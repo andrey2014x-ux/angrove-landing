@@ -65,7 +65,7 @@ export const WordReveal: React.FC<WordRevealProps> = ({
 
   return (
     // @ts-expect-error dynamic component type
-    <Component ref={containerRef} className={`inline-block ${className}`}>
+    <Component ref={containerRef} className={`block ${className}`}>
       {tokens.map((token, idx) => {
         const cleanToken = token.toLowerCase().replace(/[^a-zа-я0-9]/gi, '');
         const customClass = highlightWords[token] || highlightWords[cleanToken];

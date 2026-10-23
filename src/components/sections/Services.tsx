@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Bot, PhoneCall, Database, Network, ArrowUpRight, Play, Pause, CheckCircle2, Sparkles } from 'lucide-react';
+import { Bot, PhoneCall, Database, Network, ArrowUpRight, Play, Pause, CheckCircle2 } from 'lucide-react';
 import { config } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { WordReveal } from '../ui/WordReveal';
@@ -88,10 +88,6 @@ export const Services: React.FC = () => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-black/[0.06]">
           <div>
-            <div data-reveal="badge" className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-bold mb-3">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Понятные решения под ключ</span>
-            </div>
             <WordReveal
               as="h2"
               text="Что я внедряю в ваш бизнес"

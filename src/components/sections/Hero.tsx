@@ -138,18 +138,18 @@ export const Hero: React.FC = () => {
             </div>
 
             {/* Stats Row */}
-            <div className="grid grid-cols-3 gap-4 sm:gap-8 pt-8 mt-8 border-t border-black/[0.06] w-full max-w-lg">
+            <div className="grid grid-cols-3 gap-4 sm:gap-8 pt-8 mt-8 border-t border-black/[0.06] w-full max-w-lg items-baseline">
               <div className="hero-stat">
-                <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums">70+</div>
-                <div className="text-xs text-ink/60 font-sans mt-0.5">проектов в проде</div>
+                <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">70+</div>
+                <div className="text-xs text-ink/60 font-sans mt-1">проектов в проде</div>
               </div>
               <div className="hero-stat">
-                <div className="text-2xl sm:text-3xl font-black font-display text-blue tabular-nums">от 3 дней</div>
-                <div className="text-xs text-ink/60 font-sans mt-0.5">запуск решения</div>
+                <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">3 дня</div>
+                <div className="text-xs text-ink/60 font-sans mt-1">средний срок запуска</div>
               </div>
               <div className="hero-stat">
-                <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums">100%</div>
-                <div className="text-xs text-ink/60 font-sans mt-0.5">в срок по смете</div>
+                <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">100%</div>
+                <div className="text-xs text-ink/60 font-sans mt-1">в срок по смете</div>
               </div>
             </div>
           </div>

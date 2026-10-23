@@ -24,9 +24,6 @@ export const AboutMe: React.FC = () => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-black/[0.06] mb-10">
           <div>
-            <div data-reveal="badge" className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-bold mb-3">
-              <span>Личный бренд · Разработка под ключ</span>
-            </div>
             <WordReveal
               as="h2"
               text="Инженерный подход вместо теории"
