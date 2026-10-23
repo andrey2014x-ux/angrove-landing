@@ -378,29 +378,55 @@ export const Global3DCanvas: React.FC = () => {
 
       // Cross-fade between Hero Core and n8n Pipeline:
       // In Hero: Hero Core is 100%, Pipeline is subtle preview.
-      // In Services & beyond: Pipeline expands and activates!
-      const heroWeight = Math.max(0, 1 - Math.min(1, p * 4.5)); // 1 -> 0 as you leave Hero
-      const pipelineWeight = Math.min(1, p * 4.0);               // 0 -> 1 as you enter Services
+      // In Services & Cases: Pipeline activates (0.12 -> 0.70).
+      // In Process, FAQ & Footer: Pipeline dissolves back into a clean cosmic gyroscopic reactor!
+      const heroWeight = p < 0.12 
+        ? Math.max(0, 1 - p * 8.0) 
+        : p > 0.82 
+          ? Math.min(1, (p - 0.82) / 0.12)
+          : 0;
 
-      // Node label pills: fade in smoothly as visitor leaves Hero and enters n8n pipeline
+      const pipelineActivation = p < 0.12 
+        ? (p / 0.12) 
+        : p < 0.70 
+          ? 1.0 
+          : Math.max(0, 1 - (p - 0.70) / 0.14);
+
+      // Node label pills: strictly active during Services / n8n workflow transition (p: 0.12 -> 0.44)
+      // They gracefully fade in as user scrolls to Services, and completely fade out before Cases
+      let tagOpacity = 0;
+      if (p >= 0.12 && p <= 0.46) {
+        if (p < 0.20) {
+          tagOpacity = (p - 0.12) / 0.08;
+        } else if (p > 0.38) {
+          tagOpacity = Math.max(0, 1 - (p - 0.38) / 0.08);
+        } else {
+          tagOpacity = 0.95;
+        }
+      }
       nodeTags.forEach((tag) => {
-        tag.mat.opacity = Math.max(0, Math.min(0.95, (pipelineWeight - 0.15) * 1.3));
+        tag.mat.opacity = tagOpacity;
       });
 
-      heroCoreGroup.scale.setScalar(1.0 - pipelineWeight * 0.25);
-      pipelineGroup.scale.setScalar(0.75 + pipelineWeight * 0.4);
-      pipelineGroup.rotation.y = elapsed * 0.15 + p * Math.PI * 3;
-      pipelineGroup.rotation.x = 0.15 + Math.sin(elapsed * 0.3) * 0.08;
+      pipelineGroup.visible = pipelineActivation > 0.01;
+      if (pipelineGroup.visible) {
+        pipelineGroup.scale.setScalar((0.75 + pipelineActivation * 0.4) * pipelineActivation);
+        pipelineGroup.rotation.y = elapsed * 0.15 + p * Math.PI * 3;
+        pipelineGroup.rotation.x = 0.15 + Math.sin(elapsed * 0.3) * 0.08;
+      }
 
-      // Refined depth opacity: 3D is rich in margins, but never suffocates reading
-      const globalContrastDim = desktop ? 0.85 : 0.65;
-      crystalMat.opacity = (0.8 * heroWeight + 0.35 * (1 - heroWeight)) * globalContrastDim;
-      cageMat.opacity = (0.5 * heroWeight + 0.25 * (1 - heroWeight)) * globalContrastDim;
-      nodeMat.opacity = (0.9 * heroWeight + 0.4 * (1 - heroWeight)) * globalContrastDim;
-      ring1Mat.opacity = (0.7 * heroWeight + 0.28 * (1 - heroWeight)) * globalContrastDim;
-      ring2Mat.opacity = (0.55 * heroWeight + 0.2 * (1 - heroWeight)) * globalContrastDim;
-      ring3Mat.opacity = (0.35 * heroWeight + 0.14 * (1 - heroWeight)) * globalContrastDim;
-      tubeMat.opacity = (0.2 + 0.45 * pipelineWeight) * globalContrastDim;
+      heroCoreGroup.scale.setScalar(0.85 + (heroWeight > 0 ? heroWeight * 0.35 : 0.15));
+
+      // Dim contrast in text sections so reading is effortlessly crisp
+      const footerFade = p > 0.88 ? Math.max(0.35, 1 - (p - 0.88) / 0.12 * 0.3) : 1.0;
+      const globalContrastDim = (desktop ? 0.85 : 0.65) * footerFade;
+      crystalMat.opacity = (0.75 * heroWeight + 0.32 * (1 - heroWeight)) * globalContrastDim;
+      cageMat.opacity = (0.5 * heroWeight + 0.22 * (1 - heroWeight)) * globalContrastDim;
+      nodeMat.opacity = (0.85 * heroWeight + 0.35 * (1 - heroWeight)) * globalContrastDim;
+      ring1Mat.opacity = (0.65 * heroWeight + 0.25 * (1 - heroWeight)) * globalContrastDim;
+      ring2Mat.opacity = (0.5 * heroWeight + 0.18 * (1 - heroWeight)) * globalContrastDim;
+      ring3Mat.opacity = (0.35 * heroWeight + 0.12 * (1 - heroWeight)) * globalContrastDim;
+      tubeMat.opacity = (0.2 + 0.45 * pipelineActivation) * globalContrastDim * pipelineActivation;
 
       if (desktop) {
         if (p < 0.12) {
@@ -438,12 +464,12 @@ export const Global3DCanvas: React.FC = () => {
           targetZ = -1.5;
           targetScale = 0.98;
         } else {
-          // Final CTA & Footer: grounds into glowing bottom reactor
-          const t = (p - 0.92) / 0.08;
-          targetX = 2.95 - t * 2.95 + mouseX * 0.2;
-          targetY = -0.1 - t * 1.3 - mouseY * 0.2;
-          targetZ = -1.2;
-          targetScale = 1.15;
+          // Final CTA & Footer: centers deep into the background behind architectural branding
+          const t = Math.min(1, Math.max(0, (p - 0.90) / 0.10));
+          targetX = 2.95 * (1 - t) + mouseX * 0.15; // smoothly centers at x=0
+          targetY = -0.15 - t * 3.4 - mouseY * 0.15; // drops down to -3.55, directly behind _ANGROVE_
+          targetZ = -3.5;                            // deep behind text layer, zero occlusion
+          targetScale = 1.6;
         }
       } else {
         // Mobile responsive spatial tuning
