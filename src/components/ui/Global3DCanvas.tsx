@@ -218,15 +218,24 @@ export const Global3DCanvas: React.FC = () => {
       // Impressive scale that stays present and majestic throughout the page
       let targetScale = desktop ? 1.15 : 0.8;
 
-      // Soft opacity adaptation so it remains rich without overpowering text:
-      // In Hero: 1.0. In scroll sections: 0.7 (strong, handsome presence)
-      const scrollFactor = Math.max(0.68, 1 - p * 0.4);
-      crystalMat.opacity = 0.8 * scrollFactor;
-      cageMat.opacity = 0.5 * scrollFactor;
-      nodeMat.opacity = 0.9 * scrollFactor;
-      ring1Mat.opacity = 0.7 * scrollFactor;
-      ring2Mat.opacity = 0.55 * scrollFactor;
-      ring3Mat.opacity = 0.38 * scrollFactor;
+      // Intelligent Opacity Orchestration:
+      // - Hero (p < 0.12): Full physical crystal presence framing Andrey's portrait
+      // - Reading zones (Services, Cases, Process, About, FAQ): Heavy crystal & rings
+      //   dissolve to 0 so typography is 100% crisp, legible, and uncluttered!
+      // - Final CTA (p > 0.88): Gently reappears as a deep ambient backlight behind the solid black CTA card
+      const heroFactor = Math.max(0, 1 - Math.min(1, p * 7));
+      const ctaFactor = Math.max(0, (p - 0.88) / 0.12);
+
+      crystalMat.opacity = 0.8 * heroFactor + 0.55 * ctaFactor;
+      cageMat.opacity = 0.5 * heroFactor + 0.3 * ctaFactor;
+      nodeMat.opacity = 0.9 * heroFactor + 0.45 * ctaFactor;
+      innerCoreMat.opacity = 0.8 * heroFactor + 0.4 * ctaFactor;
+      ring1Mat.opacity = 0.7 * heroFactor + 0.35 * ctaFactor;
+      ring2Mat.opacity = 0.55 * heroFactor + 0.25 * ctaFactor;
+      ring3Mat.opacity = 0.38 * heroFactor + 0.18 * ctaFactor;
+
+      // Subtle ambient particles stay gently in deep space across the page
+      particleMat.opacity = 0.35 * heroFactor + 0.15;
 
       // Intelligent Spatial Trajectory:
       // Always keeps the 3D crystal in the LATERAL MARGINS / FLANKS (x >= 2.5 or x <= -2.7)
@@ -367,7 +376,7 @@ export const Global3DCanvas: React.FC = () => {
   return (
     <div
       ref={mountRef}
-      className="fixed inset-0 w-screen h-screen pointer-events-none select-none z-0 overflow-hidden"
+      className="absolute top-0 left-0 w-full h-[100dvh] pointer-events-none select-none z-0 overflow-hidden"
       aria-hidden="true"
     />
   );

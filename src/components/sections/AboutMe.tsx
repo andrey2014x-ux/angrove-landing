@@ -65,9 +65,11 @@ export const AboutMe: React.FC = () => {
 
           {/* Right: Principles & Direct Value */}
           <div className="lg:col-span-7 flex flex-col justify-between">
-            <p data-reveal="desc" className="font-serif italic text-lg sm:text-xl text-ink/80 leading-relaxed mb-8">
-              «Я не продаю часы и не держу штат стажеров. Проектирую и пишу код сам: от схемы базы данных до развертывания на вашем сервере. Вы получаете работающий инструмент и прямую личную ответственность за результат.»
-            </p>
+            <div data-reveal="desc" className="bg-white rounded-2xl p-6 sm:p-8 border border-black/[0.06] shadow-sm mb-8">
+              <p className="font-serif italic text-lg sm:text-xl text-ink leading-relaxed">
+                «Я не продаю часы и не держу штат стажеров. Проектирую и пишу код сам: от схемы базы данных до развертывания на вашем сервере. Вы получаете работающий инструмент и прямую личную ответственность за результат.»
+              </p>
+            </div>
 
             {/* 3 Principles Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
