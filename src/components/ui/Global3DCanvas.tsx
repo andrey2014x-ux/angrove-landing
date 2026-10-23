@@ -157,37 +157,38 @@ export const Global3DCanvas: React.FC = () => {
       currentScrollProgress += (targetScrollProgress - currentScrollProgress) * 0.06;
 
       // Dynamic repositioning through the page journey:
-      // Hero (progress ~0): right side (x: 1.8, y: 0)
-      // Services (progress ~0.25): center-left (x: -1.2, y: -0.3)
-      // Cases (progress ~0.5): center-right (x: 1.4, y: 0.2)
-      // Process (progress ~0.75): center (x: 0, y: -0.5)
-      // Final CTA (progress ~1): center (x: 0, y: 0)
+      // Hero (p ~ 0): right side (x: 1.8)
+      // Services (p ~ 0.25): left side (x: -1.8)
+      // Cases (p ~ 0.5): right side (x: 1.7)
+      // Process (p ~ 0.75): left side (x: -1.6)
+      // Final CTA (p ~ 1): center (x: 0)
       const p = currentScrollProgress;
       const baseDesktopX = window.innerWidth >= 1024 ? 1.8 : 0;
       
-      const targetGroupX = baseDesktopX * Math.cos(p * Math.PI * 2) + mouseX * 0.4;
-      const targetGroupY = Math.sin(p * Math.PI * 3) * 0.8 - mouseY * 0.4;
-      const targetGroupZ = -p * 2.0;
+      // Smooth sinusoidal oscillation between right and left as you scroll
+      const targetGroupX = (baseDesktopX * Math.cos(p * Math.PI * 4)) * (1 - p * 0.4) + mouseX * 0.4;
+      const targetGroupY = Math.sin(p * Math.PI * 2.5) * 0.6 - mouseY * 0.4;
+      const targetGroupZ = Math.sin(p * Math.PI * 2) * 0.3;
 
-      mainGroup.position.x += (targetGroupX - mainGroup.position.x) * 0.05;
-      mainGroup.position.y += (targetGroupY - mainGroup.position.y) * 0.05;
-      mainGroup.position.z += (targetGroupZ - mainGroup.position.z) * 0.05;
+      mainGroup.position.x += (targetGroupX - mainGroup.position.x) * 0.06;
+      mainGroup.position.y += (targetGroupY - mainGroup.position.y) * 0.06;
+      mainGroup.position.z += (targetGroupZ - mainGroup.position.z) * 0.06;
 
-      // 3D Core continuous and scroll-driven rotation
-      coreMesh.rotation.x = elapsed * 0.25 + mouseY + p * Math.PI * 2.5;
-      coreMesh.rotation.y = elapsed * 0.35 + mouseX + p * Math.PI * 3.5;
+      // 3D Core continuous and scroll-driven rotation - keeps moving and spinning through all sections
+      coreMesh.rotation.x = elapsed * 0.3 + mouseY + p * Math.PI * 4;
+      coreMesh.rotation.y = elapsed * 0.4 + mouseX + p * Math.PI * 6;
 
-      innerMesh.rotation.x = -elapsed * 0.4 + mouseY;
-      innerMesh.rotation.y = -elapsed * 0.5 + mouseX;
+      innerMesh.rotation.x = -elapsed * 0.45 + mouseY;
+      innerMesh.rotation.y = -elapsed * 0.55 + mouseX;
       innerWire.rotation.copy(innerMesh.rotation);
 
-      ring1.rotation.z = elapsed * 0.2 + p * Math.PI * 4;
-      ring2.rotation.x = elapsed * -0.25 - p * Math.PI * 3;
-      ring3.rotation.y = elapsed * 0.15 + p * Math.PI * 2;
+      ring1.rotation.z = elapsed * 0.25 + p * Math.PI * 6;
+      ring2.rotation.x = elapsed * -0.3 - p * Math.PI * 5;
+      ring3.rotation.y = elapsed * 0.2 + p * Math.PI * 4;
 
-      // Particles gentle drift
-      particles.rotation.y = elapsed * 0.05 + mouseX * 0.2;
-      particles.rotation.x = elapsed * 0.03 - mouseY * 0.2;
+      // Particles gentle drift across entire page
+      particles.rotation.y = elapsed * 0.06 + mouseX * 0.3 + p * Math.PI * 2;
+      particles.rotation.x = elapsed * 0.04 - mouseY * 0.3;
 
       // Gentle camera parallax
       camera.position.x = mouseX * 0.4;

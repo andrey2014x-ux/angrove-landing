@@ -12,7 +12,7 @@ export const GuideForm: React.FC = () => {
   return (
     <section
       id="guide"
-      className="bg-paper text-ink py-16 sm:py-20 relative overflow-hidden"
+      className="bg-transparent text-ink py-16 sm:py-20 relative overflow-hidden"
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
         <div className="bg-[#0A0C16] text-white rounded-3xl p-8 sm:p-12 border border-white/10 shadow-2xl relative overflow-hidden">

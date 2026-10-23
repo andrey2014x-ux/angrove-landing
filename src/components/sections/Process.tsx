@@ -46,7 +46,7 @@ export const Process: React.FC = () => {
   return (
     <section
       id="process"
-      className="bg-paper text-ink py-16 sm:py-24 relative overflow-hidden"
+      className="bg-transparent text-ink py-16 sm:py-24 relative overflow-hidden"
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
         {/* Section Header */}
