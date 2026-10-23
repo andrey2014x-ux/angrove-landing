@@ -3,6 +3,7 @@ import { config } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { gsap } from '../../lib/motion';
 import { ArrowUpRight, Sparkles } from 'lucide-react';
+import { ThreeScene } from '../ui/ThreeScene';
 
 export const Hero: React.FC = () => {
   const heroRef = useRef<HTMLElement>(null);
@@ -135,12 +136,17 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Dribbble Modern Photo Card */}
+          {/* Right Column: Dribbble Modern Photo Card + 3D Interactive Core */}
           <div
             ref={photoBlockRef}
             className="lg:col-span-5 flex flex-col items-center lg:items-end justify-center w-full relative"
           >
-            <div className="w-full max-w-[360px] sm:max-w-[420px] relative">
+            {/* Ambient 3D Interactive WebGL Core behind the photo */}
+            <div className="absolute -top-16 -left-16 sm:-left-20 w-[420px] sm:w-[500px] h-[420px] sm:h-[500px] pointer-events-none opacity-80 z-0">
+              <ThreeScene />
+            </div>
+
+            <div className="w-full max-w-[360px] sm:max-w-[420px] relative z-10">
               {/* Photo Box with curved corners, soft gradient shadow */}
               <div className="relative rounded-3xl overflow-hidden bg-zinc-900 border border-black/10 shadow-[0_20px_50px_rgba(0,0,0,0.12)] aspect-[4/5]">
                 <img
