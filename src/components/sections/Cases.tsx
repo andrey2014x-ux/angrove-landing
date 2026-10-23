@@ -2,28 +2,29 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Check, 
-  Activity, 
   ArrowUpRight,
   Database,
-  Cpu,
-  ShieldCheck
+  Play,
+  Pause,
+  Calendar,
+  FileSpreadsheet,
+  Sparkles
 } from 'lucide-react';
 import { config } from '../../config';
 
 interface CaseItem {
   id: string;
   num: string;
-  tag: string;
+  tabLabel: string;
+  clientBadge: string;
   title: string;
-  clientContext: string;
   problem: string;
   solution: string;
   stack: string[];
   metrics: {
+    value: string;
     label: string;
-    before: string;
-    after: string;
-    gain: string;
+    detail: string;
   }[];
 }
 
@@ -31,156 +32,241 @@ const CASES_DATA: CaseItem[] = [
   {
     id: 'parser',
     num: '01',
-    tag: 'ПАРСИНГ & ОБОГАЩЕНИЕ ДАННЫХ',
+    tabLabel: 'Парсинг & обогащение данных',
+    clientBadge: 'Оптовый поставщик строительного крепежа · Санкт-Петербург',
     title: 'Автоматический сбор B2B-каталогов и мониторинг цен конкурентов',
-    clientContext: 'Оптовый поставщик строительного крепежа и промышленной фурнитуры',
-    problem: '2 менеджера тратили по 3.5 часа ежедневно на ручной обход сайтов конкурентов, каталогов и карт, перебивая артикулы и телефоны в Excel.',
-    solution: 'Развернут парсер на базе Python и Playwright. Робот в 06:00 собирает номенклатуру, цены и контакты, верифицирует номера по HLR и раскладывает по категориям.',
-    stack: ['Python', 'Playwright', 'PostgreSQL', 'amoCRM API', 'Google Sheets'],
+    problem: '2 менеджера ежедневно тратили по 3.5 часа на монотонный обход каталогов, справочников и сайтов конкурентов, вручную копируя контакты и цены в Excel.',
+    solution: 'Развернут автономный парсер на Python и Playwright. Робот в 06:00 собирает номенклатуру и контакты, верифицирует телефоны по HLR-проверке и синхронизирует с amoCRM.',
+    stack: ['Python', 'Playwright', 'PostgreSQL', 'HLR Lookup API', 'amoCRM Webhooks'],
     metrics: [
-      { label: 'Скорость обработки выборки', before: '3–4 часа ручного поиска', after: '3 мин 12 сек', gain: 'В 65 раз быстрее' },
-      { label: 'Качество контактной базы', before: 'До 30% неактуальных номеров', after: '99.2% валидированных ЛПР', gain: 'Без мусора' },
-      { label: 'Высвобожденное время', before: '70 человеко-часов в месяц', after: 'Автономный cron-запуск', gain: '~60 ч/мес в активные продажи' },
+      {
+        value: '65x',
+        label: 'Ускорение сбора базы',
+        detail: 'с 4 часов до 3 мин 12 сек',
+      },
+      {
+        value: '99.2%',
+        label: 'Чистая база ЛПР',
+        detail: 'HLR-валидация без мусора',
+      },
+      {
+        value: '60 ч/мес',
+        label: 'Экономия времени',
+        detail: 'перенаправлено в продажи',
+      },
     ],
   },
   {
     id: 'assistant',
     num: '02',
-    tag: 'КОНВЕРСИОННЫЙ AI-АССИСТЕНТ 24/7',
+    tabLabel: 'Конверсионный AI-ассистент 24/7',
+    clientBadge: 'Производственно-монтажная компания (остекление) · Москва',
     title: 'Мгновенная квалификация лидов и расчет предварительных смет в Telegram',
-    clientContext: 'Производственно-монтажная компания (остекление и алюминиевые конструкции)',
     problem: 'До 28% заявок поступали вечером и в выходные. Менеджеры отвечали только утром — потенциальные заказчики успевали заказать у конкурентов.',
-    solution: 'Интегрирован FSM-ассистент с RAG по актуальному прайс-листу. Бот квалифицирует тип объекта, вычисляет ориентировочную вилку стоимости и записывает на замер.',
-    stack: ['Telegram Bot API', 'Python / FastAPI', 'Redis FSM', 'Vector Store', 'Webhooks'],
+    solution: 'Интегрирован умный ассистент с RAG по актуальному прайс-листу компании. Бот мгновенно квалифицирует объект, рассчитывает вилку сметы и передает готовый бриф в CRM.',
+    stack: ['Telegram Bot API', 'Python / FastAPI', 'RAG Knowledge Base', 'Redis FSM', 'amoCRM'],
     metrics: [
-      { label: 'Время первого ответа', before: 'От 2 до 12 часов ожидания', after: '5.8 секунд 24/7', gain: 'Мгновенный захват лида' },
-      { label: 'Конверсия ночного трафика', before: '11.4% переход в диалог', after: '34.8% переход в замер', gain: '+23.4 п.п. к выручке' },
-      { label: 'Нагрузка на отдел продаж', before: 'Рутинные ответы на типовые вопросы', after: 'Менеджеры получают готовый бриф', gain: '100% целевые встречи' },
+      {
+        value: '5.8 сек',
+        label: 'Время первого ответа',
+        detail: 'круглосуточно без выходных',
+      },
+      {
+        value: '+23.4%',
+        label: 'Конверсия ночного трафика',
+        detail: 'в назначенный замер',
+      },
+      {
+        value: '0',
+        label: 'Потерянных обращений',
+        detail: '100% лидов в воронке',
+      },
     ],
   },
   {
     id: 'digest',
     num: '03',
-    tag: 'ИНТЕГРАЦИИ & СКВОЗНОЙ УЧЕТ',
+    tabLabel: 'Интеграции & сквозной учет',
+    clientBadge: 'Сеть сервисных центров и розничных магазинов запчастей',
     title: 'Синхронизация CRM, склада и автоматическая утренняя сводка владельцу',
-    clientContext: 'Сеть сервисных центров и розничных магазинов запчастей',
-    problem: 'Заявки терялись между почтой, мессенджерами и кассой. Собственник каждое утро тратил 40–50 минут на ручное сведение отчетов из трех систем.',
-    solution: 'Собрана шина данных на базе n8n и webhooks: автоматическое сопоставление платежей, списание со склада и ежедневный пуш-дайджест в закрытый Telegram-канал.',
-    stack: ['n8n Engine', 'amoCRM Webhooks', 'МойСклад API', 'PostgreSQL', 'Telegram Bot'],
+    problem: 'Заявки терялись между почтой, мессенджерами и кассой. Собственник каждое утро тратил 45 минут на ручное сведение отчетов из трех несовместимых систем.',
+    solution: 'Собрана шина данных на базе n8n и вебхуков: автоматическое сопоставление платежей, списание остатков на складе и ежедневный пуш-дайджест ровно в 08:30:00.',
+    stack: ['n8n Engine', 'amoCRM Webhooks', 'МойСклад API', 'Банковский эквайринг', 'Telegram Bot'],
     metrics: [
-      { label: 'Сходимость финансового учета', before: 'Регулярные расхождения 3–7%', after: '100% совпадение реестров', gain: 'Ноль неучтенных заказов' },
-      { label: 'Время подготовки сводки', before: '45 минут ручной сборки', after: 'Ровно в 08:30:00 каждое утро', gain: '0 минут участия человека' },
-      { label: 'Забытые и зависшие клиенты', before: 'До 8–10% сделок без статуса', after: '0 просроченных этапов', gain: 'Полный контроль воронки' },
+      {
+        value: '100%',
+        label: 'Сходимость финучета',
+        detail: 'ноль неучтенных платежей',
+      },
+      {
+        value: '08:30',
+        label: 'Ежедневный дайджест',
+        detail: 'автономно в Telegram',
+      },
+      {
+        value: '0 мин',
+        label: 'Ручной сборки отчетов',
+        detail: 'экономия 45 минут в день',
+      },
     ],
   },
 ];
 
 export const Cases: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('parser');
+  const [filterMode, setFilterMode] = useState<'all' | 'valid'>('all');
+  const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
   const currentCase = CASES_DATA.find((c) => c.id === activeTab) || CASES_DATA[0];
 
   const renderWidget = (id: string) => {
     if (id === 'parser') {
       return (
-        <div className="bg-[#111113] text-white rounded-xl border border-zinc-800 p-4 sm:p-5 font-mono text-xs select-none">
-          {/* Terminal Title Bar */}
-          <div className="flex items-center justify-between pb-3 mb-3 border-b border-zinc-800/80">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-              <span className="font-bold text-zinc-200 tracking-wide">SCRAPER.RUNNER // v2.4</span>
-            </div>
-            <div className="flex items-center gap-3 text-[11px] text-zinc-400">
-              <span className="bg-zinc-900 border border-zinc-700/60 px-2 py-0.5 rounded text-zinc-300">
-                CRON: 06:00 MSK
+        <div className="bg-[#0E1015] text-zinc-100 rounded-2xl border border-zinc-800/90 shadow-2xl overflow-hidden select-none font-sans">
+          {/* Top Window Bar */}
+          <div className="px-4 py-3 bg-[#13151C] border-b border-zinc-800/80 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-zinc-700/80" />
+                <span className="w-2.5 h-2.5 rounded-full bg-zinc-700/80" />
+                <span className="w-2.5 h-2.5 rounded-full bg-zinc-700/80" />
+              </div>
+              <span className="text-zinc-600 text-xs">/</span>
+              <span className="font-mono text-xs text-zinc-300 font-semibold tracking-wide">
+                b2b-hardware-scraper.py
               </span>
-              <span className="text-emerald-400 font-semibold">STATUS: STREAMING</span>
+            </div>
+            <div className="flex items-center gap-2 font-mono text-[11px]">
+              <span className="inline-flex items-center gap-1 text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                CRON 06:00 MSK
+              </span>
             </div>
           </div>
 
-          {/* Engine Parameters */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3.5">
-            <div className="bg-zinc-900/80 border border-zinc-800/80 p-2 rounded">
-              <div className="text-[10px] text-zinc-400 uppercase">Источники</div>
-              <div className="text-zinc-200 font-bold mt-0.5">3 каталога + карты</div>
+          {/* Interactive Toolbar */}
+          <div className="p-3.5 bg-[#101218] border-b border-zinc-800/60 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-1.5 bg-zinc-900/90 p-1 rounded-lg border border-zinc-800">
+              <button
+                type="button"
+                onClick={() => setFilterMode('all')}
+                className={`px-2.5 py-1 rounded text-[11px] font-mono transition-colors ${
+                  filterMode === 'all'
+                    ? 'bg-blue text-white font-semibold shadow-sm'
+                    : 'text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                Все записи (542)
+              </button>
+              <button
+                type="button"
+                onClick={() => setFilterMode('valid')}
+                className={`px-2.5 py-1 rounded text-[11px] font-mono transition-colors ${
+                  filterMode === 'valid'
+                    ? 'bg-blue text-white font-semibold shadow-sm'
+                    : 'text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                Валидные ЛПР (538)
+              </button>
             </div>
-            <div className="bg-zinc-900/80 border border-zinc-800/80 p-2 rounded">
-              <div className="text-[10px] text-zinc-400 uppercase">Таймаут запроса</div>
-              <div className="text-zinc-200 font-bold mt-0.5">140 ms / proxy</div>
-            </div>
-            <div className="bg-zinc-900/80 border border-zinc-800/80 p-2 rounded">
-              <div className="text-[10px] text-zinc-400 uppercase">HLR-проверка</div>
-              <div className="text-emerald-400 font-bold mt-0.5">Включена</div>
-            </div>
-            <div className="bg-zinc-900/80 border border-zinc-800/80 p-2 rounded">
-              <div className="text-[10px] text-zinc-400 uppercase">Дедупликация</div>
-              <div className="text-zinc-200 font-bold mt-0.5">По ИНН + ОГРН</div>
+
+            <div className="flex items-center gap-2 text-[11px] font-mono text-zinc-400">
+              <span className="hidden sm:inline">Скорость:</span>
+              <span className="text-zinc-200 font-semibold">240 req/min</span>
+              <span className="text-zinc-700">|</span>
+              <span className="text-emerald-400 font-semibold">HLR: 100%</span>
             </div>
           </div>
 
-          {/* Live Data Records Table */}
-          <div className="bg-black/50 border border-zinc-800/80 rounded-lg overflow-hidden mb-3.5">
-            <div className="grid grid-cols-12 gap-2 px-3 py-1.5 bg-zinc-900/90 text-[10px] text-zinc-400 uppercase tracking-wider border-b border-zinc-800 font-semibold">
-              <div className="col-span-5">Организация / ИНН</div>
-              <div className="col-span-4">Контакт ЛПР</div>
-              <div className="col-span-3 text-right">Статус</div>
-            </div>
+          {/* Data Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="bg-zinc-900/70 border-b border-zinc-800/80 font-mono text-[10px] text-zinc-400 uppercase tracking-wider">
+                  <th className="py-2.5 px-4 font-semibold">Организация & ИНН</th>
+                  <th className="py-2.5 px-4 font-semibold">Контактное лицо</th>
+                  <th className="py-2.5 px-4 font-semibold text-center">HLR Сеть</th>
+                  <th className="py-2.5 px-4 font-semibold text-right">amoCRM</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-800/50 font-sans text-[11px]">
+                <tr className="hover:bg-zinc-800/30 transition-colors">
+                  <td className="py-2.5 px-4">
+                    <div className="font-semibold text-zinc-100">ООО «ПромТехСнаб»</div>
+                    <div className="font-mono text-[10px] text-zinc-400">ИНН 6670412891 · Екатеринбург</div>
+                  </td>
+                  <td className="py-2.5 px-4">
+                    <div className="text-zinc-200 font-medium">Дмитрий Волков</div>
+                    <div className="font-mono text-[10px] text-blue-light">+7 (343) 289-41-**</div>
+                  </td>
+                  <td className="py-2.5 px-4 text-center">
+                    <span className="inline-flex items-center gap-1 font-mono text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      МТС · Активен
+                    </span>
+                  </td>
+                  <td className="py-2.5 px-4 text-right">
+                    <span className="font-mono text-[10px] text-zinc-300 bg-zinc-800/80 px-2 py-0.5 rounded border border-zinc-700/50">
+                      Сделка #9102
+                    </span>
+                  </td>
+                </tr>
 
-            <div className="divide-y divide-zinc-800/50 text-[11px]">
-              <div className="grid grid-cols-12 gap-2 px-3 py-2 items-center hover:bg-zinc-800/30 transition-colors">
-                <div className="col-span-5 truncate">
-                  <span className="text-zinc-100 font-medium">ООО «ПромСнаб-Урал»</span>
-                  <div className="text-[10px] text-zinc-400">ИНН 6670412891 · Екатеринбург</div>
-                </div>
-                <div className="col-span-4 truncate text-zinc-300">
-                  +7 (343) 289-41-** <span className="text-zinc-400">(Дмитрий В.)</span>
-                </div>
-                <div className="col-span-3 text-right">
-                  <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded">
-                    <Check className="w-2.5 h-2.5" /> ВАЛИДЕН
-                  </span>
-                </div>
-              </div>
+                <tr className="hover:bg-zinc-800/30 transition-colors">
+                  <td className="py-2.5 px-4">
+                    <div className="font-semibold text-zinc-100">ТД «Полимер-Трейд»</div>
+                    <div className="font-mono text-[10px] text-zinc-400">ИНН 7721590442 · Москва</div>
+                  </td>
+                  <td className="py-2.5 px-4">
+                    <div className="text-zinc-200 font-medium">Светлана Романова</div>
+                    <div className="font-mono text-[10px] text-blue-light">+7 (495) 782-19-**</div>
+                  </td>
+                  <td className="py-2.5 px-4 text-center">
+                    <span className="inline-flex items-center gap-1 font-mono text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      МегаФон · Активен
+                    </span>
+                  </td>
+                  <td className="py-2.5 px-4 text-right">
+                    <span className="font-mono text-[10px] text-zinc-300 bg-zinc-800/80 px-2 py-0.5 rounded border border-zinc-700/50">
+                      Сделка #9103
+                    </span>
+                  </td>
+                </tr>
 
-              <div className="grid grid-cols-12 gap-2 px-3 py-2 items-center hover:bg-zinc-800/30 transition-colors">
-                <div className="col-span-5 truncate">
-                  <span className="text-zinc-100 font-medium">ТД «Полимер-Трейд»</span>
-                  <div className="text-[10px] text-zinc-400">ИНН 7721590442 · Москва</div>
-                </div>
-                <div className="col-span-4 truncate text-zinc-300">
-                  +7 (495) 782-19-** <span className="text-zinc-400">(Светлана Р.)</span>
-                </div>
-                <div className="col-span-3 text-right">
-                  <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded">
-                    <Check className="w-2.5 h-2.5" /> ВАЛИДЕН
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-12 gap-2 px-3 py-2 items-center hover:bg-zinc-800/30 transition-colors">
-                <div className="col-span-5 truncate">
-                  <span className="text-zinc-100 font-medium">АО «СпецМашПрибор»</span>
-                  <div className="text-[10px] text-zinc-400">ИНН 7802819430 · СПб</div>
-                </div>
-                <div className="col-span-4 truncate text-zinc-300">
-                  +7 (812) 334-08-** <span className="text-zinc-400">(Алексей К.)</span>
-                </div>
-                <div className="col-span-3 text-right">
-                  <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded">
-                    <Check className="w-2.5 h-2.5" /> ВАЛИДЕН
-                  </span>
-                </div>
-              </div>
-            </div>
+                <tr className="hover:bg-zinc-800/30 transition-colors">
+                  <td className="py-2.5 px-4">
+                    <div className="font-semibold text-zinc-100">АО «СпецМашПрибор»</div>
+                    <div className="font-mono text-[10px] text-zinc-400">ИНН 7802819430 · Санкт-Петербург</div>
+                  </td>
+                  <td className="py-2.5 px-4">
+                    <div className="text-zinc-200 font-medium">Алексей Котов</div>
+                    <div className="font-mono text-[10px] text-blue-light">+7 (812) 334-08-**</div>
+                  </td>
+                  <td className="py-2.5 px-4 text-center">
+                    <span className="inline-flex items-center gap-1 font-mono text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      Билайн · Активен
+                    </span>
+                  </td>
+                  <td className="py-2.5 px-4 text-right">
+                    <span className="font-mono text-[10px] text-zinc-300 bg-zinc-800/80 px-2 py-0.5 rounded border border-zinc-700/50">
+                      Сделка #9104
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
-          {/* Bottom Execution Capsule */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2.5 rounded-lg bg-zinc-900/90 border border-zinc-800 text-[11px]">
+          {/* Execution Bar */}
+          <div className="p-3 bg-[#13151C] border-t border-zinc-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
             <div className="flex items-center gap-2 text-zinc-300">
               <Database className="w-3.5 h-3.5 text-blue-light" />
-              <span>Экспорт: <strong>542 контакта</strong> выгружены в CRM и Google Sheets</span>
+              <span>Выгрузка: <strong>542 контакта</strong> в amoCRM и Google Sheets</span>
             </div>
-            <div className="text-zinc-400">
-              Время выполнения: <strong className="text-zinc-200">03 мин 12 сек</strong>
+            <div className="font-mono text-[11px] text-zinc-400">
+              Выполнено за <strong className="text-emerald-400">03 мин 12 сек</strong>
             </div>
           </div>
         </div>
@@ -189,76 +275,130 @@ export const Cases: React.FC = () => {
 
     if (id === 'assistant') {
       return (
-        <div className="bg-[#111113] text-white rounded-xl border border-zinc-800 p-4 sm:p-5 font-mono text-xs select-none">
-          {/* Chat Window Header */}
-          <div className="flex items-center justify-between pb-3 mb-3 border-b border-zinc-800/80">
+        <div className="bg-[#111318] text-zinc-100 rounded-2xl border border-zinc-800/90 shadow-2xl overflow-hidden select-none font-sans">
+          {/* Telegram Header */}
+          <div className="px-4 py-3 bg-[#161821] border-b border-zinc-800 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-full bg-blue/20 border border-blue/40 flex items-center justify-center text-blue-light font-bold text-xs">
-                AI
+              <div className="relative">
+                <div className="w-8 h-8 rounded-full bg-blue flex items-center justify-center text-white font-bold text-xs shadow-md">
+                  ФМ
+                </div>
+                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-[#161821]" />
               </div>
               <div>
-                <div className="text-zinc-200 font-bold font-sans">Telegram Bot // Sales FSM</div>
-                <div className="text-[10px] text-zinc-400 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
-                  RAG-модуль подключен · База цен 2026
+                <div className="font-semibold text-xs text-white flex items-center gap-1.5">
+                  <span>Фахверк Монтаж Bot</span>
+                  <span className="bg-blue/20 text-blue-light font-mono text-[9px] px-1 rounded uppercase font-bold">
+                    AI 24/7
+                  </span>
                 </div>
+                <div className="text-[10px] text-zinc-400">бот компании · онлайн</div>
               </div>
             </div>
-            <span className="text-[10px] text-amber-300 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded">
-              22:48 · Нерабочее время
+
+            <span className="text-[10px] font-mono text-amber-300 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded">
+              🌙 22:48 · Ночной трафик
             </span>
           </div>
 
           {/* Dialog Stream */}
-          <div className="space-y-3 mb-3.5 font-sans">
+          <div className="p-4 space-y-3 bg-[#0D0F14]/60 text-xs">
             {/* User message */}
             <div className="flex justify-end">
-              <div className="bg-zinc-800/90 text-zinc-200 rounded-xl rounded-tr-none px-3.5 py-2.5 max-w-[85%] text-xs border border-zinc-700/50">
-                <div className="text-[10px] text-zinc-400 font-mono mb-1">Потенциальный клиент · 22:48:01</div>
-                Добрый вечер! Делаете фахверковое остекление на 140 м² в Истринском районе? Какой ориентир по срокам и смете?
+              <div className="bg-[#1E2333] border border-blue/20 text-zinc-100 rounded-2xl rounded-tr-none px-3.5 py-2.5 max-w-[85%] shadow-sm">
+                <p className="leading-relaxed">
+                  Добрый вечер! Делаете фахверковое остекление на 140 м² в Истринском районе? Какой ориентир по смете и срокам?
+                </p>
+                <div className="text-[10px] text-zinc-400 text-right mt-1 font-mono">22:48:01</div>
               </div>
             </div>
 
-            {/* AI Latency Indicator */}
-            <div className="flex items-center justify-center gap-2 text-[10px] font-mono text-zinc-400 py-0.5">
-              <Cpu className="w-3 h-3 text-blue-light" />
-              <span>RAG-анализ номенклатуры (latency: 180ms) → Расчет вилки цен</span>
+            {/* Audio Voice Note from Bot */}
+            <div className="flex justify-start">
+              <div className="bg-[#181B24] border border-zinc-800 text-zinc-100 rounded-2xl rounded-tl-none p-3 max-w-[90%] shadow-sm">
+                <div className="flex items-center gap-2.5 mb-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsPlayingAudio(!isPlayingAudio)}
+                    className="w-7 h-7 rounded-full bg-blue hover:bg-blue-dark flex items-center justify-center text-white transition-colors shrink-0"
+                  >
+                    {isPlayingAudio ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 ml-0.5" />}
+                  </button>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-0.5 h-4">
+                      {[40, 70, 30, 90, 60, 100, 45, 80, 50, 65, 85, 35, 75, 45].map((h, i) => (
+                        <span
+                          key={i}
+                          style={{ height: `${isPlayingAudio ? Math.random() * 80 + 20 : h}%` }}
+                          className={`w-1 rounded-full transition-all duration-150 ${
+                            isPlayingAudio ? 'bg-blue' : 'bg-zinc-600'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <span className="font-mono text-[10px] text-zinc-400">0:14</span>
+                </div>
+                <div className="text-[10px] text-zinc-400 font-mono">
+                  Голосовой ответ инженера · синтезирован за 1.2 сек
+                </div>
+              </div>
             </div>
 
-            {/* Assistant Response */}
+            {/* Bot text quote response */}
             <div className="flex justify-start">
-              <div className="bg-zinc-900 border border-zinc-800 rounded-xl rounded-tl-none px-3.5 py-2.5 max-w-[92%] text-xs text-zinc-200">
-                <div className="text-[10px] text-blue-light font-mono font-bold mb-1 flex items-center justify-between">
-                  <span>AI-ассистент · 22:48:06</span>
-                  <span className="text-emerald-400 font-normal">Ответ за 5.8 сек</span>
+              <div className="bg-[#181B24] border border-zinc-800 text-zinc-100 rounded-2xl rounded-tl-none p-3.5 max-w-[92%] shadow-sm">
+                <div className="flex items-center justify-between gap-2 mb-2 pb-1.5 border-b border-zinc-800/80">
+                  <span className="text-blue-light font-semibold text-[11px]">AI-ассистент</span>
+                  <span className="text-[10px] font-mono text-emerald-400">Ответ за 5.8 сек</span>
                 </div>
-                <p className="leading-relaxed mb-2">
-                  Здравствуйте! Да, остекляем фахверковые дома двухкамерными энергосберегающими стеклопакетами 52 мм (триплекс + закаленное стекло).
+                <p className="leading-relaxed mb-2.5 text-zinc-200">
+                  Здравствуйте! Да, остекляем фахверковые объекты двухкамерным мультифункциональным триплексом 52 мм.
                 </p>
-                <div className="p-2 rounded bg-black/40 border border-zinc-800 font-mono text-[11px] mb-2 space-y-1">
-                  <div className="flex justify-between text-zinc-300">
+
+                {/* Structured Estimate Card */}
+                <div className="bg-black/40 border border-zinc-800/80 rounded-xl p-3 font-mono text-[11px] space-y-1.5 mb-2.5">
+                  <div className="flex justify-between items-center text-zinc-300">
                     <span>Ориентир сметы (140 м²):</span>
-                    <strong className="text-white">1 840 000 – 2 150 000 ₽</strong>
+                    <strong className="text-emerald-400 font-bold">1 840 000 – 2 150 000 ₽</strong>
                   </div>
-                  <div className="flex justify-between text-zinc-400 text-[10px]">
+                  <div className="flex justify-between items-center text-zinc-400 text-[10px]">
                     <span>Срок изготовления:</span>
-                    <span>18–22 рабочих дня</span>
+                    <span className="text-zinc-200">18–22 рабочих дня</span>
+                  </div>
+                  <div className="flex justify-between items-center text-zinc-400 text-[10px]">
+                    <span>Доставка в Истринский р-н:</span>
+                    <span className="text-zinc-200">Включена</span>
                   </div>
                 </div>
-                <p className="leading-relaxed text-zinc-300">
-                  У вас уже есть проектная документация со спецификацией проемов или требуется согласовать выезд инженера для замера?
-                </p>
+
+                {/* Inline Action Pills */}
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  <button
+                    type="button"
+                    className="px-2.5 py-1 rounded bg-blue hover:bg-blue-dark text-white font-mono text-[10px] font-semibold transition-colors flex items-center gap-1"
+                  >
+                    <Calendar className="w-3 h-3" />
+                    Записаться на замер
+                  </button>
+                  <button
+                    type="button"
+                    className="px-2.5 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-mono text-[10px] transition-colors"
+                  >
+                    Скачать спецификацию (PDF)
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* CRM Handover Capsule */}
-          <div className="p-2.5 rounded-lg bg-zinc-900/90 border border-zinc-800 text-[11px] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          {/* CRM Notification Banner */}
+          <div className="p-3 bg-[#161821] border-t border-zinc-800 flex items-center justify-between text-xs">
             <div className="flex items-center gap-2 text-zinc-300">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Лид зафиксирован в CRM: <strong>сделка создана, тег #фахверк_ночной</strong></span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span>Лид зафиксирован в amoCRM: <strong>тег #фахверк_ночной</strong></span>
             </div>
-            <span className="text-[10px] text-zinc-400">Конверсия в диалог: 94.6%</span>
+            <span className="font-mono text-[10px] text-emerald-400 font-semibold">Конверсия: 94.6%</span>
           </div>
         </div>
       );
@@ -266,73 +406,91 @@ export const Cases: React.FC = () => {
 
     if (id === 'digest') {
       return (
-        <div className="bg-[#111113] text-white rounded-xl border border-zinc-800 p-4 sm:p-5 font-mono text-xs select-none">
-          {/* Header */}
-          <div className="flex items-center justify-between pb-3 mb-3 border-b border-zinc-800/80">
+        <div className="bg-[#0E1015] text-zinc-100 rounded-2xl border border-zinc-800/90 shadow-2xl overflow-hidden select-none font-sans">
+          {/* Top Bar */}
+          <div className="px-4 py-3 bg-[#13151C] border-b border-zinc-800/80 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-emerald-400" />
-              <span className="font-bold text-zinc-200">DAILY DIGEST PIPELINE</span>
+              <Sparkles className="w-4 h-4 text-emerald-400" />
+              <span className="font-semibold text-xs text-white">Утренний дайджест собственнику</span>
             </div>
-            <span className="text-[10px] text-zinc-300 bg-zinc-900 border border-zinc-700/60 px-2 py-0.5 rounded">
+            <span className="font-mono text-[11px] text-zinc-400 bg-zinc-900 border border-zinc-800 px-2 py-0.5 rounded">
               08:30:00 MSK · Автономно
             </span>
           </div>
 
-          {/* High-density Status Grid */}
-          <div className="grid grid-cols-3 gap-2 mb-3.5">
-            <div className="bg-zinc-900/80 border border-zinc-800 p-2.5 rounded">
-              <div className="text-[10px] text-zinc-400 uppercase">Оборот за 24 ч</div>
-              <div className="text-base font-bold text-white mt-0.5">418 200 ₽</div>
-              <div className="text-[10px] text-emerald-400 mt-0.5">32 чека (100% сверка)</div>
-            </div>
-            <div className="bg-zinc-900/80 border border-zinc-800 p-2.5 rounded">
-              <div className="text-[10px] text-zinc-400 uppercase">Сходимость склада</div>
-              <div className="text-base font-bold text-emerald-400 mt-0.5">100.0%</div>
-              <div className="text-[10px] text-zinc-400 mt-0.5">0 расхождений</div>
-            </div>
-            <div className="bg-zinc-900/80 border border-zinc-800 p-2.5 rounded">
-              <div className="text-[10px] text-zinc-400 uppercase">Зависшие задачи</div>
-              <div className="text-base font-bold text-zinc-200 mt-0.5">0</div>
-              <div className="text-[10px] text-zinc-400 mt-0.5">Все лиды в работе</div>
+          {/* 3 Pipeline Nodes */}
+          <div className="p-3.5 bg-[#101218] border-b border-zinc-800/60">
+            <div className="grid grid-cols-3 gap-2">
+              <div className="bg-zinc-900/80 border border-zinc-800/80 p-2.5 rounded-xl">
+                <div className="text-[10px] font-mono text-zinc-400 uppercase">amoCRM</div>
+                <div className="text-sm font-bold text-white mt-0.5">32 сделки</div>
+                <div className="text-[10px] text-emerald-400 flex items-center gap-0.5 mt-0.5">
+                  <Check className="w-2.5 h-2.5" /> 100% сопоставлено
+                </div>
+              </div>
+              <div className="bg-zinc-900/80 border border-zinc-800/80 p-2.5 rounded-xl">
+                <div className="text-[10px] font-mono text-zinc-400 uppercase">МойСклад</div>
+                <div className="text-sm font-bold text-white mt-0.5">32 списания</div>
+                <div className="text-[10px] text-emerald-400 flex items-center gap-0.5 mt-0.5">
+                  <Check className="w-2.5 h-2.5" /> 0 расхождений
+                </div>
+              </div>
+              <div className="bg-zinc-900/80 border border-zinc-800/80 p-2.5 rounded-xl">
+                <div className="text-[10px] font-mono text-zinc-400 uppercase">Банк / Касса</div>
+                <div className="text-sm font-bold text-emerald-400 mt-0.5">418 200 ₽</div>
+                <div className="text-[10px] text-zinc-400 mt-0.5">Сверка реестров</div>
+              </div>
             </div>
           </div>
 
-          {/* Audit Trail Log */}
-          <div className="bg-black/50 border border-zinc-800/80 rounded-lg p-3 mb-3.5 space-y-2 text-[11px]">
-            <div className="text-[10px] text-zinc-400 uppercase tracking-wider font-semibold">
-              Журнал выполнения утренней шины n8n:
-            </div>
-            <div className="space-y-1.5 text-zinc-300">
-              <div className="flex items-center justify-between">
-                <span className="text-zinc-400">08:29:41 [amoCRM]</span>
-                <span className="text-zinc-200">Выгрузка 32 сделок воронки</span>
-                <span className="text-emerald-400 font-semibold">[OK: 240ms]</span>
+          {/* Telegram Dispatch Card */}
+          <div className="p-4 bg-[#0D0F14]/70">
+            <div className="bg-[#181B24] border border-zinc-800 rounded-xl p-3.5 text-xs space-y-2">
+              <div className="flex items-center justify-between pb-2 border-b border-zinc-800/80">
+                <div className="font-semibold text-zinc-200 flex items-center gap-1.5">
+                  <span>📱 Telegram: «Дирекция · Операционная сводка»</span>
+                </div>
+                <span className="font-mono text-[10px] text-zinc-400">08:30:00</span>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-zinc-400">08:29:46 [МойСклад]</span>
-                <span className="text-zinc-200">Сверка списаний и резервов остатков</span>
-                <span className="text-emerald-400 font-semibold">[OK: 310ms]</span>
+
+              <div className="font-mono text-[11px] space-y-1.5 text-zinc-300">
+                <div className="text-emerald-400 font-semibold">
+                  🌅 Доброе утро! Итоги вторника (автоматический аудит):
+                </div>
+                <div className="flex justify-between py-1 border-b border-zinc-800/50">
+                  <span className="text-zinc-400">Выручка за 24 ч:</span>
+                  <span className="text-white font-bold">418 200 ₽ (+14% к плану)</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-zinc-800/50">
+                  <span className="text-zinc-400">Оплачено заказов:</span>
+                  <span className="text-white">32 чека (средний чек: 13 068 ₽)</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-zinc-800/50">
+                  <span className="text-zinc-400">Складские остатки:</span>
+                  <span className="text-emerald-400">100% сходимость, 0 потерь</span>
+                </div>
+                <div className="flex justify-between py-1">
+                  <span className="text-zinc-400">Зависшие лиды:</span>
+                  <span className="text-emerald-400 font-bold">0 сделок без ответа</span>
+                </div>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-zinc-400">08:29:52 [Банк/Эквайринг]</span>
-                <span className="text-zinc-200">Сверка реестра выписок с чеками касс</span>
-                <span className="text-emerald-400 font-semibold">[OK: 180ms]</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-zinc-400">08:30:00 [Telegram]</span>
-                <span className="text-zinc-200">Формирование и отправка дайджеста собственнику</span>
-                <span className="text-emerald-400 font-semibold">[DELIVERED]</span>
+
+              <div className="pt-2 flex items-center gap-2">
+                <span className="px-2.5 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-mono text-[10px] transition-colors flex items-center gap-1 cursor-pointer">
+                  <FileSpreadsheet className="w-3 h-3 text-blue-light" />
+                  Открыть сводный отчет в DataLens
+                </span>
               </div>
             </div>
           </div>
 
           {/* Delivery Note */}
-          <div className="flex items-center justify-between p-2.5 rounded-lg bg-zinc-900/90 border border-zinc-800 text-[11px] text-zinc-300">
-            <span className="flex items-center gap-1.5">
+          <div className="p-3 bg-[#13151C] border-t border-zinc-800/80 flex items-center justify-between text-xs">
+            <span className="flex items-center gap-1.5 text-zinc-300">
               <Check className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Доставка в Telegram-канал руководства завершена без сбоев</span>
+              <span>Шина n8n отработала за 1.8 сек</span>
             </span>
-            <span className="text-zinc-400">Экономия: ~45 мин/день</span>
+            <span className="font-mono text-[10px] text-zinc-400">Экономия: 45 мин/день</span>
           </div>
         </div>
       );
@@ -350,24 +508,24 @@ export const Cases: React.FC = () => {
       <div id="work" className="absolute -top-24 pointer-events-none" aria-hidden="true" />
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12">
-        {/* Section Header (No Serif, Clean Fluid Display Typography) */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-10 border-b border-line-dark">
+        {/* Section Header */}
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-10 border-b border-line-dark/25">
           <div>
-            <div className="flex items-center gap-2 mb-2.5 text-xs font-mono uppercase tracking-wider text-blue font-bold">
+            <div className="flex items-center gap-2 mb-3 text-xs font-mono uppercase tracking-wider text-blue font-bold">
               <span className="w-2 h-2 rounded-full bg-blue" aria-hidden="true" />
-              <span>Кейсы внедрений // Практика</span>
+              <span>Кейсы внедрений · Реальный опыт</span>
             </div>
-            <h2 className="text-[clamp(1.85rem,3.8vw,3.25rem)] font-display font-black uppercase tracking-tight leading-[1.08] text-ink">
-              Инженерные решения <span className="text-blue">[в цифрах]</span>
+            <h2 className="text-[clamp(1.9rem,3.8vw,3.25rem)] font-display font-black tracking-tight leading-[1.08] text-ink">
+              Код вместо рутины: <span className="font-serif italic font-normal text-blue">кейсы в цифрах</span>
             </h2>
           </div>
-          <p className="text-sm sm:text-base text-ink/80 max-w-lg font-sans leading-[1.6]">
-            Никаких абстрактных метрик: реальные конфигурации скриптов, парсеров и чат-ассистентов с прозрачной экономией времени и устранением операционных потерь.
+          <p className="text-sm sm:text-base text-ink/75 max-w-lg font-sans leading-relaxed">
+            Никаких выдуманных историй: реальные конфигурации скриптов, парсеров и чат-ассистентов с прозрачной экономией времени и устранением операционных потерь.
           </p>
         </div>
 
-        {/* Case Switcher Tabs (Flat, Emil Kowalski Active Feedback) */}
-        <div className="flex flex-wrap gap-2.5 my-8 border-b border-line-dark/20 pb-4">
+        {/* Case Switcher Tabs */}
+        <div className="flex flex-wrap gap-2.5 my-8 border-b border-line-dark/15 pb-5">
           {CASES_DATA.map((c) => {
             const isActive = activeTab === c.id;
             return (
@@ -375,22 +533,22 @@ export const Cases: React.FC = () => {
                 key={c.id}
                 type="button"
                 onClick={() => setActiveTab(c.id)}
-                className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-xs sm:text-sm font-mono font-medium transition-[background-color,border-color,color,transform] duration-160 ease-out active:scale-[0.97] ${
+                className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-[background-color,border-color,color,transform] duration-160 ease-out active:scale-[0.98] ${
                   isActive
-                    ? 'bg-[#111113] text-white border border-zinc-800'
-                    : 'bg-white/40 text-ink/70 border border-line-dark/20 hover:bg-white/80 hover:text-ink'
+                    ? 'bg-ink text-white border border-ink shadow-sm'
+                    : 'bg-white/60 text-ink/75 border border-line-dark/20 hover:bg-white hover:text-ink'
                 }`}
               >
-                <span className={`text-[11px] font-bold ${isActive ? 'text-blue-light' : 'text-ink/40'}`}>
+                <span className={`font-mono text-xs font-bold ${isActive ? 'text-blue-light' : 'text-ink/40'}`}>
                   {c.num}
                 </span>
-                <span className="font-sans font-semibold tracking-tight">{c.tag}</span>
+                <span className="font-sans font-semibold tracking-tight">{c.tabLabel}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Active Case Details Layout (Asymmetric Two-Column Grid) */}
+        {/* Active Case Details Layout */}
         <AnimatePresence mode="wait">
           <motion.div
             key={currentCase.id}
@@ -400,65 +558,66 @@ export const Cases: React.FC = () => {
             transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
             className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start"
           >
-            {/* Left Column: Context, Problem, Solution, Exact Metrics Table */}
+            {/* Left Column: Context, Problem, Solution, Exact Metrics Cards */}
             <div className="lg:col-span-6 flex flex-col justify-between space-y-6">
               <div>
-                <div className="flex items-center gap-3 mb-2 font-mono text-xs text-ink/50">
-                  <span className="font-bold text-blue font-mono">{currentCase.num} // КЕЙС</span>
-                  <span>·</span>
-                  <span className="text-ink/70">{currentCase.clientContext}</span>
+                {/* Client Badge */}
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 border border-line-dark/20 text-xs text-ink/75 font-sans mb-3 shadow-xs">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue" />
+                  <span>{currentCase.clientBadge}</span>
                 </div>
 
-                <h3 className="text-xl sm:text-2xl lg:text-3xl font-display font-black text-ink leading-snug tracking-tight mb-4">
+                {/* Case Title */}
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-display font-bold text-ink leading-snug tracking-tight mb-5">
                   {currentCase.title}
                 </h3>
 
-                {/* Structured Context: Problem vs Solution */}
-                <div className="space-y-3.5 bg-white/40 border border-line-dark/20 p-4 sm:p-5 rounded-xl text-xs sm:text-sm">
-                  <div>
-                    <div className="font-mono text-[10px] uppercase tracking-wider text-rose-600 font-bold mb-1 flex items-center gap-1.5">
+                {/* Refined Before / After Editorial Blocks */}
+                <div className="space-y-3.5">
+                  {/* Before */}
+                  <div className="bg-black/[0.03] border border-black/10 rounded-xl p-4 sm:p-5 text-xs sm:text-sm">
+                    <div className="font-mono text-[10px] uppercase tracking-wider text-rose-600 font-bold mb-1.5 flex items-center gap-1.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-rose-600" />
-                      Исходная проблема
+                      Как было (ручной труд)
                     </div>
-                    <p className="text-ink/80 leading-[1.6] font-sans">
+                    <p className="text-ink/80 leading-relaxed font-sans">
                       {currentCase.problem}
                     </p>
                   </div>
 
-                  <div className="pt-3 border-t border-line-dark/15">
-                    <div className="font-mono text-[10px] uppercase tracking-wider text-emerald-700 font-bold mb-1 flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-700" />
-                      Реализованное решение
+                  {/* After */}
+                  <div className="bg-white border border-line-dark/20 rounded-xl p-4 sm:p-5 text-xs sm:text-sm shadow-xs">
+                    <div className="font-mono text-[10px] uppercase tracking-wider text-blue font-bold mb-1.5 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue" />
+                      Что разработано (автоматизация)
                     </div>
-                    <p className="text-ink/80 leading-[1.6] font-sans">
+                    <p className="text-ink/85 leading-relaxed font-sans">
                       {currentCase.solution}
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Engineering Metrics Table (Anti-AI Tells: No Isolated Giant Numbers) */}
-              <div className="border border-line-dark/25 rounded-xl bg-white/60 overflow-hidden text-xs">
-                <div className="px-4 py-2 bg-ink/5 border-b border-line-dark/20 font-mono text-[10px] uppercase tracking-wider text-ink/60 font-bold flex justify-between">
-                  <span>Измеряемый параметр</span>
-                  <span>Было → Стало // Итог</span>
-                </div>
-
-                <div className="divide-y divide-line-dark/15">
-                  {currentCase.metrics.map((m, idx) => (
-                    <div key={idx} className="p-3 sm:px-4 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
-                      <div>
-                        <div className="font-bold text-ink text-xs">{m.label}</div>
-                        <div className="text-[11px] text-ink/60 mt-0.5">
-                          <span className="line-through text-ink/40">{m.before}</span> → <span className="font-mono font-semibold text-ink">{m.after}</span>
-                        </div>
+              {/* 3 Grand Metric Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {currentCase.metrics.map((m, idx) => (
+                  <div 
+                    key={idx} 
+                    className="p-4 rounded-xl bg-white border border-line-dark/20 shadow-xs flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="font-mono text-[10px] uppercase tracking-wider text-ink/50 font-semibold mb-1">
+                        {m.label}
                       </div>
-                      <div className="shrink-0 font-mono text-[11px] font-bold text-blue bg-blue/10 border border-blue/20 px-2.5 py-1 rounded-md self-start sm:self-auto">
-                        {m.gain}
+                      <div className="text-2xl sm:text-3xl font-display font-black text-ink tracking-tight tabular-nums">
+                        {m.value}
                       </div>
                     </div>
-                  ))}
-                </div>
+                    <div className="mt-2.5 pt-2 border-t border-line-dark/10 font-mono text-[10px] text-blue font-medium">
+                      {m.detail}
+                    </div>
+                  </div>
+                ))}
               </div>
 
               {/* Tech Stack Chips */}
@@ -470,7 +629,7 @@ export const Cases: React.FC = () => {
                   {currentCase.stack.map((item, idx) => (
                     <span 
                       key={idx}
-                      className="px-2.5 py-1 rounded bg-white/70 border border-line-dark/20 font-mono text-[11px] text-ink/80 font-medium"
+                      className="px-2.5 py-1 rounded-md bg-white border border-line-dark/20 font-mono text-[11px] text-ink/80 font-medium"
                     >
                       {item}
                     </span>
@@ -481,17 +640,17 @@ export const Cases: React.FC = () => {
 
             {/* Right Column: High-Fidelity UI Widget */}
             <div className="lg:col-span-6 sticky top-24">
-              <div className="text-[10px] font-mono text-ink/40 uppercase tracking-wider mb-2 flex items-center justify-between">
+              <div className="text-[10px] font-mono text-ink/50 uppercase tracking-wider mb-2.5 flex items-center justify-between">
                 <span>Интерфейс в боевом режиме</span>
-                <span>Live Preview</span>
+                <span className="text-blue font-semibold">Live Preview</span>
               </div>
               {renderWidget(currentCase.id)}
             </div>
           </motion.div>
         </AnimatePresence>
 
-        {/* Bottom Editorial Callout (TasteKill Clean Dark Card, No Neon Blobs) */}
-        <div className="mt-16 sm:mt-24 p-8 sm:p-10 rounded-2xl bg-[#111113] text-white border border-zinc-800 relative overflow-hidden">
+        {/* Bottom Editorial Callout Card */}
+        <div className="mt-16 sm:mt-24 p-8 sm:p-10 rounded-2xl bg-ink text-white border border-zinc-800 relative overflow-hidden">
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
             <div className="max-w-2xl">
               <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-zinc-400 mb-2.5">
@@ -501,7 +660,7 @@ export const Cases: React.FC = () => {
               <h3 className="text-xl sm:text-2xl lg:text-3xl font-display font-black text-white leading-tight mb-2.5">
                 Хотите узнать, какие операции выгоднее всего автоматизировать у вас?
               </h3>
-              <p className="text-xs sm:text-sm text-zinc-300 font-sans leading-[1.6]">
+              <p className="text-xs sm:text-sm text-zinc-300 font-sans leading-relaxed">
                 Опишите в 2–3 предложениях ваши ежедневные рутинные задачи (сбор данных, ответы клиентам, перенос таблиц). Я изучу стек и предложу точный сценарий экономии времени с оценкой сроков разработки.
               </p>
             </div>
