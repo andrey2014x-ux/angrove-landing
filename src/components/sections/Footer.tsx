@@ -148,20 +148,17 @@ export const Footer: React.FC = () => {
 
         {/* Sub-Footer Meta Bar */}
         <div className="pt-6 pb-4 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-sans text-ink/60">
-          <div className="flex items-center gap-4">
-            <span className="font-mono text-[11px]">© {currentYear} _ANGROVE_. Все права защищены.</span>
-            <span className="text-ink/20">|</span>
-            <a
-              href="/privacy"
-              className="text-[11px] hover:text-blue underline underline-offset-2 transition-colors"
-            >
-              Политика конфиденциальности
-            </a>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span className="font-mono text-[11px] font-medium text-ink/80">© {currentYear} _ANGROVE_. Все права защищены.</span>
+            <span className="text-ink/20 hidden sm:inline">·</span>
+            <span className="text-[11px] text-ink/50">
+              Сайт не собирает и не хранит персональные данные. Связь и согласование задач осуществляются напрямую в Telegram.
+            </span>
           </div>
 
           <button
             onClick={scrollToTop}
-            className="group inline-flex items-center gap-1.5 text-[11px] font-mono text-ink/60 hover:text-blue transition-colors cursor-pointer"
+            className="group inline-flex items-center gap-1.5 text-[11px] font-mono text-ink/60 hover:text-blue transition-colors cursor-pointer flex-shrink-0"
           >
             <span>Наверх страницы</span>
             <ArrowUp size={12} className="transition-transform group-hover:-translate-y-0.5" />
