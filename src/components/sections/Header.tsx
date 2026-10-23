@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { trackGoal } from '../../lib/analytics';
-import { Menu, X } from 'lucide-react';
+import { config } from '../../config';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -12,29 +13,38 @@ export const Header: React.FC = () => {
 
   return (
     <header className="sticky top-0 left-0 w-full z-50 bg-paper/95 backdrop-blur-sm border-b border-line-dark">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
-        {/* Brand Monogram: Morphs into animated leopard pattern on hover */}
-        <a
-          href="/"
-          className="group relative inline-block font-display text-xl sm:text-2xl font-black tracking-tight select-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 cursor-pointer py-1"
-          title="_angrove_ — автоматизация процессов"
-        >
-          {/* Base Solid Ink Text */}
-          <span className="inline-block text-ink transition-opacity duration-200 ease-out group-hover:opacity-0">
-            _angrove_
-          </span>
-
-          {/* Morphing Animated Leopard Text Overlay */}
-          <span
-            className="absolute inset-0 pt-1 text-leopard-flow opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 will-change-transform"
-            aria-hidden="true"
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 h-16 sm:h-20 flex items-center justify-between gap-4">
+        
+        {/* Brand Monogram + Status Indicator */}
+        <div className="flex items-center gap-4">
+          <a
+            href="/"
+            className="group relative inline-block font-display text-xl sm:text-2xl font-black tracking-tight select-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 cursor-pointer py-1"
+            title="_angrove_ — автоматизация процессов"
           >
-            _angrove_
+            {/* Base Solid Ink Text */}
+            <span className="inline-block text-ink transition-opacity duration-200 ease-out group-hover:opacity-0">
+              _angrove_
+            </span>
+
+            {/* Morphing Animated Leopard Text Overlay */}
+            <span
+              className="absolute inset-0 pt-1 text-leopard-flow opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100 will-change-transform"
+              aria-hidden="true"
+            >
+              _angrove_
+            </span>
+          </a>
+
+          {/* Real-time Status Badge on Wide Screens */}
+          <span className="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-mono text-emerald-800">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Свободен для 1 проекта</span>
           </span>
-        </a>
+        </div>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-8 lg:gap-10 font-sans text-sm font-medium text-ink">
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8 font-sans text-xs lg:text-sm font-medium text-ink">
           <a
             href="#services"
             className="editorial-link-hover hover:text-blue transition-colors focus-visible:ring-2 focus-visible:ring-blue"
@@ -70,15 +80,27 @@ export const Header: React.FC = () => {
             onClick={handleGuideClick}
             className="text-blue font-bold flex items-center gap-1 hover:underline transition-colors focus-visible:ring-2 focus-visible:ring-blue active:scale-[0.98]"
           >
-            <span>Получить гид</span>
-            <span aria-hidden="true">→</span>
+            <span>Гид</span>
+            <span aria-hidden="true">↓</span>
+          </a>
+
+          {/* Quick Header Telegram Action Button */}
+          <a
+            href={config.telegramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackGoal('click_telegram')}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-ink text-paper hover:bg-blue hover:text-white font-mono text-xs font-bold uppercase tracking-wider transition-all duration-150 active:scale-95 shadow-xs"
+          >
+            <span>Telegram</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
           </a>
         </nav>
 
         {/* Mobile Hamburger Button */}
         <button
           type="button"
-          className="md:hidden p-2.5 text-ink hover:text-blue focus-visible:ring-2 focus-visible:ring-blue active:scale-95 transition-transform"
+          className="md:hidden p-2.5 text-ink hover:text-blue focus-visible:ring-2 focus-visible:ring-blue active:scale-95 transition-transform cursor-pointer"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-expanded={mobileMenuOpen}
           aria-label={mobileMenuOpen ? 'Закрыть меню' : 'Открыть меню'}
@@ -128,10 +150,24 @@ export const Header: React.FC = () => {
           <a
             href="#guide"
             onClick={handleGuideClick}
-            className="text-base font-bold text-blue flex items-center gap-1.5 pt-2 border-t border-line-dark/20"
+            className="text-base font-bold text-blue py-1.5 flex items-center justify-between"
           >
-            <span>Получить практический гид</span>
-            <span aria-hidden="true">→</span>
+            <span>Получить гид (PDF)</span>
+            <span aria-hidden="true">↓</span>
+          </a>
+
+          <a
+            href={config.telegramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => {
+              trackGoal('click_telegram');
+              setMobileMenuOpen(false);
+            }}
+            className="mt-2 py-3 px-5 rounded-xl bg-ink text-white font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2"
+          >
+            <span>Написать в Telegram</span>
+            <ArrowUpRight className="w-4 h-4" />
           </a>
         </div>
       )}

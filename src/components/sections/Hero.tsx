@@ -88,7 +88,7 @@ export const Hero: React.FC = () => {
             {/* Category Rubric - Clean, 14-16px, regular case without neon glow */}
             <div className="flex items-center gap-2.5 mb-6 sm:mb-8 text-sm sm:text-base font-medium text-ink/80">
               <span className="w-2 h-2 rounded-full bg-blue flex-shrink-0" aria-hidden="true" />
-              <span>Автоматизация · AI-ассистенты · Интеграции</span>
+              <span>AI-инструменты · Автоматизация · Интеграции</span>
             </div>
 
             {/* H1 with Editorial Typography */}
@@ -111,7 +111,7 @@ export const Hero: React.FC = () => {
 
             {/* Subtitle with Clear Business Offer */}
             <p className="font-sans text-base sm:text-lg lg:text-xl text-ink/85 font-normal leading-relaxed max-w-xl mt-6 sm:mt-8 mb-8 sm:mb-10">
-              Разрабатываю парсеры, Telegram-ботов и AI-агентов под ключ. Заменяю рутину на надежный код, который работает 24/7 без больничных, отпусков и человеческих ошибок.
+              Создаю AI-ассистентов, персональные инструменты, ботов, парсеры и интеграции для авторов, экспертов, команд и компаний. От идеи и схемы процесса — до работающей системы в ваших сервисах и аккаунтах.
             </p>
 
             {/* Actions: Primary Solid Black (Обсудить задачу) + Secondary Outline (Гид) */}
