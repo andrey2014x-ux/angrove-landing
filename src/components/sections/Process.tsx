@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { config } from '../../config';
 import { trackGoal } from '../../lib/analytics';
+import { WordReveal } from '../ui/WordReveal';
+import { useSectionReveal } from '../../lib/useScrollAnimation';
 
 interface Step {
   num: string;
@@ -38,6 +40,9 @@ const STEPS: Step[] = [
 ];
 
 export const Process: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  useSectionReveal(sectionRef, { cardStagger: 0.1 });
+
   const handleCtaClick = () => {
     trackGoal('click_process_cta');
     trackGoal('click_telegram');
@@ -45,6 +50,7 @@ export const Process: React.FC = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="process"
       className="bg-transparent text-ink py-16 sm:py-24 relative overflow-hidden"
     >
@@ -52,17 +58,17 @@ export const Process: React.FC = () => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-black/[0.06]">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-bold mb-3">
+            <div data-reveal="badge" className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-bold mb-3">
               <span>Линейный регламент</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-ink">
-              Четыре шага{' '}
-              <span className="font-serif italic font-normal text-blue lowercase">
-                до запуска
-              </span>
-            </h2>
+            <WordReveal
+              as="h2"
+              text="Четыре шага до запуска"
+              className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-ink"
+              highlightWords={{ до: 'font-serif italic font-normal text-blue lowercase', запуска: 'font-serif italic font-normal text-blue lowercase' }}
+            />
           </div>
-          <p className="text-xs sm:text-sm text-ink/70 max-w-md font-sans leading-relaxed">
+          <p data-reveal="desc" className="text-xs sm:text-sm text-ink/70 max-w-md font-sans leading-relaxed">
             Понятный линейный план без затягивания сроков и скрытых платежей.
           </p>
         </div>
@@ -72,6 +78,7 @@ export const Process: React.FC = () => {
           {STEPS.map((step) => (
             <div
               key={step.num}
+              data-reveal="card"
               className="bg-white rounded-3xl p-7 flex flex-col justify-between border border-black/[0.06] shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
             >
               <div>
@@ -101,7 +108,7 @@ export const Process: React.FC = () => {
         </div>
 
         {/* Bottom CTA Bar */}
-        <div className="mt-10 p-6 sm:p-8 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div data-reveal="stage" className="mt-10 p-6 sm:p-8 rounded-3xl bg-white border border-black/[0.06] shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="text-xs sm:text-sm text-ink/80 font-medium">
             Хотите понять, сколько времени займет автоматизация вашей конкретной задачи?
           </div>

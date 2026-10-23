@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { config } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { ArrowUpRight, ShieldCheck, Terminal, Compass } from 'lucide-react';
+import { WordReveal } from '../ui/WordReveal';
+import { useSectionReveal } from '../../lib/useScrollAnimation';
 
 export const AboutMe: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  useSectionReveal(sectionRef, { cardStagger: 0.1 });
+
   const handleTelegramClick = () => {
     trackGoal('click_telegram');
   };
 
   return (
     <section
+      ref={sectionRef}
       id="about"
       className="bg-transparent text-ink py-16 sm:py-24 relative overflow-hidden"
     >
@@ -18,17 +24,17 @@ export const AboutMe: React.FC = () => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-black/[0.06] mb-10">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-bold mb-3">
+            <div data-reveal="badge" className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-bold mb-3">
               <span>Личный бренд · Разработка под ключ</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-ink">
-              Инженерный подход{' '}
-              <span className="font-serif italic font-normal text-blue lowercase">
-                вместо теории
-              </span>
-            </h2>
+            <WordReveal
+              as="h2"
+              text="Инженерный подход вместо теории"
+              className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-ink"
+              highlightWords={{ вместо: 'font-serif italic font-normal text-blue lowercase', теории: 'font-serif italic font-normal text-blue lowercase' }}
+            />
           </div>
-          <p className="text-xs sm:text-sm text-ink/70 max-w-md font-sans leading-relaxed">
+          <p data-reveal="desc" className="text-xs sm:text-sm text-ink/70 max-w-md font-sans leading-relaxed">
             Прямой контакт с автором системы без менеджеров и перекладывания ответственности.
           </p>
         </div>
@@ -37,7 +43,7 @@ export const AboutMe: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           {/* Left: Andrey's Photo in rounded-3xl with Soft Glow */}
-          <div className="lg:col-span-5 flex justify-center">
+          <div data-reveal="card" className="lg:col-span-5 flex justify-center">
             <div className="w-full max-w-[380px] rounded-3xl overflow-hidden bg-zinc-900 border border-black/10 shadow-[0_20px_50px_rgba(0,0,0,0.1)] relative aspect-[4/5]">
               <img
                 src="/andrey.jpg"
@@ -59,13 +65,13 @@ export const AboutMe: React.FC = () => {
 
           {/* Right: Principles & Direct Value */}
           <div className="lg:col-span-7 flex flex-col justify-between">
-            <p className="font-serif italic text-lg sm:text-xl text-ink/80 leading-relaxed mb-8">
+            <p data-reveal="desc" className="font-serif italic text-lg sm:text-xl text-ink/80 leading-relaxed mb-8">
               «Я не продаю часы и не держу штат стажеров. Проектирую и пишу код сам: от схемы базы данных до развертывания на вашем сервере. Вы получаете работающий инструмент и прямую личную ответственность за результат.»
             </p>
 
             {/* 3 Principles Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-              <div className="bg-white p-5 rounded-2xl border border-black/[0.06] shadow-sm">
+              <div data-reveal="card" className="bg-white p-5 rounded-2xl border border-black/[0.06] shadow-sm">
                 <ShieldCheck className="w-5 h-5 text-blue mb-2.5" />
                 <div className="font-bold text-sm text-ink mb-1">Фиксированная смета</div>
                 <div className="text-xs text-ink/65 leading-relaxed">
@@ -73,7 +79,7 @@ export const AboutMe: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white p-5 rounded-2xl border border-black/[0.06] shadow-sm">
+              <div data-reveal="card" className="bg-white p-5 rounded-2xl border border-black/[0.06] shadow-sm">
                 <Terminal className="w-5 h-5 text-blue mb-2.5" />
                 <div className="font-bold text-sm text-ink mb-1">Чистый исходный код</div>
                 <div className="text-xs text-ink/65 leading-relaxed">
@@ -81,7 +87,7 @@ export const AboutMe: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white p-5 rounded-2xl border border-black/[0.06] shadow-sm">
+              <div data-reveal="card" className="bg-white p-5 rounded-2xl border border-black/[0.06] shadow-sm">
                 <Compass className="w-5 h-5 text-blue mb-2.5" />
                 <div className="font-bold text-sm text-ink mb-1">14 дней гарантии</div>
                 <div className="text-xs text-ink/65 leading-relaxed">
@@ -90,7 +96,7 @@ export const AboutMe: React.FC = () => {
               </div>
             </div>
 
-            <div>
+            <div data-reveal="stage">
               <a
                 href={config.telegramUrl}
                 target="_blank"

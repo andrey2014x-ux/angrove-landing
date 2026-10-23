@@ -23,27 +23,54 @@ export const Hero: React.FC = () => {
       if (lines && lines.length) {
         gsap.fromTo(
           lines,
-          { y: 30, opacity: 0 },
+          { y: 35, opacity: 0 },
           {
             y: 0,
             opacity: 1,
-            duration: 0.8,
-            stagger: 0.1,
+            duration: 0.85,
+            stagger: 0.12,
             ease: 'power3.out',
           }
+        );
+      }
+
+      const sub = heroRef.current?.querySelector('.hero-subtitle');
+      if (sub) {
+        gsap.fromTo(
+          sub,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.8, delay: 0.35, ease: 'power3.out' }
+        );
+      }
+
+      const actions = heroRef.current?.querySelector('.hero-actions');
+      if (actions) {
+        gsap.fromTo(
+          actions,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.8, delay: 0.45, ease: 'power3.out' }
+        );
+      }
+
+      const stats = heroRef.current?.querySelectorAll('.hero-stat');
+      if (stats && stats.length) {
+        gsap.fromTo(
+          stats,
+          { opacity: 0, y: 25, scale: 0.95 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.7, delay: 0.55, stagger: 0.1, ease: 'power3.out' }
         );
       }
 
       if (photoBlockRef.current) {
         gsap.fromTo(
           photoBlockRef.current,
-          { opacity: 0, scale: 0.96, y: 20 },
+          { opacity: 0, scale: 0.94, y: 25 },
           {
             opacity: 1,
             scale: 1,
             y: 0,
-            duration: 0.9,
-            delay: 0.15,
+            duration: 1.0,
+            delay: 0.2,
             ease: 'power2.out',
           }
         );
@@ -84,12 +111,12 @@ export const Hero: React.FC = () => {
             </h1>
 
             {/* Subtitle */}
-            <p className="font-sans text-base sm:text-lg lg:text-xl text-ink/75 font-normal leading-relaxed max-w-xl mb-8">
+            <p className="hero-subtitle font-sans text-base sm:text-lg lg:text-xl text-ink/75 font-normal leading-relaxed max-w-xl mb-8">
               Создаю AI-агентов, парсеры и сквозные интеграции под ваши бизнес-процессы. От идеи и схемы — до работающей системы в ваших сервисах.
             </p>
 
             {/* Actions: Modern Buttons */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
+            <div className="hero-actions flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
               <a
                 href={config.telegramUrl}
                 target="_blank"
@@ -112,15 +139,15 @@ export const Hero: React.FC = () => {
 
             {/* Stats Row */}
             <div className="grid grid-cols-3 gap-4 sm:gap-8 pt-8 mt-8 border-t border-black/[0.06] w-full max-w-lg">
-              <div>
+              <div className="hero-stat">
                 <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums">70+</div>
                 <div className="text-xs text-ink/60 font-sans mt-0.5">проектов в проде</div>
               </div>
-              <div>
+              <div className="hero-stat">
                 <div className="text-2xl sm:text-3xl font-black font-display text-blue tabular-nums">от 3 дней</div>
                 <div className="text-xs text-ink/60 font-sans mt-0.5">запуск решения</div>
               </div>
-              <div>
+              <div className="hero-stat">
                 <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums">100%</div>
                 <div className="text-xs text-ink/60 font-sans mt-0.5">в срок по смете</div>
               </div>

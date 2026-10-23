@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Bot, PhoneCall, Database, Network, ArrowUpRight, Play, Pause, CheckCircle2, Sparkles } from 'lucide-react';
 import { config } from '../../config';
 import { trackGoal } from '../../lib/analytics';
+import { WordReveal } from '../ui/WordReveal';
+import { useSectionReveal } from '../../lib/useScrollAnimation';
 
 export const Services: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  useSectionReveal(sectionRef, { cardStagger: 0.08 });
+
   const [activeTab, setActiveTab] = useState<number>(0);
 
   // Tab 1: Interactive Bot Simulator State
@@ -90,6 +95,7 @@ export const Services: React.FC = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="services"
       className="bg-transparent text-ink py-16 sm:py-24 relative overflow-hidden"
     >
@@ -97,18 +103,18 @@ export const Services: React.FC = () => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-black/[0.06]">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-bold mb-3">
+            <div data-reveal="badge" className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-bold mb-3">
               <Sparkles className="w-3.5 h-3.5" />
               <span>Понятные решения под ключ</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-ink">
-              Что я внедряю в ваш{' '}
-              <span className="font-serif italic font-normal text-blue lowercase">
-                бизнес
-              </span>
-            </h2>
+            <WordReveal
+              as="h2"
+              text="Что я внедряю в ваш бизнес"
+              className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-ink"
+              highlightWords={{ бизнес: 'font-serif italic font-normal text-blue lowercase' }}
+            />
           </div>
-          <p className="text-xs sm:text-sm text-ink/75 max-w-md font-sans leading-relaxed">
+          <p data-reveal="desc" className="text-xs sm:text-sm text-ink/75 max-w-md font-sans leading-relaxed">
             Без заумных технических терминов. Выбирайте задачу — пощупайте, как это работает на живом примере прямо на экране.
           </p>
         </div>
@@ -121,6 +127,7 @@ export const Services: React.FC = () => {
               <button
                 key={tab.id}
                 type="button"
+                data-reveal="card"
                 onClick={() => setActiveTab(idx)}
                 className={`text-left p-4 sm:p-5 rounded-2xl border transition-all duration-200 cursor-pointer ${
                   isActive
@@ -149,7 +156,7 @@ export const Services: React.FC = () => {
         </div>
 
         {/* Main Interactive Stage for Selected System */}
-        <div className="mt-8 bg-white rounded-3xl border border-black/[0.06] shadow-[0_15px_40px_rgba(0,0,0,0.04)] p-6 sm:p-10 lg:p-12 relative overflow-hidden">
+        <div data-reveal="stage" className="mt-8 bg-white rounded-3xl border border-black/[0.06] shadow-[0_15px_40px_rgba(0,0,0,0.04)] p-6 sm:p-10 lg:p-12 relative overflow-hidden">
           
           {/* SCENARIO 1: TELEGRAM BOT */}
           {activeTab === 0 && (

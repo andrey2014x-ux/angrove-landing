@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { config } from '../../config';
 import { trackGoal } from '../../lib/analytics';
+import { WordReveal } from '../ui/WordReveal';
+import { useSectionReveal } from '../../lib/useScrollAnimation';
 
 interface CaseProject {
   id: string;
@@ -48,6 +50,9 @@ const PROJECTS: CaseProject[] = [
 ];
 
 export const Cases: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  useSectionReveal(sectionRef, { cardStagger: 0.12 });
+
   const handleDiscussClick = () => {
     trackGoal('click_case_discuss');
     trackGoal('click_telegram');
@@ -55,6 +60,7 @@ export const Cases: React.FC = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="cases"
       className="bg-transparent text-ink py-16 sm:py-24 relative overflow-hidden"
     >
@@ -62,17 +68,17 @@ export const Cases: React.FC = () => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-black/[0.06]">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-bold mb-3">
+            <div data-reveal="badge" className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-bold mb-3">
               <span>Реализованная практика</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-ink">
-              Реальные{' '}
-              <span className="font-serif italic font-normal text-blue lowercase">
-                кейсы
-              </span>
-            </h2>
+            <WordReveal
+              as="h2"
+              text="Реальные кейсы"
+              className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-ink"
+              highlightWords={{ кейсы: 'font-serif italic font-normal text-blue lowercase' }}
+            />
           </div>
-          <p className="text-xs sm:text-sm text-ink/70 max-w-md font-sans leading-relaxed">
+          <p data-reveal="desc" className="text-xs sm:text-sm text-ink/70 max-w-md font-sans leading-relaxed">
             Отдельные решения, запущенные в реальных компаниях с подтвержденным бизнес-эффектом.
           </p>
         </div>
@@ -82,6 +88,7 @@ export const Cases: React.FC = () => {
           {PROJECTS.map((proj) => (
             <div
               key={proj.id}
+              data-reveal="card"
               className="bg-white rounded-3xl p-7 sm:p-8 flex flex-col justify-between border border-black/[0.06] shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 group"
             >
               <div>

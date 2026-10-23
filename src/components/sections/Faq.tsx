@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Minus } from 'lucide-react';
+import { WordReveal } from '../ui/WordReveal';
+import { useSectionReveal } from '../../lib/useScrollAnimation';
 
 interface FaqItem {
   id: string;
@@ -9,6 +11,9 @@ interface FaqItem {
 }
 
 export const Faq: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  useSectionReveal(sectionRef, { cardStagger: 0.06 });
+
   const [openId, setOpenId] = useState<string | null>('cost');
 
   const faqs: FaqItem[] = [
@@ -55,6 +60,7 @@ export const Faq: React.FC = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="faq"
       className="bg-transparent text-ink py-16 sm:py-24 relative overflow-hidden"
     >
@@ -62,17 +68,17 @@ export const Faq: React.FC = () => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-black/[0.06]">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-bold mb-3">
+            <div data-reveal="badge" className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-bold mb-3">
               <span>Вопросы и ответы</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-ink">
-              Частые{' '}
-              <span className="font-serif italic font-normal text-blue lowercase">
-                вопросы
-              </span>
-            </h2>
+            <WordReveal
+              as="h2"
+              text="Частые вопросы и ответы"
+              className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-ink"
+              highlightWords={{ вопросы: 'font-serif italic font-normal text-blue lowercase' }}
+            />
           </div>
-          <p className="text-xs sm:text-sm text-ink/70 max-w-md font-sans leading-relaxed">
+          <p data-reveal="desc" className="text-xs sm:text-sm text-ink/70 max-w-md font-sans leading-relaxed">
             Коротко и честно о сроках, стоимости, безопасности и принципах внедрения.
           </p>
         </div>
@@ -83,7 +89,7 @@ export const Faq: React.FC = () => {
             const isOpen = openId === faq.id;
 
             return (
-              <div key={faq.id} className="transition-colors duration-150">
+              <div key={faq.id} data-reveal="card" className="transition-colors duration-150">
                 <button
                   type="button"
                   id={`faq-btn-${idx}`}
