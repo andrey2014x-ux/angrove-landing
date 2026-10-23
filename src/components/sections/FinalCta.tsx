@@ -27,7 +27,7 @@ export const FinalCta: React.FC = () => {
       });
 
       ScrollTrigger.create({
-        onUpdate: (self) => {
+        onUpdate: (self: any) => {
           if (!marqueeTween) return;
           const velocity = Math.abs(self.getVelocity() / 250);
           const newTimeScale = Math.min(4, Math.max(1, 1 + velocity));

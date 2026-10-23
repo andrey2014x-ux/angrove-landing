@@ -37,7 +37,7 @@ export function initSmoothScroll(): Lenis | null {
 
   const lenis = new Lenis({
     duration: 1.2,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease-out
+    easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease-out
     orientation: 'vertical',
     gestureOrientation: 'vertical',
     smoothWheel: true,
