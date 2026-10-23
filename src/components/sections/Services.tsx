@@ -89,23 +89,23 @@ export const Services: React.FC = () => {
   const [chatMessages, setChatMessages] = useState<Array<{ sender: 'user' | 'bot'; text: string; time: string; buttons?: string[] }>>([
     {
       sender: 'user',
-      text: 'Добрый день! Подскажите, за сколько дней реально запустить AI-бота для отдела продаж?',
+      text: 'Добрый день! За сколько дней запускается бот для отдела продаж?',
       time: '14:30',
     },
     {
       sender: 'bot',
-      text: 'Здравствуйте! Базовый сценарий с интеграцией в CRM запускаем за 3–4 дня. Бот сразу берёт на себя ответы по прайсу и сбор контактов. На какой мессенджер ориентируетесь?',
+      text: 'Здравствуйте! Базовый сценарий с интеграцией в CRM запускаем за 3–4 дня. Бот сразу берёт на себя ответы по прайсу и квалификацию лидов. Какую CRM используете?',
       time: '14:30',
-      buttons: ['Рассчитать смету', 'Примеры интеграций', 'Позвать Андрея'],
+      buttons: ['Рассчитать смету', 'Сроки запуска', 'Позвать Андрея'],
     },
   ]);
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [inputVal, setInputVal] = useState<string>('');
 
   const quickQuestions = [
-    'Сколько стоит бот под ключ?',
-    'Как бот учит наш прайс?',
-    'С какими CRM интегрируетесь?',
+    'Сколько стоит бот?',
+    'Как бот учит прайс?',
+    'С какими CRM работаете?',
   ];
 
   const handleAskQuick = (question: string) => {
@@ -119,11 +119,11 @@ export const Services: React.FC = () => {
     setTimeout(() => {
       let reply = '';
       let buttons: string[] = [];
-      if (question.includes('Сколько стоит')) {
+      if (question.includes('стоит')) {
         reply = 'Кастомный Telegram-бот с базой знаний и интеграцией в amoCRM/Bitrix24 стоит от 30 000 ₽. Смета фиксируется до старта разработки.';
         buttons = ['Оценить мою задачу', 'Сроки внедрения'];
       } else if (question.includes('прайс')) {
-        reply = 'Загружаем ваши таблицы, PDF-каталоги и регламенты в векторную базу (RAG). Бот цитирует только проверенные данные вашей компании без фантазий.';
+        reply = 'Загружаем ваши таблицы, PDF-каталоги и регламенты в векторную базу (RAG). Бот цитирует только проверенные данные компании.';
         buttons = ['Форматы документов', 'Тест на примерах'];
       } else {
         reply = 'Интегрируемся с amoCRM, Bitrix24, МойСклад, 1C и Google Таблицами через официальные API и Webhooks.';
@@ -159,11 +159,11 @@ export const Services: React.FC = () => {
   };
 
   return (
-    <section className="bg-[#0B0D13] text-white py-20 sm:py-28 relative overflow-hidden" id="services">
+    <section className="bg-[#0B0D13] text-white py-16 sm:py-24 relative overflow-hidden" id="services">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
         
         {/* Section Rubric & Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-white/10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-white/10">
           <div>
             <div className="flex items-center gap-2 mb-3 font-mono text-xs text-white/50 uppercase tracking-widest">
               <span className="w-1.5 h-1.5 rounded-full bg-blue" />
@@ -206,11 +206,11 @@ export const Services: React.FC = () => {
           })}
         </div>
 
-        {/* Main 2-Column Minimalist Showcase */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 pt-10 items-stretch">
+        {/* Main 2-Column Showcase */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 pt-8 sm:pt-10 items-stretch">
           
           {/* Left Column (5 cols): Clear Business Substance */}
-          <div className="lg:col-span-5 flex flex-col justify-between">
+          <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
             <div>
               <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-white/5 border border-white/10 font-mono text-[10px] text-white/70 font-semibold tracking-wider mb-4">
                 <span>{currentService.badge}</span>
@@ -220,12 +220,12 @@ export const Services: React.FC = () => {
                 {currentService.headline}
               </h3>
 
-              <p className="text-sm sm:text-base text-white/70 font-sans leading-relaxed mb-8">
+              <p className="text-sm sm:text-base text-white/70 font-sans leading-relaxed mb-6">
                 {currentService.subheadline}
               </p>
 
               {/* 3 Clear Conditions (Timeline, Budget, Stack) */}
-              <div className="grid grid-cols-2 gap-4 border-t border-b border-white/10 py-5 mb-8 font-sans">
+              <div className="grid grid-cols-2 gap-4 border-t border-b border-white/10 py-5 mb-6 font-sans">
                 <div>
                   <div className="flex items-center gap-1.5 text-xs text-white/50 font-mono mb-1">
                     <Clock className="w-3.5 h-3.5 text-blue-light" />
@@ -262,7 +262,7 @@ export const Services: React.FC = () => {
               </div>
 
               {/* Business Effect Banner */}
-              <div className="p-4 rounded-xl bg-blue/10 border border-blue/25 text-xs sm:text-sm text-blue-light font-sans mb-8 leading-relaxed">
+              <div className="p-4 rounded-xl bg-blue/10 border border-blue/25 text-xs sm:text-sm text-blue-light font-sans leading-relaxed">
                 <span className="font-mono text-[10px] uppercase font-bold text-white mr-2 bg-blue px-2 py-0.5 rounded">
                   Эффект
                 </span>
@@ -275,7 +275,7 @@ export const Services: React.FC = () => {
               href={config.telegramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-3 px-7 py-4 rounded-xl bg-white text-ink text-xs sm:text-sm font-black uppercase tracking-wider hover:bg-blue hover:text-white transition-all duration-150 active:scale-[0.98] shadow-md group"
+              className="inline-flex items-center justify-center gap-3 px-7 py-3.5 sm:py-4 rounded-xl bg-white text-ink text-xs sm:text-sm font-black uppercase tracking-wider hover:bg-blue hover:text-white transition-all duration-150 active:scale-[0.98] shadow-md group"
             >
               <span>Обсудить задачу в Telegram</span>
               <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -284,7 +284,7 @@ export const Services: React.FC = () => {
 
           {/* Right Column (7 cols): High-Craft Digital Product Interface */}
           <div className="lg:col-span-7 flex flex-col">
-            <div className="flex-1 bg-[#131622] rounded-3xl border border-white/10 p-5 sm:p-7 flex flex-col justify-between shadow-2xl min-h-[500px] overflow-hidden relative">
+            <div className="flex-1 bg-[#131622] rounded-3xl border border-white/10 p-4 sm:p-6 flex flex-col justify-between shadow-2xl h-[520px] max-h-[520px] overflow-hidden relative">
               
               <AnimatePresence mode="wait">
                 {/* 01: Authentic Telegram Client Interface */}
@@ -295,115 +295,113 @@ export const Services: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.18 }}
-                    className="flex-1 flex flex-col justify-between"
+                    className="flex-1 flex flex-col min-h-0"
                   >
-                    <div>
-                      {/* Telegram Client Header */}
-                      <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-white/10">
-                        <div className="flex items-center gap-3">
-                          <div className="relative">
-                            <div className="w-10 h-10 rounded-full bg-blue text-white font-bold text-sm flex items-center justify-center font-display shadow-sm">
-                              _a_
-                            </div>
-                            <span className="w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#131622] absolute bottom-0 right-0" />
+                    {/* Telegram Client Header */}
+                    <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10 shrink-0">
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <div className="w-9 h-9 rounded-full bg-blue text-white font-bold text-xs flex items-center justify-center font-display shadow-sm">
+                            _a_
                           </div>
-                          <div>
-                            <div className="flex items-center gap-1.5 font-bold text-xs sm:text-sm text-white">
-                              <span>_angrove_ assistant</span>
-                              <span className="w-3.5 h-3.5 rounded-full bg-blue text-white text-[9px] flex items-center justify-center">✓</span>
-                            </div>
-                            <div className="text-[11px] text-white/50 font-mono">
-                              bot · отвечает за 2.4с · Telegram Bot API
-                            </div>
+                          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#131622] absolute bottom-0 right-0" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-1.5 font-bold text-xs sm:text-sm text-white">
+                            <span>_angrove_ assistant</span>
+                            <span className="w-3.5 h-3.5 rounded-full bg-blue text-white text-[9px] flex items-center justify-center">✓</span>
+                          </div>
+                          <div className="text-[10px] text-white/50 font-mono">
+                            Telegram Bot API · ответ 2.4с
                           </div>
                         </div>
-
-                        <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono text-emerald-400">
-                          онлайн 24/7
-                        </span>
                       </div>
 
-                      {/* Chat Messages Stream */}
-                      <div className="space-y-3 max-h-[280px] overflow-y-auto pr-1 text-xs sm:text-sm font-sans">
-                        {/* Sample Voice Message from Client */}
-                        <div className="flex items-start gap-2 max-w-[85%]">
-                          <div className="p-3 rounded-2xl bg-white/10 text-white rounded-tl-none border border-white/5 w-full">
-                            <div className="flex items-center gap-2.5 mb-1.5">
-                              <span className="w-7 h-7 rounded-full bg-blue text-white flex items-center justify-center">
-                                ▶
-                              </span>
-                              <div className="flex-1 h-3 flex items-center gap-0.5">
-                                {[40, 70, 90, 60, 30, 80, 100, 50, 20, 60, 85, 40, 70, 95, 30].map((h, i) => (
-                                  <span key={i} className="w-1 bg-white/40 rounded-full" style={{ height: `${h}%` }} />
-                                ))}
-                              </div>
-                              <span className="text-[10px] font-mono text-white/50">0:14</span>
+                      <span className="px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono text-emerald-400">
+                        онлайн 24/7
+                      </span>
+                    </div>
+
+                    {/* Chat Messages Stream (Strict Flex-1 to Never Overflow Parent) */}
+                    <div className="flex-1 min-h-0 overflow-y-auto space-y-2.5 pr-1.5 text-xs sm:text-sm font-sans scrollbar-thin">
+                      {/* Voice Note Simulation */}
+                      <div className="flex items-start gap-2 max-w-[85%]">
+                        <div className="p-2.5 rounded-2xl bg-white/10 text-white rounded-tl-none border border-white/5 w-full">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="w-6 h-6 rounded-full bg-blue text-white flex items-center justify-center text-[10px]">
+                              ▶
+                            </span>
+                            <div className="flex-1 h-2.5 flex items-center gap-0.5">
+                              {[40, 70, 90, 60, 30, 80, 100, 50, 20, 60, 85, 40, 70].map((h, i) => (
+                                <span key={i} className="w-1 bg-white/40 rounded-full" style={{ height: `${h}%` }} />
+                              ))}
                             </div>
-                            <div className="text-[11px] text-white/70 italic border-t border-white/10 pt-1.5">
-                              [Голосовое распознано]: «Добрый день! Подскажите, успеем запустить бота до конца недели?»
-                            </div>
+                            <span className="text-[10px] font-mono text-white/50">0:14</span>
+                          </div>
+                          <div className="text-[10px] text-white/70 italic border-t border-white/10 pt-1">
+                            [Голос]: «Добрый день! Успеем запустить бота до конца недели?»
                           </div>
                         </div>
+                      </div>
 
-                        {/* Dialogue history */}
-                        {chatMessages.map((msg, i) => (
+                      {/* Dialogue History */}
+                      {chatMessages.map((msg, i) => (
+                        <div
+                          key={i}
+                          className={`flex flex-col ${
+                            msg.sender === 'user' ? 'items-end' : 'items-start'
+                          }`}
+                        >
                           <div
-                            key={i}
-                            className={`flex flex-col ${
-                              msg.sender === 'user' ? 'items-end' : 'items-start'
+                            className={`p-3 rounded-2xl max-w-[90%] leading-relaxed ${
+                              msg.sender === 'user'
+                                ? 'bg-blue text-white rounded-br-none shadow-md'
+                                : 'bg-white/[0.08] text-white rounded-bl-none border border-white/10'
                             }`}
                           >
-                            <div
-                              className={`p-3.5 rounded-2xl max-w-[88%] leading-relaxed ${
-                                msg.sender === 'user'
-                                  ? 'bg-blue text-white rounded-br-none shadow-md'
-                                  : 'bg-white/[0.08] text-white rounded-bl-none border border-white/10'
-                              }`}
-                            >
-                              <div>{msg.text}</div>
+                            <div className="text-xs sm:text-[13px]">{msg.text}</div>
 
-                              {/* Telegram Inline Buttons if present */}
-                              {msg.buttons && (
-                                <div className="mt-2.5 pt-2 border-t border-white/10 flex flex-wrap gap-1.5">
-                                  {msg.buttons.map((b) => (
-                                    <button
-                                      key={b}
-                                      type="button"
-                                      onClick={() => handleAskQuick(b)}
-                                      className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-[11px] text-blue-light font-medium transition-colors cursor-pointer border border-white/10"
-                                    >
-                                      {b}
-                                    </button>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-1 text-[10px] font-mono text-white/40 mt-1 px-1">
-                              <span>{msg.time}</span>
-                              {msg.sender === 'user' && <CheckCheck className="w-3 h-3 text-sky-400" />}
-                            </div>
+                            {/* Telegram Inline Buttons */}
+                            {msg.buttons && (
+                              <div className="mt-2 pt-2 border-t border-white/10 flex flex-wrap gap-1.5">
+                                {msg.buttons.map((b) => (
+                                  <button
+                                    key={b}
+                                    type="button"
+                                    onClick={() => handleAskQuick(b)}
+                                    className="px-2 py-0.5 rounded-lg bg-white/10 hover:bg-white/20 text-[10px] sm:text-[11px] text-blue-light font-medium transition-colors cursor-pointer border border-white/10"
+                                  >
+                                    {b}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
                           </div>
-                        ))}
+                          <div className="flex items-center gap-1 text-[9px] font-mono text-white/40 mt-0.5 px-1">
+                            <span>{msg.time}</span>
+                            {msg.sender === 'user' && <CheckCheck className="w-3 h-3 text-sky-400" />}
+                          </div>
+                        </div>
+                      ))}
 
-                        {isTyping && (
-                          <div className="text-xs font-mono text-white/50 flex items-center gap-2 p-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-blue animate-pulse" />
-                            <span>Бот формулирует ответ по базе знаний...</span>
-                          </div>
-                        )}
-                      </div>
+                      {isTyping && (
+                        <div className="text-xs font-mono text-white/50 flex items-center gap-2 p-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue animate-pulse" />
+                          <span>Бот печатает ответ...</span>
+                        </div>
+                      )}
                     </div>
 
                     {/* Bottom: Quick Chips & Interactive Input Form */}
-                    <div className="pt-3 border-t border-white/10 mt-3">
-                      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
+                    <div className="pt-2.5 border-t border-white/10 mt-2 shrink-0">
+                      <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 scrollbar-none">
                         {quickQuestions.map((q) => (
                           <button
                             key={q}
                             type="button"
                             onClick={() => handleAskQuick(q)}
                             disabled={isTyping}
-                            className="whitespace-nowrap px-3 py-1 rounded-full bg-white/5 hover:bg-white/10 text-[11px] font-sans text-white/70 border border-white/10 transition-colors cursor-pointer active:scale-95"
+                            className="whitespace-nowrap px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 text-[10px] font-sans text-white/70 border border-white/10 transition-colors cursor-pointer active:scale-95"
                           >
                             {q}
                           </button>
@@ -416,15 +414,15 @@ export const Services: React.FC = () => {
                           value={inputVal}
                           onChange={(e) => setInputVal(e.target.value)}
                           placeholder="Задайте любой вопрос боту..."
-                          className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-white/40 focus:outline-none focus:border-blue"
+                          className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-white/40 focus:outline-none focus:border-blue"
                         />
                         <button
                           type="submit"
                           disabled={!inputVal.trim() || isTyping}
-                          className="w-9 h-9 rounded-xl bg-blue disabled:opacity-40 text-white flex items-center justify-center shrink-0 cursor-pointer transition-transform active:scale-95"
+                          className="w-8 h-8 rounded-xl bg-blue disabled:opacity-40 text-white flex items-center justify-center shrink-0 cursor-pointer transition-transform active:scale-95"
                           title="Отправить сообщение"
                         >
-                          <Send className="w-4 h-4" />
+                          <Send className="w-3.5 h-3.5" />
                         </button>
                       </form>
                     </div>
@@ -443,7 +441,7 @@ export const Services: React.FC = () => {
                   >
                     <div>
                       {/* Telephony Header */}
-                      <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-white/10">
+                      <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
                         <div className="flex items-center gap-2.5">
                           <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
                           <div>
@@ -451,7 +449,7 @@ export const Services: React.FC = () => {
                               Сессия звонка #CALL-8842
                             </div>
                             <div className="text-[10px] font-mono text-white/50">
-                              SIP Trunk: RT-Telecom · Кодек: Opus 48kHz · Задержка: 380ms
+                              SIP: RT-Telecom · Opus 48kHz · Задержка: 380ms
                             </div>
                           </div>
                         </div>
@@ -462,19 +460,19 @@ export const Services: React.FC = () => {
                       </div>
 
                       {/* Caller Meta & Audio Waveform Banner */}
-                      <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="p-3 rounded-2xl bg-white/5 border border-white/10 mb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                         <div>
                           <div className="text-xs font-bold text-white flex items-center gap-1.5">
                             <PhoneCall className="w-3.5 h-3.5 text-emerald-400" />
                             <span>ООО «ПромСнаб-М» · Отдел снабжения</span>
                           </div>
-                          <div className="text-[11px] font-mono text-white/50 mt-0.5">
-                            +7 (926) 410-**-** · Квалификация потребности в крепеже
+                          <div className="text-[10px] font-mono text-white/50 mt-0.5">
+                            +7 (926) 410-**-** · Квалификация потребности
                           </div>
                         </div>
 
                         {/* Animated Equalizer Waveform */}
-                        <div className="flex items-center gap-1 h-6">
+                        <div className="flex items-center gap-1 h-5">
                           {[30, 80, 50, 100, 70, 40, 90, 60, 85, 45, 95, 35].map((h, i) => (
                             <motion.span
                               key={i}
@@ -488,9 +486,9 @@ export const Services: React.FC = () => {
                       </div>
 
                       {/* Live Transcript Dialog */}
-                      <div className="space-y-2.5 bg-black/40 rounded-2xl p-4 border border-white/10 text-xs sm:text-sm font-sans max-h-[220px] overflow-y-auto">
-                        <div className="flex items-start gap-2.5">
-                          <span className="px-1.5 py-0.5 rounded bg-blue/20 text-blue-light font-mono text-[10px] font-bold shrink-0">
+                      <div className="space-y-2 bg-black/40 rounded-2xl p-3.5 border border-white/10 text-xs sm:text-[13px] font-sans max-h-[220px] overflow-y-auto">
+                        <div className="flex items-start gap-2">
+                          <span className="px-1.5 py-0.5 rounded bg-blue/20 text-blue-light font-mono text-[9px] font-bold shrink-0">
                             AI РОБОТ
                           </span>
                           <span className="text-white/80 leading-relaxed">
@@ -498,8 +496,8 @@ export const Services: React.FC = () => {
                           </span>
                         </div>
 
-                        <div className="flex items-start gap-2.5">
-                          <span className="px-1.5 py-0.5 rounded bg-white/10 text-white/70 font-mono text-[10px] font-bold shrink-0">
+                        <div className="flex items-start gap-2">
+                          <span className="px-1.5 py-0.5 rounded bg-white/10 text-white/70 font-mono text-[9px] font-bold shrink-0">
                             КЛИЕНТ
                           </span>
                           <span className="text-white/95 leading-relaxed">
@@ -507,8 +505,8 @@ export const Services: React.FC = () => {
                           </span>
                         </div>
 
-                        <div className="flex items-start gap-2.5">
-                          <span className="px-1.5 py-0.5 rounded bg-blue/20 text-blue-light font-mono text-[10px] font-bold shrink-0">
+                        <div className="flex items-start gap-2">
+                          <span className="px-1.5 py-0.5 rounded bg-blue/20 text-blue-light font-mono text-[9px] font-bold shrink-0">
                             AI РОБОТ
                           </span>
                           <span className="text-white/80 leading-relaxed">
@@ -519,12 +517,12 @@ export const Services: React.FC = () => {
                     </div>
 
                     {/* AI Intent & Qualification Status Banner */}
-                    <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono flex flex-col sm:flex-row sm:items-center justify-between gap-2 mt-4">
-                      <div className="flex items-center gap-2 font-bold">
-                        <Check className="w-4 h-4" />
-                        <span>Интент: Запрос коммерческого предложения (Score: 0.98)</span>
+                    <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mt-3">
+                      <div className="flex items-center gap-1.5 font-bold">
+                        <Check className="w-3.5 h-3.5" />
+                        <span>Интент: Запрос КП (Score: 0.98)</span>
                       </div>
-                      <span className="text-emerald-300/80 font-medium">
+                      <span className="text-emerald-300/80 font-medium text-[11px]">
                         Сделка в amoCRM создана за 0.4с
                       </span>
                     </div>
@@ -543,7 +541,7 @@ export const Services: React.FC = () => {
                   >
                     <div>
                       {/* Top Controls: Search & Filter */}
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 mb-3 border-b border-white/10">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-3 mb-3 border-b border-white/10">
                         <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 flex-1 max-w-sm">
                           <Search className="w-3.5 h-3.5 text-white/40" />
                           <input
@@ -570,19 +568,19 @@ export const Services: React.FC = () => {
 
                       {/* Structured Data Table */}
                       <div className="bg-black/30 rounded-2xl border border-white/10 overflow-hidden text-xs font-mono">
-                        <div className="grid grid-cols-12 gap-2 px-3.5 py-2 bg-white/5 text-[10px] text-white/50 uppercase tracking-wider font-semibold border-b border-white/10">
+                        <div className="grid grid-cols-12 gap-2 px-3 py-2 bg-white/5 text-[10px] text-white/50 uppercase tracking-wider font-semibold border-b border-white/10">
                           <span className="col-span-5">Компания / ИНН</span>
                           <span className="col-span-4">Контакт ЛПР</span>
-                          <span className="col-span-3 text-right">HLR Проверка</span>
+                          <span className="col-span-3 text-right">HLR Сеть</span>
                         </div>
 
-                        <div className="divide-y divide-white/5">
-                          <div className="grid grid-cols-12 gap-2 px-3.5 py-2.5 items-center hover:bg-white/[0.02]">
+                        <div className="divide-y divide-white/5 text-[11px]">
+                          <div className="grid grid-cols-12 gap-2 px-3 py-2 items-center hover:bg-white/[0.02]">
                             <div className="col-span-5 truncate">
                               <span className="text-white font-semibold block">ООО «ПромТехСнаб»</span>
                               <span className="text-[10px] text-white/40">ИНН 78129481 · СПб</span>
                             </div>
-                            <div className="col-span-4 truncate text-white/80">
+                            <div className="col-span-4 truncate text-white/80 whitespace-nowrap">
                               +7 (812) 334-**-**
                               <span className="block text-[10px] text-white/40">Дмитрий К. (Директор)</span>
                             </div>
@@ -593,12 +591,12 @@ export const Services: React.FC = () => {
                             </div>
                           </div>
 
-                          <div className="grid grid-cols-12 gap-2 px-3.5 py-2.5 items-center hover:bg-white/[0.02]">
+                          <div className="grid grid-cols-12 gap-2 px-3 py-2 items-center hover:bg-white/[0.02]">
                             <div className="col-span-5 truncate">
                               <span className="text-white font-semibold block">АО «Завод Крепёж»</span>
                               <span className="text-[10px] text-white/40">ИНН 77218492 · Москва</span>
                             </div>
-                            <div className="col-span-4 truncate text-white/80">
+                            <div className="col-span-4 truncate text-white/80 whitespace-nowrap">
                               +7 (495) 710-**-**
                               <span className="block text-[10px] text-white/40">Иван Р. (Отдел закупок)</span>
                             </div>
@@ -610,7 +608,7 @@ export const Services: React.FC = () => {
                           </div>
 
                           {!onlyValidFilter && (
-                            <div className="grid grid-cols-12 gap-2 px-3.5 py-2.5 items-center opacity-40 bg-white/[0.01]">
+                            <div className="grid grid-cols-12 gap-2 px-3 py-2 items-center opacity-40 bg-white/[0.01]">
                               <div className="col-span-5 truncate">
                                 <span className="text-white font-semibold block">ИП Смирнов В.А.</span>
                                 <span className="text-[10px] text-white/40">Розничный павильон</span>
@@ -626,12 +624,12 @@ export const Services: React.FC = () => {
                             </div>
                           )}
 
-                          <div className="grid grid-cols-12 gap-2 px-3.5 py-2.5 items-center hover:bg-white/[0.02]">
+                          <div className="grid grid-cols-12 gap-2 px-3 py-2 items-center hover:bg-white/[0.02]">
                             <div className="col-span-5 truncate">
                               <span className="text-white font-semibold block">ООО «СеверСклад»</span>
                               <span className="text-[10px] text-white/40">ИНН 78049102 · СПб</span>
                             </div>
-                            <div className="col-span-4 truncate text-white/80">
+                            <div className="col-span-4 truncate text-white/80 whitespace-nowrap">
                               +7 (812) 991-**-**
                               <span className="block text-[10px] text-white/40">Ольга С. (Снабжение)</span>
                             </div>
@@ -646,14 +644,14 @@ export const Services: React.FC = () => {
                     </div>
 
                     {/* Bottom Status Plaque */}
-                    <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 mt-4">
+                    <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white/60 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mt-3">
                       <div>Собрано: 542 контакта за 3 мин 12 сек · Дубли удалены</div>
-                      <div className="text-blue-light font-bold">Выгрузка в CRM / Google Sheets</div>
+                      <div className="text-blue-light font-bold">Выгрузка в CRM / Sheets</div>
                     </div>
                   </motion.div>
                 )}
 
-                {/* 04: Real Enterprise Event Pipeline Studio (Screenshot 1 fix) */}
+                {/* 04: Real Enterprise Event Pipeline Studio */}
                 {activeTab === 3 && (
                   <motion.div
                     key="integration-artifact"
@@ -665,28 +663,28 @@ export const Services: React.FC = () => {
                   >
                     <div>
                       {/* Studio Header */}
-                      <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-white/10">
+                      <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
                         <div className="flex items-center gap-2">
                           <span className="w-2.5 h-2.5 rounded-full bg-blue" />
                           <div className="font-bold text-xs sm:text-sm text-white">
-                            Шина интеграции: Сайт → amoCRM → МойСклад → Telegram
+                            Шина: Сайт → amoCRM → МойСклад → Telegram
                           </div>
                         </div>
 
-                        <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-mono text-[10px] font-bold">
-                          Сквозное время: 1.1с
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-mono text-[10px] font-bold">
+                          Сквозное: 1.1с
                         </span>
                       </div>
 
                       {/* 3 Step Interactive Cards */}
-                      <div className="space-y-3 font-sans">
+                      <div className="space-y-2.5 font-sans">
                         {[
                           {
                             step: 1,
                             tag: 'TRIGGER',
                             tagColor: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
                             title: '1. Webhook с сайта (Tilda / React)',
-                            desc: 'Мгновенный перехват отправки формы с именем, телефоном и составом корзины.',
+                            desc: 'Мгновенный перехват отправки формы с именем, телефоном и заказом.',
                             latency: '14ms',
                             payload: '{\n  "event": "lead.submit",\n  "client": "Алексей Смирнов",\n  "phone": "+7 999 123-45-67",\n  "sku_list": ["Крепёж М8", "Шайба 10"]\n}',
                           },
@@ -695,32 +693,32 @@ export const Services: React.FC = () => {
                             tag: 'SYNC & CRM',
                             tagColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
                             title: '2. amoCRM & МойСклад API',
-                            desc: 'Автоматическая проверка дублей, создание сделки и резервирование позиций на складе.',
+                            desc: 'Проверка дублей, создание сделки и резервирование на складе.',
                             latency: '180ms',
-                            payload: '{\n  "crm_deal_id": 48291,\n  "pipeline": "Новые заявки",\n  "warehouse_status": "RESERVED",\n  "manager_id": 7821\n}',
+                            payload: '{\n  "crm_deal_id": 48291,\n  "pipeline": "Новые заявки",\n  "warehouse_status": "RESERVED"\n}',
                           },
                           {
                             step: 3,
                             tag: 'DISPATCH',
                             tagColor: 'bg-blue/20 text-blue-light border-blue/30',
                             title: '3. Алерт в закрытый Telegram-канал',
-                            desc: 'Собственник и дежурный менеджер получают карточку сделки с кнопкой прямого звонка.',
+                            desc: 'Собственник и менеджер получают карточку сделки с кнопкой прямого звонка.',
                             latency: '85ms',
-                            payload: '{\n  "telegram_alert": "sent",\n  "chat_id": "@sales_inner",\n  "button": "https://amocrm.ru/leads/detail/48291"\n}',
+                            payload: '{\n  "telegram_alert": "sent",\n  "chat_id": "@sales_inner",\n  "button": "https://amocrm.ru/leads/48291"\n}',
                           },
                         ].map((item, idx) => (
                           <div
                             key={item.step}
                             onClick={() => setSelectedEventIndex(idx)}
-                            className={`p-3.5 rounded-2xl border transition-all duration-150 cursor-pointer ${
+                            className={`p-3 rounded-2xl border transition-all duration-150 cursor-pointer ${
                               selectedEventIndex === idx
                                 ? 'bg-white/10 border-blue shadow-lg'
                                 : 'bg-white/[0.03] border-white/5 hover:border-white/15'
                             }`}
                           >
-                            <div className="flex items-center justify-between mb-1">
+                            <div className="flex items-center justify-between mb-0.5">
                               <div className="flex items-center gap-2">
-                                <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold border ${item.tagColor}`}>
+                                <span className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold border ${item.tagColor}`}>
                                   {item.tag}
                                 </span>
                                 <span className="font-bold text-xs sm:text-sm text-white">
@@ -730,11 +728,11 @@ export const Services: React.FC = () => {
                               <span className="font-mono text-[10px] text-white/40">{item.latency}</span>
                             </div>
 
-                            <p className="text-xs text-white/60 mb-2 leading-relaxed font-sans">{item.desc}</p>
+                            <p className="text-[11px] text-white/60 mb-1 leading-relaxed font-sans">{item.desc}</p>
 
                             {selectedEventIndex === idx && (
-                              <div className="relative mt-2">
-                                <pre className="p-3 rounded-xl bg-black/60 font-mono text-[11px] text-emerald-400 overflow-x-auto leading-relaxed border border-white/5">
+                              <div className="relative mt-1.5">
+                                <pre className="p-2.5 rounded-xl bg-black/60 font-mono text-[10px] text-emerald-400 overflow-x-auto leading-relaxed border border-white/5">
                                   {item.payload}
                                 </pre>
                                 <button
@@ -743,7 +741,7 @@ export const Services: React.FC = () => {
                                     e.stopPropagation();
                                     copyEventJson(item.payload);
                                   }}
-                                  className="absolute top-2 right-2 p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white/70 text-[10px] font-mono flex items-center gap-1 transition-colors"
+                                  className="absolute top-1.5 right-1.5 p-1 rounded-md bg-white/10 hover:bg-white/20 text-white/70 text-[9px] font-mono flex items-center gap-1 transition-colors"
                                   title="Скопировать JSON"
                                 >
                                   {copiedPayload ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
@@ -757,23 +755,17 @@ export const Services: React.FC = () => {
                     </div>
 
                     {/* Bottom Status */}
-                    <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white/50 flex items-center justify-between mt-4">
+                    <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white/50 flex items-center justify-between mt-3">
                       <span>Архитектура: Python Webhooks + n8n Engine</span>
-                      <span className="text-emerald-400">0 потерянных заказов</span>
+                      <span className="text-emerald-400 font-bold">0 потерянных заказов</span>
                     </div>
                   </motion.div>
                 )}
               </AnimatePresence>
-
             </div>
           </div>
-
         </div>
-
       </div>
-
-      {/* Subtle bottom separator line */}
-      <div className="w-full h-px bg-white/10 mt-20" aria-hidden="true" />
     </section>
   );
 };
