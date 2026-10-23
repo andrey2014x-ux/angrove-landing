@@ -12,7 +12,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 left-0 w-full z-50 bg-paper/95 backdrop-blur-sm border-b border-line-dark">
+    <header className="sticky top-0 left-0 w-full z-50 bg-paper/90 backdrop-blur-md border-b border-black/[0.06]">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 h-16 sm:h-20 flex items-center justify-between gap-4">
         
         {/* Brand Monogram + Status Indicator */}
@@ -90,7 +90,7 @@ export const Header: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackGoal('click_telegram')}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-ink text-paper hover:bg-blue hover:text-white font-mono text-xs font-bold uppercase tracking-wider transition-all duration-150 active:scale-95 shadow-xs"
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-blue text-white hover:bg-blue-dark font-sans text-xs font-bold transition-all duration-150 active:scale-95 shadow-sm"
           >
             <span>Telegram</span>
             <ArrowUpRight className="w-3.5 h-3.5" />

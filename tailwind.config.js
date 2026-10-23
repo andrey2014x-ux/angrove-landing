@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        paper: "#EEEBE5",
+        paper: "#F8F7F4",
         ink: "#0A0C16",
         blue: {
           DEFAULT: "#3D5CFF",
@@ -35,9 +35,6 @@ export default {
         sans: ['Onest', 'sans-serif'],
         display: ['Onest', 'sans-serif'],
         serif: ['Lora', 'serif'],
-      },
-      borderRadius: {
-        none: '0px',
       },
       backgroundImage: {
         'leopard': "url('/leopard-pattern.png')",

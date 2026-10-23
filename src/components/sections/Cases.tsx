@@ -21,8 +21,8 @@ const PROJECTS: CaseProject[] = [
     client: 'Поставщик крепежа · СПб',
     statValue: '65x',
     statLabel: 'ускорение сбора базы контактов',
-    title: 'Парсинг B2B-каталогов и проверка телефонов',
-    description: 'Парсер на Python обходит 14 закрытых площадок, собирает контакты и проверяет доступность номеров по HLR-валидации.',
+    title: 'Парсинг B2B-каталогов и валидация телефонов',
+    description: 'Парсер на Python обходит 14 закрытых каталогов, собирает контакты и проверяет доступность номеров по HLR-валидации.',
     tags: ['Python', 'Playwright', 'amoCRM'],
   },
   {
@@ -41,7 +41,7 @@ const PROJECTS: CaseProject[] = [
     client: 'Сеть автосервисов · 12 точек',
     statValue: '100%',
     statLabel: 'сходимость складского и финучета',
-    title: 'Сквозная связка CRM, склада и Telegram-сводка',
+    title: 'Сквозная связка CRM, склада и Telegram-дайджест',
     description: 'Оплата на кассе мгновенно списывает остатки на складе, а владелец получает персональный дайджест в 08:30:00.',
     tags: ['n8n', 'МойСклад', 'Webhooks'],
   },
@@ -56,20 +56,19 @@ export const Cases: React.FC = () => {
   return (
     <section
       id="cases"
-      className="bg-paper text-ink py-20 sm:py-28 border-b border-line-dark relative overflow-hidden"
+      className="bg-paper text-ink py-16 sm:py-24 relative overflow-hidden"
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-line-dark">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-black/[0.06]">
           <div>
-            <div className="flex items-center gap-2.5 mb-3 text-sm sm:text-base font-medium text-ink">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue" aria-hidden="true" />
-              <span>Кейсы внедрения</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-bold mb-3">
+              <span>Реализованная практика</span>
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-ink">
-              Реализованные{' '}
+              Реальные{' '}
               <span className="font-serif italic font-normal text-blue lowercase">
-                проекты
+                кейсы
               </span>
             </h2>
           </div>
@@ -78,27 +77,27 @@ export const Cases: React.FC = () => {
           </p>
         </div>
 
-        {/* 3-Column Showcase Grid */}
+        {/* 3-Column Modern Dribbble Showcase Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-10">
           {PROJECTS.map((proj) => (
             <div
               key={proj.id}
-              className="border border-line-dark bg-paper p-6 sm:p-7 flex flex-col justify-between hover:border-blue hover:shadow-sm transition-all duration-200 group"
+              className="bg-white rounded-3xl p-7 sm:p-8 flex flex-col justify-between border border-black/[0.06] shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 group"
             >
               <div>
-                {/* Header: Number & Client */}
-                <div className="flex items-center justify-between pb-4 mb-6 border-b border-line-dark/30">
+                {/* Header: Number & Client Pill */}
+                <div className="flex items-center justify-between pb-4 mb-6 border-b border-black/[0.06]">
                   <span className="font-mono text-xs font-bold text-ink/40 group-hover:text-blue transition-colors">
                     {proj.num}
                   </span>
-                  <span className="font-mono text-[11px] text-ink/60 uppercase">
+                  <span className="px-2.5 py-1 rounded-full bg-zinc-100 text-[10px] font-mono text-zinc-600 font-medium uppercase">
                     {proj.client}
                   </span>
                 </div>
 
                 {/* Big Stat Monument */}
                 <div className="mb-6">
-                  <div className="text-4xl sm:text-5xl font-black tracking-tight text-ink font-mono tabular-nums group-hover:text-blue transition-colors">
+                  <div className="text-4xl sm:text-5xl font-black tracking-tight text-blue font-display tabular-nums">
                     {proj.statValue}
                   </div>
                   <div className="text-xs text-ink/60 font-sans mt-1">
@@ -112,18 +111,18 @@ export const Cases: React.FC = () => {
                 </h3>
 
                 {/* Project Description */}
-                <p className="text-xs sm:text-sm text-ink/75 font-sans leading-relaxed mb-6">
+                <p className="text-xs sm:text-sm text-ink/70 font-sans leading-relaxed mb-6">
                   {proj.description}
                 </p>
               </div>
 
               {/* Footer: Tags & Action */}
-              <div className="pt-6 border-t border-line-dark/40 flex items-center justify-between gap-2">
+              <div className="pt-6 border-t border-black/[0.06] flex items-center justify-between gap-2">
                 <div className="flex flex-wrap gap-1.5">
                   {proj.tags.map((t) => (
                     <span
                       key={t}
-                      className="px-2 py-0.5 bg-black/[0.04] text-[10px] font-mono font-medium text-ink/70"
+                      className="px-2.5 py-1 rounded-full bg-zinc-100 text-[10px] font-mono font-medium text-zinc-700"
                     >
                       {t}
                     </span>
@@ -135,7 +134,7 @@ export const Cases: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleDiscussClick}
-                  className="w-8 h-8 flex items-center justify-center border border-line-dark text-ink group-hover:bg-blue group-hover:border-blue group-hover:text-white transition-colors cursor-pointer shrink-0"
+                  className="w-9 h-9 rounded-full bg-zinc-100 flex items-center justify-center text-ink group-hover:bg-blue group-hover:text-white transition-all cursor-pointer shrink-0"
                   title="Обсудить похожее решение"
                 >
                   <ArrowUpRight className="w-4 h-4" />

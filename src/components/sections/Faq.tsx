@@ -56,14 +56,13 @@ export const Faq: React.FC = () => {
   return (
     <section
       id="faq"
-      className="bg-paper text-ink py-20 sm:py-28 border-b border-line-dark relative overflow-hidden"
+      className="bg-paper text-ink py-16 sm:py-24 relative overflow-hidden"
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-line-dark">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-black/[0.06]">
           <div>
-            <div className="flex items-center gap-2.5 mb-3 text-sm sm:text-base font-medium text-ink">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue" aria-hidden="true" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-bold mb-3">
               <span>Вопросы и ответы</span>
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-ink">
@@ -78,8 +77,8 @@ export const Faq: React.FC = () => {
           </p>
         </div>
 
-        {/* Clean Editorial Accordion List */}
-        <div className="divide-y divide-line-dark border-b border-line-dark mt-4">
+        {/* Clean Accordion List */}
+        <div className="divide-y divide-black/[0.06] border-b border-black/[0.06] mt-4">
           {faqs.map((faq, idx) => {
             const isOpen = openId === faq.id;
 

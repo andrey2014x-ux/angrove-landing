@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, Bot, PhoneCall, Database, Network } from 'lucide-react';
 import { config } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 
@@ -12,15 +12,14 @@ export const Services: React.FC = () => {
   return (
     <section
       id="services"
-      className="bg-paper text-ink py-20 sm:py-28 border-b border-line-dark relative overflow-hidden"
+      className="bg-paper text-ink py-16 sm:py-24 relative overflow-hidden"
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-line-dark">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-black/[0.06]">
           <div>
-            <div className="flex items-center gap-2.5 mb-3 text-sm sm:text-base font-medium text-ink">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue" aria-hidden="true" />
-              <span>Решения и возможности</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-bold mb-3">
+              <span>Решения и системы</span>
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-ink">
               Что я{' '}
@@ -34,32 +33,36 @@ export const Services: React.FC = () => {
           </p>
         </div>
 
-        {/* Bento Grid (Dribbble Style) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-6 pt-10">
+        {/* Bento Grid (Dribbble Modern Tech Studio) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5 sm:gap-6 pt-10">
           
-          {/* Bento Card 1 (Large Hero Card - 7 Cols, Dark Obsidian) */}
-          <div className="lg:col-span-7 bg-ink text-paper p-7 sm:p-9 flex flex-col justify-between border border-line-light relative group hover:border-blue transition-colors duration-200">
+          {/* Bento Card 1: AI Agents (Hero Dark Card, 7 Cols) */}
+          <div className="lg:col-span-7 bg-[#0A0C16] text-white rounded-3xl p-8 sm:p-10 flex flex-col justify-between border border-white/10 shadow-[0_20px_50px_rgba(10,12,22,0.15)] relative overflow-hidden group hover:border-blue/50 transition-all duration-300">
+            {/* Subtle blue ambient radial glow */}
+            <div className="absolute top-0 right-0 w-72 h-72 bg-blue/20 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+
             <div>
-              <div className="flex items-center justify-between gap-3 mb-6">
-                <span className="font-mono text-[11px] font-bold text-blue-light uppercase tracking-wider">
-                  SYS-01 // TELEGRAM · CLAUDE 3.5 · RAG
-                </span>
-                <span className="text-xs font-mono text-paper/40">3–5 ДНЕЙ</span>
+              <div className="flex items-center justify-between gap-3 mb-6 relative z-10">
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-blue-light text-xs font-mono font-bold">
+                  <Bot className="w-3.5 h-3.5 text-blue-light" />
+                  <span>SYS-01 // TELEGRAM · CLAUDE · RAG</span>
+                </div>
+                <span className="text-xs font-mono text-white/40">3–5 ДНЕЙ</span>
               </div>
 
-              <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-paper mb-3 leading-snug">
+              <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white mb-3 leading-snug relative z-10">
                 AI-ассистенты первого контакта
               </h3>
 
-              <p className="text-sm sm:text-base text-paper/75 font-sans leading-relaxed max-w-lg mb-8">
-                Обучаются на вашем прайсе и регламентах. Отвечают клиенту за 5 секунд в Telegram, рассчитывают смету и сразу создают сделку в CRM.
+              <p className="text-sm sm:text-base text-zinc-300 font-sans leading-relaxed max-w-lg mb-8 relative z-10">
+                Обучаются на вашем каталоге и регламентах. Отвечают клиенту за 5 секунд в Telegram, рассчитывают точную смету и создают готовую сделку в CRM.
               </p>
             </div>
 
-            <div className="pt-6 border-t border-line-light flex flex-wrap items-center justify-between gap-4">
+            <div className="pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 relative z-10">
               <div className="flex items-center gap-2">
-                <span className="font-mono font-bold text-lg text-emerald-400 tabular-nums">+30%</span>
-                <span className="text-xs text-paper/60">конверсия ночного трафика</span>
+                <span className="font-mono font-bold text-2xl text-emerald-400 tabular-nums">+30%</span>
+                <span className="text-xs text-zinc-400">рост конверсии ночного трафика</span>
               </div>
 
               <a
@@ -67,21 +70,22 @@ export const Services: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={handleCtaClick}
-                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-light group-hover:text-white transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-blue text-xs font-bold uppercase tracking-wider text-white transition-all duration-200 cursor-pointer"
               >
                 <span>Обсудить бота</span>
-                <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <ArrowUpRight className="w-4 h-4" />
               </a>
             </div>
           </div>
 
-          {/* Bento Card 2 (5 Cols, Light Card) */}
-          <div className="lg:col-span-5 bg-paper p-7 sm:p-9 flex flex-col justify-between border border-line-dark hover:border-blue transition-colors duration-200 group">
+          {/* Bento Card 2: Voice Telephony (5 Cols, Luxury White Card) */}
+          <div className="lg:col-span-5 bg-white text-ink rounded-3xl p-8 sm:p-10 flex flex-col justify-between border border-black/[0.06] shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
             <div>
               <div className="flex items-center justify-between gap-3 mb-6">
-                <span className="font-mono text-[11px] font-bold text-ink/50 uppercase tracking-wider">
-                  SYS-02 // SIP · WHISPER · ELEVENLABS
-                </span>
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-xs font-mono font-bold">
+                  <PhoneCall className="w-3.5 h-3.5" />
+                  <span>SYS-02 // SIP · WHISPER</span>
+                </div>
                 <span className="text-xs font-mono text-ink/40">5–8 ДНЕЙ</span>
               </div>
 
@@ -94,22 +98,25 @@ export const Services: React.FC = () => {
               </p>
             </div>
 
-            <div className="pt-6 border-t border-line-dark/40 flex items-center justify-between">
+            <div className="pt-6 border-t border-black/[0.06] flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="font-mono font-bold text-lg text-ink tabular-nums">1 000</span>
+                <span className="font-mono font-bold text-2xl text-ink tabular-nums">1 000</span>
                 <span className="text-xs text-ink/60">звонков в час</span>
               </div>
-              <ArrowUpRight className="w-4 h-4 text-ink/40 group-hover:text-blue transition-colors" />
+              <div className="w-9 h-9 rounded-full bg-zinc-100 flex items-center justify-center text-ink/50 group-hover:bg-blue group-hover:text-white transition-colors">
+                <ArrowUpRight className="w-4 h-4" />
+              </div>
             </div>
           </div>
 
-          {/* Bento Card 3 (5 Cols, Light Card) */}
-          <div className="lg:col-span-5 bg-paper p-7 sm:p-9 flex flex-col justify-between border border-line-dark hover:border-blue transition-colors duration-200 group">
+          {/* Bento Card 3: Parsers & Data (5 Cols, Luxury White Card) */}
+          <div className="lg:col-span-5 bg-white text-ink rounded-3xl p-8 sm:p-10 flex flex-col justify-between border border-black/[0.06] shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
             <div>
               <div className="flex items-center justify-between gap-3 mb-6">
-                <span className="font-mono text-[11px] font-bold text-ink/50 uppercase tracking-wider">
-                  SYS-03 // PLAYWRIGHT · POSTGRESQL · HLR
-                </span>
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-mono font-bold">
+                  <Database className="w-3.5 h-3.5" />
+                  <span>SYS-03 // PLAYWRIGHT · POSTGRES</span>
+                </div>
                 <span className="text-xs font-mono text-ink/40">2–4 ДНЯ</span>
               </div>
 
@@ -122,22 +129,25 @@ export const Services: React.FC = () => {
               </p>
             </div>
 
-            <div className="pt-6 border-t border-line-dark/40 flex items-center justify-between">
+            <div className="pt-6 border-t border-black/[0.06] flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="font-mono font-bold text-lg text-ink tabular-nums">60x</span>
+                <span className="font-mono font-bold text-2xl text-ink tabular-nums">60x</span>
                 <span className="text-xs text-ink/60">быстрее ручного поиска</span>
               </div>
-              <ArrowUpRight className="w-4 h-4 text-ink/40 group-hover:text-blue transition-colors" />
+              <div className="w-9 h-9 rounded-full bg-zinc-100 flex items-center justify-center text-ink/50 group-hover:bg-blue group-hover:text-white transition-colors">
+                <ArrowUpRight className="w-4 h-4" />
+              </div>
             </div>
           </div>
 
-          {/* Bento Card 4 (Large Card - 7 Cols, Light Card with Blue Accents) */}
-          <div className="lg:col-span-7 bg-paper p-7 sm:p-9 flex flex-col justify-between border border-line-dark hover:border-blue transition-colors duration-200 group">
+          {/* Bento Card 4: End-to-End Integrations (7 Cols, Luxury White Card with Accent) */}
+          <div className="lg:col-span-7 bg-white text-ink rounded-3xl p-8 sm:p-10 flex flex-col justify-between border border-black/[0.06] shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
             <div>
               <div className="flex items-center justify-between gap-3 mb-6">
-                <span className="font-mono text-[11px] font-bold text-blue uppercase tracking-wider">
-                  SYS-04 // N8N · WEBHOOKS · МОЙСКЛАД · 1С
-                </span>
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-mono font-bold">
+                  <Network className="w-3.5 h-3.5" />
+                  <span>SYS-04 // N8N · WEBHOOKS · МОЙСКЛАД · 1С</span>
+                </div>
                 <span className="text-xs font-mono text-ink/40">4–7 ДНЕЙ</span>
               </div>
 
@@ -150,9 +160,9 @@ export const Services: React.FC = () => {
               </p>
             </div>
 
-            <div className="pt-6 border-t border-line-dark/40 flex flex-wrap items-center justify-between gap-4">
+            <div className="pt-6 border-t border-black/[0.06] flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-2">
-                <span className="font-mono font-bold text-lg text-blue tabular-nums">100%</span>
+                <span className="font-mono font-bold text-2xl text-blue tabular-nums">100%</span>
                 <span className="text-xs text-ink/60">сходимость данных и учета</span>
               </div>
 
@@ -161,10 +171,10 @@ export const Services: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={handleCtaClick}
-                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-ink group-hover:text-blue transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900 hover:bg-blue text-xs font-bold uppercase tracking-wider text-white transition-all duration-200 cursor-pointer"
               >
                 <span>Обсудить интеграцию</span>
-                <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <ArrowUpRight className="w-4 h-4" />
               </a>
             </div>
           </div>

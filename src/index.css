@@ -15,12 +15,12 @@
   html {
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
-    background-color: #EEEBE5;
+    background-color: #F8F7F4;
     color: #0A0C16;
   }
   
   body {
-    background-color: #EEEBE5;
+    background-color: #F8F7F4;
     color: #0A0C16;
     font-family: 'Onest', sans-serif;
   }
