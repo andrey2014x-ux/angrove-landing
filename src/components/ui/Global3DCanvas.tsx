@@ -430,45 +430,52 @@ export const Global3DCanvas: React.FC = () => {
 
       if (desktop) {
         if (p < 0.12) {
-          // Hero screen: centered behind Andrey's photo card
+          // 1. Hero screen: centered behind Andrey's photo card (x: 2.35)
           targetX = 2.35 + mouseX * 0.3;
           targetY = 0.05 - mouseY * 0.3;
           targetZ = 0;
           targetScale = 1.15;
-        } else if (p < 0.38) {
-          // Screen 1 -> Screen 2 Transition (Services / n8n workflow stage)
-          // Scales up prominently and hovers right between the scenario card and Telegram simulator
-          const t = (p - 0.12) / 0.26;
-          targetX = 2.35 - t * 0.75 + mouseX * 0.2; // 2.35 -> 1.60 (bridges the gap!)
+        } else if (p < 0.28) {
+          // 2. Services screen & n8n workflow transition (p: 0.12 -> 0.28)
+          // Scales up prominently and bridges between scenario card and Telegram simulator
+          const t = (p - 0.12) / 0.16;
+          targetX = 2.35 - t * 0.75 + mouseX * 0.2; // 2.35 -> 1.60
           targetY = 0.05 - t * 0.15 - mouseY * 0.2;
-          targetZ = 0.2 - t * 0.4;                  // closer to camera (prominent, high presence!)
+          targetZ = 0.2 - t * 0.4;
           targetScale = 1.45;
-        } else if (p < 0.6) {
-          // Cases showcase: right flank whitespace behind cards
-          const t = (p - 0.38) / 0.22;
+        } else if (p < 0.40) {
+          // 3. Cases showcase (p: 0.28 -> 0.40): right flank whitespace
           targetX = 3.1 + mouseX * 0.2;
-          targetY = -0.3 + t * 0.4 - mouseY * 0.2;
-          targetZ = -0.8 - t * 0.4;
-          targetScale = 1.15;
-        } else if (p < 0.82) {
-          // Process & About: flows to left margin whitespace
-          const t = (p - 0.6) / 0.22;
-          targetX = 3.0 - t * 5.95 + mouseX * 0.2;
-          targetY = 0.3 - t * 0.5 - mouseY * 0.2;
-          targetZ = -1.5;
-          targetScale = 0.98;
-        } else if (p < 0.92) {
-          // FAQ & Guide: sits in open right whitespace next to max-w-4xl accordion
-          targetX = 2.95 + mouseX * 0.2;
-          targetY = -0.1 - mouseY * 0.2;
-          targetZ = -1.5;
-          targetScale = 0.98;
+          targetY = 0.05 - mouseY * 0.2;
+          targetZ = -0.9;
+          targetScale = 1.2;
+        } else if (p < 0.54) {
+          // 4. Process stages (p: 0.40 -> 0.54): smoothly flows to left margin whitespace
+          const t = (p - 0.40) / 0.14;
+          targetX = 3.1 - t * 5.9 + mouseX * 0.2; // 3.1 -> -2.8
+          targetY = 0.1 - t * 0.3 - mouseY * 0.2;
+          targetZ = -1.4;
+          targetScale = 1.05;
+        } else if (p < 0.68) {
+          // 5. Guide & About Me (p: 0.54 -> 0.68): stays in open left margin
+          targetX = -2.8 + mouseX * 0.2;
+          targetY = 0.0 - mouseY * 0.2;
+          targetZ = -1.4;
+          targetScale = 1.05;
+        } else if (p < 0.88) {
+          // 6. FAQ Section (p: 0.68 -> 0.88): MOVES FIRMLY TO THE RIGHT FLANK!
+          // Accordion cards occupy the left 65% of the screen; 3D core centers at 85% in open whitespace
+          const t = Math.min(1, Math.max(0, (p - 0.68) / 0.05));
+          targetX = -2.8 + t * 7.1 + mouseX * 0.15; // flows from -2.8 all the way to +4.30 (completely clear of cards!)
+          targetY = -0.05 - mouseY * 0.15;
+          targetZ = -0.9;                           // crisp and luminous in the open right margin
+          targetScale = 1.12;                       // calibrated so outer orbital rings stay in right whitespace
         } else {
-          // Final CTA & Footer: centers deep into the background behind architectural branding
-          const t = Math.min(1, Math.max(0, (p - 0.90) / 0.10));
-          targetX = 2.95 * (1 - t) + mouseX * 0.15; // smoothly centers at x=0
-          targetY = -0.15 - t * 3.4 - mouseY * 0.15; // drops down to -3.55, directly behind _ANGROVE_
-          targetZ = -3.5;                            // deep behind text layer, zero occlusion
+          // 7. Final CTA & Footer (p >= 0.88): converges into the bottom reactor behind _ANGROVE_
+          const t = Math.min(1, Math.max(0, (p - 0.88) / 0.12));
+          targetX = 4.30 * (1 - t) + mouseX * 0.15; // smoothly centers at x=0
+          targetY = 0.05 - t * 3.6 - mouseY * 0.15; // drops down behind _ANGROVE_ at bottom
+          targetZ = -3.5;                           // deep behind text layer, zero occlusion
           targetScale = 1.6;
         }
       } else {
