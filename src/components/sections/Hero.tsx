@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { config } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { gsap } from '../../lib/motion';
-import { ArrowUpRight, Sparkles } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { ThreeScene } from '../ui/ThreeScene';
 
 export const Hero: React.FC = () => {
@@ -57,23 +57,15 @@ export const Hero: React.FC = () => {
   return (
     <section
       ref={heroRef}
-      className="relative bg-paper text-ink pt-8 sm:pt-14 pb-14 sm:pb-20 overflow-hidden"
+      className="relative bg-paper text-ink pt-10 sm:pt-16 pb-16 sm:pb-24 overflow-hidden"
       id="hero"
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 relative">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           {/* Left Column: Headlines & Actions */}
-          <div className="lg:col-span-7 flex flex-col items-start text-left">
+          <div className="lg:col-span-7 flex flex-col items-start text-left z-10">
             
-            {/* Status Pill Badge */}
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white border border-black/[0.08] shadow-sm mb-6 text-xs sm:text-sm font-medium text-ink">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Свободен для 1 проекта на этой неделе</span>
-              <span className="text-ink/30">|</span>
-              <span className="text-blue font-semibold">_angrove_</span>
-            </div>
-
             {/* H1 Headline with Leopard Code Text */}
             <h1
               ref={headlineRef}
@@ -97,7 +89,7 @@ export const Hero: React.FC = () => {
               Создаю AI-агентов, парсеры и сквозные интеграции под ваши бизнес-процессы. От идеи и схемы — до работающей системы в ваших сервисах.
             </p>
 
-            {/* Actions: Dribbble Modern Buttons */}
+            {/* Actions: Modern Buttons */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
               <a
                 href={config.telegramUrl}
@@ -136,42 +128,27 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Dribbble Modern Photo Card + 3D Interactive Core */}
+          {/* Right Column: Prominent WebGL 3D Core + Clean Photo Frame */}
           <div
             ref={photoBlockRef}
-            className="lg:col-span-5 flex flex-col items-center lg:items-end justify-center w-full relative"
+            className="lg:col-span-5 flex flex-col items-center justify-center w-full relative min-h-[460px] sm:min-h-[520px]"
           >
-            {/* Ambient 3D Interactive WebGL Core behind the photo */}
-            <div className="absolute -top-16 -left-16 sm:-left-20 w-[420px] sm:w-[500px] h-[420px] sm:h-[500px] pointer-events-none opacity-80 z-0">
-              <ThreeScene />
+            {/* Prominent, Large 3D WebGL Scene behind and around the photo */}
+            <div className="absolute inset-0 -top-8 -bottom-8 -left-12 -right-12 flex items-center justify-center pointer-events-none z-0">
+              <ThreeScene className="w-full h-full" />
             </div>
 
-            <div className="w-full max-w-[360px] sm:max-w-[420px] relative z-10">
-              {/* Photo Box with curved corners, soft gradient shadow */}
-              <div className="relative rounded-3xl overflow-hidden bg-zinc-900 border border-black/10 shadow-[0_20px_50px_rgba(0,0,0,0.12)] aspect-[4/5]">
+            {/* Clean, Premium Photo of Andrey without cringe badges */}
+            <div className="w-full max-w-[340px] sm:max-w-[390px] relative z-10">
+              <div className="relative rounded-3xl overflow-hidden bg-zinc-900 border border-black/10 shadow-[0_25px_60px_rgba(0,0,0,0.14)] aspect-[4/5]">
                 <img
                   src="/andrey.jpg"
                   alt="Андрей — Архитектор систем"
                   className="w-full h-full object-cover object-top select-none"
                   loading="eager"
-                  width={420}
-                  height={525}
+                  width={390}
+                  height={488}
                 />
-                
-                {/* Overlay Floating Glass Badges */}
-                <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl bg-[#0A0C16]/80 backdrop-blur-md border border-white/10 text-white shadow-xl flex items-center justify-between">
-                  <div>
-                    <div className="text-xs font-mono text-blue-light font-bold">АНДРЕЙ · АРХИТЕКТОР</div>
-                    <div className="text-sm font-bold text-white mt-0.5">Личная разработка под ключ</div>
-                  </div>
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                </div>
-              </div>
-
-              {/* Floating micro-badge */}
-              <div className="absolute -top-3 -right-3 hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white text-ink text-xs font-bold shadow-lg border border-black/[0.06]">
-                <Sparkles className="w-3.5 h-3.5 text-blue" />
-                <span>Python & n8n Core</span>
               </div>
             </div>
           </div>

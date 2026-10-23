@@ -15,7 +15,7 @@ export const Header: React.FC = () => {
     <header className="sticky top-0 left-0 w-full z-50 bg-paper/90 backdrop-blur-md border-b border-black/[0.06]">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 h-16 sm:h-20 flex items-center justify-between gap-4">
         
-        {/* Brand Monogram + Status Indicator */}
+        {/* Brand Monogram */}
         <div className="flex items-center gap-4">
           <a
             href="/"
@@ -35,12 +35,6 @@ export const Header: React.FC = () => {
               _angrove_
             </span>
           </a>
-
-          {/* Real-time Status Badge on Wide Screens */}
-          <span className="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-mono text-emerald-800">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Свободен для 1 проекта</span>
-          </span>
         </div>
 
         {/* Desktop Navigation Links */}
