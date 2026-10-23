@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Header } from './components/sections/Header';
 import { Hero } from './components/sections/Hero';
-import { PainChecklist } from './components/sections/PainChecklist';
 import { Services } from './components/sections/Services';
 import { Cases } from './components/sections/Cases';
 import { Process } from './components/sections/Process';
@@ -65,10 +64,7 @@ export const App: React.FC = () => {
         {/* 1. Hero */}
         <Hero />
 
-        {/* 2. «Знакомо?» (Светлая секция) */}
-        <PainChecklist />
-
-        {/* 3. Услуги (Интерактивная витрина решений) */}
+        {/* 2. Услуги (Bento Grid) */}
         <Services />
 
         {/* 4. Реальные кейсы внедрения */}
