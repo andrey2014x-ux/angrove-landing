@@ -15,7 +15,7 @@ export const Global3DCanvas: React.FC = () => {
     const width = window.innerWidth;
     const height = window.innerHeight;
 
-    // 1. Safe WebGL Renderer
+    // 1. Safe WebGL Renderer with Tone Mapping
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({
@@ -30,93 +30,96 @@ export const Global3DCanvas: React.FC = () => {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.set(0, 0, 8);
+    camera.position.set(0, 0, 8.5);
 
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.25;
     container.appendChild(renderer.domElement);
 
-    // 2. Lighting Rig for rich physical depth & specular shine
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
+    // 2. Lighting System
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
     scene.add(ambientLight);
 
     const dirLight1 = new THREE.DirectionalLight(0x617DFF, 3.5);
-    dirLight1.position.set(5, 6, 5);
+    dirLight1.position.set(6, 7, 5);
     scene.add(dirLight1);
 
     const dirLight2 = new THREE.DirectionalLight(0x3D5CFF, 2.5);
-    dirLight2.position.set(-5, -4, 3);
+    dirLight2.position.set(-6, -4, 4);
     scene.add(dirLight2);
 
-    const coreLight = new THREE.PointLight(0x617DFF, 2.0, 8);
-    scene.add(coreLight);
+    const pulseLight = new THREE.PointLight(0x3D5CFF, 2.5, 12);
+    scene.add(pulseLight);
 
-    // 3. Main 3D Container Group
-    const mainGroup = new THREE.Group();
-    scene.add(mainGroup);
+    // 3. Master Spatial Group
+    const masterGroup = new THREE.Group();
+    scene.add(masterGroup);
 
     const isDesktop = width >= 1024;
-    // Hero position: right side, large, solid and impressive
-    mainGroup.position.set(isDesktop ? 2.45 : 0, isDesktop ? 0.05 : -0.2, 0);
+    masterGroup.position.set(isDesktop ? 2.4 : 0, 0.05, 0);
 
-    // 4. Volumetric Core: Translucent Frosted Crystal (Icosahedron)
-    // Real geometry with lighting and depth, NOT just a flat wireframe
-    const crystalGeom = new THREE.IcosahedronGeometry(1.5, 0);
+    // -------------------------------------------------------------
+    // MODULE A: Hero Core (Translucent Crystal + Gyro Rings)
+    // -------------------------------------------------------------
+    const heroCoreGroup = new THREE.Group();
+    masterGroup.add(heroCoreGroup);
+
+    // A1. Translucent Physical Crystal
+    const crystalGeom = new THREE.IcosahedronGeometry(1.4, 0);
     const crystalMat = new THREE.MeshPhysicalMaterial({
       color: 0x3D5CFF,
       emissive: 0x1A2875,
       emissiveIntensity: 0.35,
       roughness: 0.15,
       metalness: 0.1,
-      transmission: 0.65, // frosted glass depth
+      transmission: 0.65,
       thickness: 1.2,
       transparent: true,
-      opacity: 0.75,
+      opacity: 0.85,
     });
     const crystalMesh = new THREE.Mesh(crystalGeom, crystalMat);
-    mainGroup.add(crystalMesh);
+    heroCoreGroup.add(crystalMesh);
 
-    // Outer Digital Lattice Cage (Subtle glowing architectural frame)
-    const cageGeom = new THREE.IcosahedronGeometry(1.85, 1);
+    // A2. Outer Geodesic Wireframe Cage
+    const cageGeom = new THREE.IcosahedronGeometry(1.8, 1);
     const cageMat = new THREE.MeshBasicMaterial({
       color: 0x617DFF,
       wireframe: true,
       transparent: true,
-      opacity: 0.45,
+      opacity: 0.5,
     });
     const cageMesh = new THREE.Mesh(cageGeom, cageMat);
-    mainGroup.add(cageMesh);
+    heroCoreGroup.add(cageMesh);
 
-    // Glowing Vertex Nodes on the lattice
+    // A3. Glowing Vertex Nodes
     const cageVertices = cageGeom.attributes.position.array;
     const nodeGeom = new THREE.BufferGeometry();
     nodeGeom.setAttribute('position', new THREE.BufferAttribute(cageVertices, 3));
     const nodeMat = new THREE.PointsMaterial({
       color: 0x8EA5FF,
-      size: 0.08,
+      size: 0.075,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.9,
     });
     const vertexNodes = new THREE.Points(nodeGeom, nodeMat);
     cageMesh.add(vertexNodes);
 
-    // Inner Glowing Core (Octahedron pulsating with energy)
-    const innerCoreGeom = new THREE.OctahedronGeometry(0.8, 0);
+    // A4. Inner Glowing Octahedron
+    const innerCoreGeom = new THREE.OctahedronGeometry(0.75, 0);
     const innerCoreMat = new THREE.MeshStandardMaterial({
       color: 0x11162B,
       emissive: 0x3D5CFF,
-      emissiveIntensity: 0.8,
+      emissiveIntensity: 0.85,
       roughness: 0.3,
       metalness: 0.8,
     });
     const innerCoreMesh = new THREE.Mesh(innerCoreGeom, innerCoreMat);
-    mainGroup.add(innerCoreMesh);
+    heroCoreGroup.add(innerCoreMesh);
 
-    // 5. Majestic Gyroscopic Orbital Rings
-    // Large and graceful, but smoothly oriented to frame the space
-    const ring1Geom = new THREE.TorusGeometry(2.3, 0.02, 16, 140);
+    // A5. Gyroscopic Orbital Rings (Tightly contained to prevent screen text occlusion)
+    const ring1Geom = new THREE.TorusGeometry(1.75, 0.016, 16, 100);
     const ring1Mat = new THREE.MeshStandardMaterial({
       color: 0x3D5CFF,
       emissive: 0x243DB5,
@@ -124,13 +127,13 @@ export const Global3DCanvas: React.FC = () => {
       roughness: 0.2,
       metalness: 0.6,
       transparent: true,
-      opacity: 0.65,
+      opacity: 0.7,
     });
     const ring1 = new THREE.Mesh(ring1Geom, ring1Mat);
     ring1.rotation.x = Math.PI / 3;
-    mainGroup.add(ring1);
+    heroCoreGroup.add(ring1);
 
-    const ring2Geom = new THREE.TorusGeometry(2.8, 0.016, 16, 140);
+    const ring2Geom = new THREE.TorusGeometry(2.05, 0.012, 16, 100);
     const ring2Mat = new THREE.MeshStandardMaterial({
       color: 0x617DFF,
       emissive: 0x3D5CFF,
@@ -138,42 +141,170 @@ export const Global3DCanvas: React.FC = () => {
       roughness: 0.2,
       metalness: 0.5,
       transparent: true,
-      opacity: 0.5,
+      opacity: 0.55,
     });
     const ring2 = new THREE.Mesh(ring2Geom, ring2Mat);
     ring2.rotation.y = Math.PI / 4;
-    mainGroup.add(ring2);
+    heroCoreGroup.add(ring2);
 
-    const ring3Geom = new THREE.TorusGeometry(3.0, 0.011, 16, 140);
+    const ring3Geom = new THREE.TorusGeometry(2.35, 0.009, 16, 100);
     const ring3Mat = new THREE.MeshBasicMaterial({
       color: 0x8EA5FF,
       transparent: true,
       opacity: 0.35,
     });
     const ring3 = new THREE.Mesh(ring3Geom, ring3Mat);
-    ring3.rotation.x = -Math.PI / 4.5;
-    mainGroup.add(ring3);
+    ring3.rotation.x = -Math.PI / 4.2;
+    heroCoreGroup.add(ring3);
 
-    // 6. Ambient Floating Particle Constellation
+    // -------------------------------------------------------------
+    // MODULE B: The n8n / AI Automation Pipeline (Nodes & Flow Curves)
+    // Plays animated computational scenarios as visitor scrolls!
+    // -------------------------------------------------------------
+    const pipelineGroup = new THREE.Group();
+    masterGroup.add(pipelineGroup);
+
+    // 4 Pipeline Nodes (Workflow hubs: Webhook -> AI Logic -> CRM -> Dispatch)
+    const nodeCoords = [
+      new THREE.Vector3(-1.35, 0.75, 0),     // 0: Webhook / Lead
+      new THREE.Vector3(-0.35, 0.15, 0.4),   // 1: Claude AI Core
+      new THREE.Vector3(0.55, -0.4, -0.1),   // 2: amoCRM Sync
+      new THREE.Vector3(1.45, 0.55, 0.2),    // 3: Telegram Alert
+    ];
+
+    const nodeColors = [0x3D5CFF, 0x617DFF, 0x3D5CFF, 0x00E676];
+    const nodeLabels = ['Webhook / Lead', 'Claude AI Core', 'amoCRM Sync', 'Telegram Alert'];
+    const nodeHexes = ['#3D5CFF', '#617DFF', '#3D5CFF', '#00E676'];
+
+    const nodeMeshes: THREE.Mesh[] = [];
+    const nodeTags: { sprite: THREE.Sprite; mat: THREE.SpriteMaterial }[] = [];
+
+    // Helper: Create high-DPI canvas text sprites for real n8n node labeling
+    const createNodeTagSprite = (text: string, colorHex: string) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 360;
+      canvas.height = 90;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        // Pill background
+        ctx.fillStyle = 'rgba(10, 14, 28, 0.92)';
+        if (ctx.roundRect) {
+          ctx.roundRect(8, 12, 344, 66, 18);
+        } else {
+          ctx.rect(8, 12, 344, 66);
+        }
+        ctx.fill();
+
+        // Border
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = colorHex;
+        ctx.stroke();
+
+        // Glowing status dot
+        ctx.fillStyle = colorHex;
+        ctx.beginPath();
+        ctx.arc(44, 45, 7, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Label text
+        ctx.font = 'bold 24px system-ui, -apple-system, sans-serif';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, 68, 45);
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.minFilter = THREE.LinearFilter;
+      const mat = new THREE.SpriteMaterial({ map: texture, transparent: true, opacity: 0 });
+      const sprite = new THREE.Sprite(mat);
+      sprite.scale.set(0.92, 0.23, 1);
+      return { sprite, mat };
+    };
+
+    nodeCoords.forEach((pos, idx) => {
+      const hubGeom = new THREE.IcosahedronGeometry(0.32, 0);
+      const hubMat = new THREE.MeshStandardMaterial({
+        color: nodeColors[idx],
+        emissive: nodeColors[idx],
+        emissiveIntensity: 1.1,
+        roughness: 0.2,
+        metalness: 0.7,
+      });
+      const hubMesh = new THREE.Mesh(hubGeom, hubMat);
+      hubMesh.position.copy(pos);
+
+      // Orbital halo around each node
+      const haloGeom = new THREE.TorusGeometry(0.48, 0.012, 12, 48);
+      const haloMat = new THREE.MeshBasicMaterial({
+        color: nodeColors[idx],
+        transparent: true,
+        opacity: 0.75,
+      });
+      const halo = new THREE.Mesh(haloGeom, haloMat);
+      halo.rotation.x = Math.PI / 2.5;
+      hubMesh.add(halo);
+
+      // Node label pill
+      const tag = createNodeTagSprite(nodeLabels[idx], nodeHexes[idx]);
+      tag.sprite.position.set(pos.x, pos.y + 0.48, pos.z);
+      pipelineGroup.add(tag.sprite);
+      nodeTags.push(tag);
+
+      pipelineGroup.add(hubMesh);
+      nodeMeshes.push(hubMesh);
+    });
+
+    // Spline curve connecting the workflow pipeline (smooth bezier flow)
+    const pipelineCurve = new THREE.CatmullRomCurve3(nodeCoords);
+    const tubeGeom = new THREE.TubeGeometry(pipelineCurve, 64, 0.026, 8, false);
+    const tubeMat = new THREE.MeshStandardMaterial({
+      color: 0x3D5CFF,
+      emissive: 0x3050FF,
+      emissiveIntensity: 0.6,
+      transparent: true,
+      opacity: 0.6,
+    });
+    const tubeMesh = new THREE.Mesh(tubeGeom, tubeMat);
+    pipelineGroup.add(tubeMesh);
+
+    // Moving Data Pulses (Glowing data packets traveling along the n8n pipeline)
+    const packetCount = 8;
+    const packetMeshes: THREE.Mesh[] = [];
+    for (let i = 0; i < packetCount; i++) {
+      const pGeom = new THREE.SphereGeometry(0.09, 14, 14);
+      const pMat = new THREE.MeshBasicMaterial({
+        color: i % 2 === 0 ? 0x00FF88 : 0xA5C0FF,
+      });
+      const pMesh = new THREE.Mesh(pGeom, pMat);
+      pipelineGroup.add(pMesh);
+      packetMeshes.push(pMesh);
+    }
+
+    // -------------------------------------------------------------
+    // MODULE C: Ambient Constellation (Deep Space Dust)
+    // -------------------------------------------------------------
     const particleCount = 140;
     const particleGeom = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount * 3; i += 3) {
       positions[i] = (Math.random() - 0.5) * 18;
       positions[i + 1] = (Math.random() - 0.5) * 16;
-      positions[i + 2] = (Math.random() - 0.5) * 10 - 1.0;
+      positions[i + 2] = (Math.random() - 0.5) * 10 - 1.2;
     }
     particleGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     const particleMat = new THREE.PointsMaterial({
-      color: 0x617DFF,
-      size: 0.05,
+      color: 0x4D6CFF,
+      size: 0.045,
       transparent: true,
-      opacity: 0.6,
+      opacity: 0.4,
     });
     const particles = new THREE.Points(particleGeom, particleMat);
     scene.add(particles);
 
-    // 7. Mouse Interaction
+    // -------------------------------------------------------------
+    // INTERACTION & SCROLL CONTROLS
+    // -------------------------------------------------------------
     let mouseX = 0;
     let mouseY = 0;
     let targetMouseX = 0;
@@ -188,7 +319,6 @@ export const Global3DCanvas: React.FC = () => {
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
-    // 8. Scroll Scrubbing
     let targetScrollProgress = 0;
     let currentScrollProgress = 0;
 
@@ -199,7 +329,9 @@ export const Global3DCanvas: React.FC = () => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // 9. Continuous Animation Loop
+    // -------------------------------------------------------------
+    // ANIMATION & SCENARIO ENGINE
+    // -------------------------------------------------------------
     let animId: number;
     let clock = new THREE.Clock();
 
@@ -207,126 +339,149 @@ export const Global3DCanvas: React.FC = () => {
       animId = requestAnimationFrame(animate);
       const elapsed = clock.getElapsedTime();
 
-      // Smooth dampening
+      // Smooth interpolation
       mouseX += (targetMouseX - mouseX) * 0.05;
       mouseY += (targetMouseY - mouseY) * 0.05;
-      currentScrollProgress += (targetScrollProgress - currentScrollProgress) * 0.05;
+      currentScrollProgress += (targetScrollProgress - currentScrollProgress) * 0.06;
 
       const p = currentScrollProgress;
       const desktop = window.innerWidth >= 1024;
 
-      // Impressive scale that stays present and majestic throughout the page
-      let targetScale = desktop ? 1.15 : 0.8;
+      // 1. DATA PULSE PROPAGATION (n8n scenario simulation):
+      // Packets continuously loop through the nodes, pulsing energy
+      packetMeshes.forEach((mesh, idx) => {
+        const offset = idx / packetCount;
+        const progress = (elapsed * 0.22 + offset) % 1;
+        const pt = pipelineCurve.getPointAt(progress);
+        mesh.position.copy(pt);
+      });
 
-      // Intelligent Opacity Orchestration:
-      // - Hero (p < 0.12): Full physical crystal presence framing Andrey's portrait
-      // - Reading zones (Services, Cases, Process, About, FAQ): Heavy crystal & rings
-      //   dissolve to 0 so typography is 100% crisp, legible, and uncluttered!
-      // - Final CTA (p > 0.88): Gently reappears as a deep ambient backlight behind the solid black CTA card
-      const heroFactor = Math.max(0, 1 - Math.min(1, p * 7));
-      const ctaFactor = Math.max(0, (p - 0.88) / 0.12);
+      // Node subtle breathing animation
+      nodeMeshes.forEach((hub, idx) => {
+        const pulse = 1 + Math.sin(elapsed * 3 + idx * 1.5) * 0.15;
+        hub.scale.set(pulse, pulse, pulse);
+        hub.rotation.y = elapsed * 0.5 + idx;
+      });
 
-      crystalMat.opacity = 0.8 * heroFactor + 0.55 * ctaFactor;
-      cageMat.opacity = 0.5 * heroFactor + 0.3 * ctaFactor;
-      nodeMat.opacity = 0.9 * heroFactor + 0.45 * ctaFactor;
-      innerCoreMat.opacity = 0.8 * heroFactor + 0.4 * ctaFactor;
-      ring1Mat.opacity = 0.7 * heroFactor + 0.35 * ctaFactor;
-      ring2Mat.opacity = 0.55 * heroFactor + 0.25 * ctaFactor;
-      ring3Mat.opacity = 0.38 * heroFactor + 0.18 * ctaFactor;
-
-      // Subtle ambient particles stay gently in deep space across the page
-      particleMat.opacity = 0.35 * heroFactor + 0.15;
-
-      // Intelligent Spatial Trajectory:
-      // Always keeps the 3D crystal in the LATERAL MARGINS / FLANKS (x >= 2.5 or x <= -2.7)
-      // and NEVER crosses the center reading column during content or FAQ!
-      let targetX = desktop ? 2.45 : 0;
+      // 2. SCROLL CHOREOGRAPHY FROM HEADER TO FOOTER:
+      // - Hero (p < 0.12): Master Hero Core is featured on right flank (x: 2.35), pipeline is nested inside.
+      // - Transition Screen 1 -> Screen 2 (Services, p: 0.12 -> 0.35):
+      //   The 3D scene smoothly expands into the n8n pipeline with glowing data packets & hub tags!
+      // - Cases (p: 0.35 -> 0.6): Drifts to upper right flank (x: 2.95, y: 0.35).
+      // - Process (p: 0.6 -> 0.82): Shifts along left margin (x: -2.95, y: -0.1), framing workflow steps.
+      // - FAQ & Guide (p: 0.82 -> 0.92): Stays securely in right margin whitespace (x: 2.95, y: -0.1).
+      // - Final CTA & Footer (p: 0.92 -> 1.0): Converges behind the CTA button like a power reactor!
+      let targetX = desktop ? 2.35 : 0;
       let targetY = desktop ? 0.05 : -0.2;
       let targetZ = 0;
+      let targetScale = desktop ? 1.15 : 0.75;
+
+      // Cross-fade between Hero Core and n8n Pipeline:
+      // In Hero: Hero Core is 100%, Pipeline is subtle preview.
+      // In Services & beyond: Pipeline expands and activates!
+      const heroWeight = Math.max(0, 1 - Math.min(1, p * 4.5)); // 1 -> 0 as you leave Hero
+      const pipelineWeight = Math.min(1, p * 4.0);               // 0 -> 1 as you enter Services
+
+      // Node label pills: fade in smoothly as visitor leaves Hero and enters n8n pipeline
+      nodeTags.forEach((tag) => {
+        tag.mat.opacity = Math.max(0, Math.min(0.95, (pipelineWeight - 0.15) * 1.3));
+      });
+
+      heroCoreGroup.scale.setScalar(1.0 - pipelineWeight * 0.25);
+      pipelineGroup.scale.setScalar(0.75 + pipelineWeight * 0.4);
+      pipelineGroup.rotation.y = elapsed * 0.15 + p * Math.PI * 3;
+      pipelineGroup.rotation.x = 0.15 + Math.sin(elapsed * 0.3) * 0.08;
+
+      // Refined depth opacity: 3D is rich in margins, but never suffocates reading
+      const globalContrastDim = desktop ? 0.85 : 0.65;
+      crystalMat.opacity = (0.8 * heroWeight + 0.35 * (1 - heroWeight)) * globalContrastDim;
+      cageMat.opacity = (0.5 * heroWeight + 0.25 * (1 - heroWeight)) * globalContrastDim;
+      nodeMat.opacity = (0.9 * heroWeight + 0.4 * (1 - heroWeight)) * globalContrastDim;
+      ring1Mat.opacity = (0.7 * heroWeight + 0.28 * (1 - heroWeight)) * globalContrastDim;
+      ring2Mat.opacity = (0.55 * heroWeight + 0.2 * (1 - heroWeight)) * globalContrastDim;
+      ring3Mat.opacity = (0.35 * heroWeight + 0.14 * (1 - heroWeight)) * globalContrastDim;
+      tubeMat.opacity = (0.2 + 0.45 * pipelineWeight) * globalContrastDim;
 
       if (desktop) {
-        if (p < 0.15) {
-          // Hero: Right flank, framing Andrey's portrait
-          targetX = 2.45 + mouseX * 0.3;
+        if (p < 0.12) {
+          // Hero screen: centered behind Andrey's photo card
+          targetX = 2.35 + mouseX * 0.3;
           targetY = 0.05 - mouseY * 0.3;
           targetZ = 0;
-          targetScale = 1.18;
+          targetScale = 1.15;
         } else if (p < 0.38) {
-          // Services: stays along right whitespace margin
-          const t = (p - 0.15) / 0.23;
-          targetX = 2.45 + t * 0.35 + mouseX * 0.2;
-          targetY = 0.05 + t * 0.35 - mouseY * 0.2;
-          targetZ = -t * 1.5;
-          targetScale = 1.05;
+          // Screen 1 -> Screen 2 Transition (Services / n8n workflow stage)
+          // Scales up prominently and hovers right between the scenario card and Telegram simulator
+          const t = (p - 0.12) / 0.26;
+          targetX = 2.35 - t * 0.75 + mouseX * 0.2; // 2.35 -> 1.60 (bridges the gap!)
+          targetY = 0.05 - t * 0.15 - mouseY * 0.2;
+          targetZ = 0.2 - t * 0.4;                  // closer to camera (prominent, high presence!)
+          targetScale = 1.45;
         } else if (p < 0.6) {
-          // Cases: upper-right whitespace margin
+          // Cases showcase: right flank whitespace behind cards
           const t = (p - 0.38) / 0.22;
-          targetX = 2.8 + mouseX * 0.2;
-          targetY = 0.4 + t * 0.7 - mouseY * 0.2;
-          targetZ = -1.5 - t * 0.5;
-          targetScale = 1.0;
-        } else if (p < 0.78) {
-          // Process & About: shifts to far-left margin, clear of center
-          const t = (p - 0.6) / 0.18;
-          targetX = 2.8 - t * 5.6 + mouseX * 0.2; // fast transition across gap into -2.8
-          targetY = 1.1 - t * 0.9 - mouseY * 0.2;
-          targetZ = -2.0;
-          targetScale = 1.0;
-        } else if (p < 0.9) {
-          // FAQ & Guide: sits peacefully in the far right margin, completely away from FAQ cards!
-          const t = (p - 0.78) / 0.12;
-          targetX = -2.8 + t * 5.7 + mouseX * 0.2; // glides into right margin
-          targetY = 0.2 - mouseY * 0.2;
-          targetZ = -2.2;
-          targetScale = 0.95;
+          targetX = 3.1 + mouseX * 0.2;
+          targetY = -0.3 + t * 0.4 - mouseY * 0.2;
+          targetZ = -0.8 - t * 0.4;
+          targetScale = 1.15;
+        } else if (p < 0.82) {
+          // Process & About: flows to left margin whitespace
+          const t = (p - 0.6) / 0.22;
+          targetX = 3.0 - t * 5.95 + mouseX * 0.2;
+          targetY = 0.3 - t * 0.5 - mouseY * 0.2;
+          targetZ = -1.5;
+          targetScale = 0.98;
+        } else if (p < 0.92) {
+          // FAQ & Guide: sits in open right whitespace next to max-w-4xl accordion
+          targetX = 2.95 + mouseX * 0.2;
+          targetY = -0.1 - mouseY * 0.2;
+          targetZ = -1.5;
+          targetScale = 0.98;
         } else {
-          // Final CTA & Footer: grounds into lower center behind the solid black card
-          const t = (p - 0.9) / 0.1;
-          targetX = 2.9 - t * 2.9 + mouseX * 0.2;
-          targetY = 0.2 - t * 1.6 - mouseY * 0.2;
-          targetZ = -1.8;
-          targetScale = 1.1;
+          // Final CTA & Footer: grounds into glowing bottom reactor
+          const t = (p - 0.92) / 0.08;
+          targetX = 2.95 - t * 2.95 + mouseX * 0.2;
+          targetY = -0.1 - t * 1.3 - mouseY * 0.2;
+          targetZ = -1.2;
+          targetScale = 1.15;
         }
       } else {
-        // Mobile
-        targetScale = 0.78;
-        targetX = mouseX * 0.2;
-        targetY = -0.3 + Math.sin(p * Math.PI * 2) * 0.4;
-        targetZ = -0.8;
+        // Mobile responsive spatial tuning
+        targetScale = 0.7;
+        targetX = mouseX * 0.15;
+        targetY = -0.2 + Math.sin(p * Math.PI * 2) * 0.35;
+        targetZ = -0.9;
       }
 
-      mainGroup.position.x += (targetX - mainGroup.position.x) * 0.05;
-      mainGroup.position.y += (targetY - mainGroup.position.y) * 0.05;
-      mainGroup.position.z += (targetZ - mainGroup.position.z) * 0.05;
+      masterGroup.position.x += (targetX - masterGroup.position.x) * 0.05;
+      masterGroup.position.y += (targetY - masterGroup.position.y) * 0.05;
+      masterGroup.position.z += (targetZ - masterGroup.position.z) * 0.05;
 
-      const currentScale = mainGroup.scale.x;
+      const currentScale = masterGroup.scale.x;
       const newScale = currentScale + (targetScale - currentScale) * 0.05;
-      mainGroup.scale.set(newScale, newScale, newScale);
+      masterGroup.scale.set(newScale, newScale, newScale);
 
-      // Organic, mesmerizing rotations
+      // Hero core rotations
       crystalMesh.rotation.x = elapsed * 0.25 + mouseY * 0.4 + p * Math.PI * 2;
       crystalMesh.rotation.y = elapsed * 0.35 + mouseX * 0.4 + p * Math.PI * 3;
-
       cageMesh.rotation.x = -elapsed * 0.2 + mouseY * 0.3;
       cageMesh.rotation.y = -elapsed * 0.25 + mouseX * 0.3;
-
       innerCoreMesh.rotation.x = elapsed * 0.5;
       innerCoreMesh.rotation.y = -elapsed * 0.6;
-
       ring1.rotation.z = elapsed * 0.2 + p * Math.PI * 2.5;
       ring2.rotation.x = elapsed * -0.25 - p * Math.PI * 2;
       ring3.rotation.y = elapsed * 0.15 + p * Math.PI * 1.8;
 
-      // Dynamic light tracking
-      coreLight.position.set(mainGroup.position.x, mainGroup.position.y, mainGroup.position.z + 1);
+      // Point light tracking
+      pulseLight.position.set(masterGroup.position.x, masterGroup.position.y, masterGroup.position.z + 1.2);
 
-      // Particle slow drift
-      particles.rotation.y = elapsed * 0.03 + mouseX * 0.1;
-      particles.rotation.x = elapsed * 0.02 - mouseY * 0.1;
+      // Ambient particle drift
+      particles.rotation.y = elapsed * 0.025 + mouseX * 0.1;
+      particles.rotation.x = elapsed * 0.015 - mouseY * 0.1;
 
       // Soft camera tilt
-      camera.position.x = mouseX * 0.3;
-      camera.position.y = -mouseY * 0.3;
+      camera.position.x = mouseX * 0.25;
+      camera.position.y = -mouseY * 0.25;
       camera.lookAt(0, 0, 0);
 
       renderer.render(scene, camera);
@@ -334,7 +489,7 @@ export const Global3DCanvas: React.FC = () => {
 
     animate();
 
-    // 10. Resize
+    // Resize
     const handleResize = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
@@ -368,6 +523,8 @@ export const Global3DCanvas: React.FC = () => {
       ring2Mat.dispose();
       ring3Geom.dispose();
       ring3Mat.dispose();
+      tubeGeom.dispose();
+      tubeMat.dispose();
       particleGeom.dispose();
       particleMat.dispose();
     };
@@ -376,7 +533,7 @@ export const Global3DCanvas: React.FC = () => {
   return (
     <div
       ref={mountRef}
-      className="absolute top-0 left-0 w-full h-[100dvh] pointer-events-none select-none z-0 overflow-hidden"
+      className="fixed inset-0 w-screen h-screen pointer-events-none select-none z-0 overflow-hidden"
       aria-hidden="true"
     />
   );

@@ -14,7 +14,8 @@ export type AnalyticsGoal =
   | 'click_instagram'
   | 'click_case_discuss'
   | 'click_process_cta'
-  | 'click_services_cta';
+  | 'click_services_cta'
+  | 'simulate_bot_message';
 
 export function initAnalytics(): void {
   if (!config.metrikaId || typeof window === 'undefined') return;

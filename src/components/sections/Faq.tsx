@@ -78,7 +78,7 @@ export const Faq: React.FC = () => {
               highlightWords={{ вопросы: 'font-serif italic font-normal text-blue lowercase' }}
             />
           </div>
-          <p data-reveal="desc" className="text-xs sm:text-sm text-ink/70 max-w-md font-sans leading-relaxed">
+          <p data-reveal="desc" className="text-xs sm:text-sm text-ink/85 max-w-md font-sans leading-relaxed bg-white/85 backdrop-blur-md px-4 py-2.5 rounded-xl border border-black/[0.06] shadow-xs">
             Коротко и честно о сроках, стоимости, безопасности и принципах внедрения.
           </p>
         </div>

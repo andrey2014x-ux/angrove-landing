@@ -62,7 +62,7 @@ export const App: React.FC = () => {
       {/* 0. Header (Sticky) */}
       <Header />
 
-      <main className="flex-1">
+      <main className="flex-1 relative z-10">
         {/* 1. Hero */}
         <Hero />
 
