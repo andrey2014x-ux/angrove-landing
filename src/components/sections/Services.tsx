@@ -1,648 +1,619 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Play,
-  RotateCcw,
-  MessageSquare,
-  Sparkles,
-  Database,
-  Send,
+  ArrowUpRight,
   PhoneCall,
-  Layers,
   Filter,
-  CheckCircle2,
-  ArrowRight,
-  GitBranch,
+  Check,
   Clock,
-  Terminal,
-  ExternalLink,
+  Coins,
 } from 'lucide-react';
-import { TelegramChatScene } from './services/ServiceScenes';
 import { config } from '../../config';
 
-interface NodeData {
-  id: string;
-  type: 'trigger' | 'ai' | 'logic' | 'action';
-  badge: string;
-  title: string;
-  desc: string;
-  outputLabel: string;
-  latency: string;
-  icon: React.ReactNode;
-}
-
-interface WorkflowData {
+interface ServiceTab {
   id: string;
   num: string;
-  tabLabel: string;
-  title: string;
-  filename: string;
-  shortDesc: string;
-  roiResult: string;
-  chatPrompt: string;
-  nodes: NodeData[];
+  tabTitle: string;
+  badge: string;
+  headline: string;
+  subheadline: string;
+  timeline: string;
+  budget: string;
+  stack: string[];
+  businessEffect: string;
 }
 
-const WORKFLOWS: WorkflowData[] = [
+const SERVICES_DATA: ServiceTab[] = [
   {
-    id: 'ai-agents',
+    id: 'assistant',
     num: '01',
-    tabLabel: 'AI-агенты',
-    title: 'Автономный AI-ассистент первой линии в Telegram',
-    filename: '01_telegram_ai_rag_agent.json',
-    shortDesc: 'Отвечает клиентам за 5 секунд 24/7, консультирует по прайсу и правилам, квалифицирует лида.',
-    roiResult: 'Результат: ответ за 5 секунд 24/7, +30% к конверсии в заявку, 0 пропущенных ночных лидов',
-    chatPrompt: 'Протестируйте живой диалог с ботом',
-    nodes: [
-      {
-        id: 'node-1',
-        type: 'trigger',
-        badge: 'TRIGGER',
-        title: 'Telegram Webhook',
-        desc: 'Входящее сообщение клиента (текст или войс)',
-        outputLabel: 'text: "Сколько стоит интеграция?"',
-        latency: '12ms',
-        icon: <MessageSquare className="w-4 h-4 text-sky-400" />,
-      },
-      {
-        id: 'node-2',
-        type: 'ai',
-        badge: 'AI AGENT',
-        title: 'LLM Agent + RAG',
-        desc: 'Поиск по прайсу компании и формулирование ответа',
-        outputLabel: 'tokens: 142 · context: price_2026',
-        latency: '240ms',
-        icon: <Sparkles className="w-4 h-4 text-purple-400" />,
-      },
-      {
-        id: 'node-3',
-        type: 'logic',
-        badge: 'ROUTER',
-        title: 'Lead Qualifier',
-        desc: 'Проверка готовности к заказу и сбор контакта',
-        outputLabel: 'intent: "commercial" · score: 0.94',
-        latency: '18ms',
-        icon: <Filter className="w-4 h-4 text-amber-400" />,
-      },
-      {
-        id: 'node-4',
-        type: 'action',
-        badge: 'ACTION',
-        title: 'amoCRM & Alert',
-        desc: 'Создание сделки и отправка готового брифа в чат',
-        outputLabel: 'lead_id: #48291 · status: created',
-        latency: '85ms',
-        icon: <Database className="w-4 h-4 text-emerald-400" />,
-      },
-    ],
+    tabTitle: 'AI-агенты в Telegram',
+    badge: 'ПЕРВАЯ ЛИНИЯ 24/7',
+    headline: 'Отвечает клиентам за 5 секунд и ведёт к сделке',
+    subheadline:
+      'Обучается на вашем прайсе, регламентах и базе знаний. Понимает опечатки и голосовые сообщения, квалифицирует бюджет и передаёт готовый бриф менеджеру.',
+    timeline: '3–5 рабочих дней',
+    budget: 'от 30 000 ₽',
+    stack: ['Python', 'Telegram Bot API', 'amoCRM / Bitrix24', 'OpenAI / Claude', 'RAG'],
+    businessEffect: '+30% к конверсии из первого контакта за счёт мгновенного ответа даже ночью и в выходные',
   },
   {
-    id: 'voice-ai',
+    id: 'voice',
     num: '02',
-    tabLabel: 'AI-обзвон',
-    title: 'Голосовой AI-робот для квалификации и повторных заказов',
-    filename: '02_voice_ai_sip_qualifier.json',
-    shortDesc: 'До 1000 звонков в час без выгорания операторов. Естественный голос, перебивания, задержка <0.5с.',
-    roiResult: 'Результат: фильтрация холодной базы за 1 час вместо недели, экономия до 80 000 ₽/мес на колл-центре',
-    chatPrompt: 'Протестируйте сценарий квалификации в чате',
-    nodes: [
-      {
-        id: 'node-1',
-        type: 'trigger',
-        badge: 'TRIGGER',
-        title: 'Cron / Контакты',
-        desc: 'Выборка базы клиентов, давших согласие',
-        outputLabel: 'queue: 450 contacts · SIP ready',
-        latency: '15ms',
-        icon: <Clock className="w-4 h-4 text-sky-400" />,
-      },
-      {
-        id: 'node-2',
-        type: 'ai',
-        badge: 'VOICE AI',
-        title: 'Speech-to-Speech Bot',
-        desc: 'Диалог по скрипту без задержек (<0.5с)',
-        outputLabel: 'latency: 420ms · sentiment: positive',
-        latency: '420ms',
-        icon: <PhoneCall className="w-4 h-4 text-purple-400" />,
-      },
-      {
-        id: 'node-3',
-        type: 'logic',
-        badge: 'ROUTER',
-        title: 'Согласие получено?',
-        desc: 'Ответ «Да, отправьте счёт» → тёплая воронка',
-        outputLabel: 'branch: "YES" · intent: "quote"',
-        latency: '22ms',
-        icon: <GitBranch className="w-4 h-4 text-amber-400" />,
-      },
-      {
-        id: 'node-4',
-        type: 'action',
-        badge: 'ACTION',
-        title: 'Карточка в CRM',
-        desc: 'Прикрепление записи диалога и пуш менеджеру',
-        outputLabel: 'audio_url: rec_921.mp3 · deal: hot',
-        latency: '95ms',
-        icon: <CheckCircle2 className="w-4 h-4 text-emerald-400" />,
-      },
-    ],
+    tabTitle: 'AI-обзвон и телефония',
+    badge: 'ГОЛОСОВЫЕ РОБОТЫ',
+    headline: 'Обзвон и приём звонков без выгорания операторов',
+    subheadline:
+      'Синтез естественного живого голоса с задержкой ответа менее 0.5 секунды. Робот понимает перебивания, фильтрует холодную базу и переводит заинтересованных на менеджера.',
+    timeline: '5–8 рабочих дней',
+    budget: 'от 40 000 ₽',
+    stack: ['SIP-телефония', 'Whisper STT', 'ElevenLabs / Cartesia', 'FastAPI', 'CRM Webhooks'],
+    businessEffect: 'До 1000 звонков в час при стоимости минуты от 2 ₽. Никаких больничных и текучки кадров',
   },
   {
     id: 'parsers',
     num: '03',
-    tabLabel: 'Парсеры данных',
-    title: 'Автоматический сбор каталогов, цен конкурентов и баз B2B',
-    filename: '03_data_scraper_enrichment.json',
-    shortDesc: 'Автономный сбор реестров, карт и каталогов: отсечение неликвида, выгрузка чистой таблицы.',
-    roiResult: 'Результат: 500+ проверенных контактов ЛПР за 3 минуты вместо 70 человеко-часов ручного копипаста',
-    chatPrompt: 'Узнайте о технологиях парсинга в диалоге',
-    nodes: [
-      {
-        id: 'node-1',
-        type: 'trigger',
-        badge: 'TRIGGER',
-        title: 'Cron: 06:00 MSK',
-        desc: 'Запуск автономного цикла по расписанию',
-        outputLabel: 'sources: 2GIS · Yandex · Portals',
-        latency: '8ms',
-        icon: <Clock className="w-4 h-4 text-sky-400" />,
-      },
-      {
-        id: 'node-2',
-        type: 'ai',
-        badge: 'SCRAPER',
-        title: 'Playwright Crawler',
-        desc: 'Обход сайтов с ротацией прокси и антикапчей',
-        outputLabel: 'scraped: 520 items · status: 200',
-        latency: '680ms',
-        icon: <Layers className="w-4 h-4 text-purple-400" />,
-      },
-      {
-        id: 'node-3',
-        type: 'logic',
-        badge: 'TRANSFORM',
-        title: 'Deduplication & HLR',
-        desc: 'Удаление дублей и проверка номеров телефонов',
-        outputLabel: 'valid: 492 · junk_removed: 28',
-        latency: '45ms',
-        icon: <Filter className="w-4 h-4 text-amber-400" />,
-      },
-      {
-        id: 'node-4',
-        type: 'action',
-        badge: 'ACTION',
-        title: 'Google Sheets / CRM',
-        desc: 'Чистая база с телефонами ЛПР уже в таблице',
-        outputLabel: 'rows_added: 492 · sync: 100%',
-        latency: '110ms',
-        icon: <Database className="w-4 h-4 text-emerald-400" />,
-      },
-    ],
+    tabTitle: 'Парсеры и базы данных',
+    badge: 'B2B ДАННЫЕ & МОНИТОРИНГ',
+    headline: 'Свежие реестры контактов и цен конкурентов на автопилоте',
+    subheadline:
+      'Сбор открытых данных с карт, каталогов, маркетплейсов и отраслевых сайтов. Автоматическое отсечение неликвида, валидация телефонов ЛПР и выгрузка в чистую таблицу.',
+    timeline: '2–4 рабочих дня',
+    budget: 'от 25 000 ₽',
+    stack: ['Python / Playwright', 'PostgreSQL', 'HLR Lookup', 'Google Sheets API', 'Anti-Captcha'],
+    businessEffect: '500+ актуальных контактов за несколько минут вместо недель монотонного ручного поиска',
   },
   {
-    id: 'automations',
+    id: 'automation',
     num: '04',
-    tabLabel: 'Сквозные цепочки n8n',
-    title: 'Цифровой диспетчер: сайт, CRM, склад и мессенджеры',
-    filename: '04_n8n_cross_system_bridge.json',
-    shortDesc: 'Связывает заявки с сайта, учёт склада, amoCRM/Bitrix24 и закрытый Telegram-канал без рутины.',
-    roiResult: 'Результат: 0 потерянных заказов, сквозной финансовый учёт, автоматический дайджест собственнику',
-    chatPrompt: 'Рассчитайте архитектуру интеграции в диалоге',
-    nodes: [
-      {
-        id: 'node-1',
-        type: 'trigger',
-        badge: 'TRIGGER',
-        title: 'Webhook: Заявка',
-        desc: 'Лид с сайта, Tilda, Avito или мессенджера',
-        outputLabel: 'client: Алексей · phone: +7 999 123-**',
-        latency: '10ms',
-        icon: <Terminal className="w-4 h-4 text-sky-400" />,
-      },
-      {
-        id: 'node-2',
-        type: 'ai',
-        badge: 'TRANSFORM',
-        title: 'Data Validator',
-        desc: 'Нормализация данных и проверка на дубликаты',
-        outputLabel: 'is_new: true · clean_phone: valid',
-        latency: '14ms',
-        icon: <Filter className="w-4 h-4 text-purple-400" />,
-      },
-      {
-        id: 'node-3',
-        type: 'logic',
-        badge: 'ROUTER',
-        title: '1С / МойСклад API',
-        desc: 'Резерв номенклатуры и выставление счёта',
-        outputLabel: 'invoice: #7821 · items_reserved: 4',
-        latency: '120ms',
-        icon: <GitBranch className="w-4 h-4 text-amber-400" />,
-      },
-      {
-        id: 'node-4',
-        type: 'action',
-        badge: 'ACTION',
-        title: 'Telegram & CRM Alert',
-        desc: 'Мгновенное оповещение команды за 1.1 секунды',
-        outputLabel: 'push_sent: true · elapsed: 1.1s',
-        latency: '70ms',
-        icon: <Send className="w-4 h-4 text-emerald-400" />,
-      },
-    ],
+    tabTitle: 'Сквозные интеграции',
+    badge: 'ИНТЕГРАЦИИ & n8n',
+    headline: 'Сайт, CRM, склад и мессенджеры в единой бесшовной цепочке',
+    subheadline:
+      'Новая заявка мгновенно попадает в CRM, товар резервируется на складе, а вам в телефон приходит структурированное уведомление со всеми данными.',
+    timeline: '4–7 рабочих дней',
+    budget: 'от 35 000 ₽',
+    stack: ['n8n Engine', 'amoCRM / Bitrix24', '1C / МойСклад', 'Webhooks', 'Telegram API'],
+    businessEffect: '0 потерянных лидов, исключение человеческого фактора и прозрачный учет каждой сделки',
   },
 ];
 
 export const Services: React.FC = () => {
-  const [activeWorkflowIndex, setActiveWorkflowIndex] = useState<number>(0);
-  const [viewMode, setViewMode] = useState<'flow' | 'chat'>('flow');
-  const [activeStep, setActiveStep] = useState<number>(3);
-  const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [selectedNodeIndex, setSelectedNodeIndex] = useState<number>(0);
+  const [activeTab, setActiveTab] = useState<number>(0);
 
-  const currentWorkflow = WORKFLOWS[activeWorkflowIndex];
+  // Tab 1: AI Chat interactive state
+  const [chatMessages, setChatMessages] = useState<Array<{ sender: 'user' | 'bot'; text: string; time: string }>>([
+    {
+      sender: 'user',
+      text: 'Добрый день! Подскажите, за сколько дней реально запустить AI-бота для отдела продаж?',
+      time: '14:30',
+    },
+    {
+      sender: 'bot',
+      text: 'Здравствуйте! Базовый сценарий с интеграцией CRM запускаем за 3–4 дня. Бот сразу берёт на себя ответы по прайсу и сбор контактов. На какой мессенджер ориентируетесь?',
+      time: '14:30',
+    },
+  ]);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
 
-  // Auto-reset execution animation on tab change
-  useEffect(() => {
-    setActiveStep(3); // default to all executed / ready
-    setIsRunning(false);
-    setSelectedNodeIndex(0);
-  }, [activeWorkflowIndex]);
+  const quickQuestions = [
+    'Сколько стоит бот под ключ?',
+    'Как бот учит наш прайс?',
+    'С какими CRM интегрируетесь?',
+  ];
 
-  // Run test simulation sequence
-  const handleRunSimulation = () => {
-    if (isRunning) return;
-    setIsRunning(true);
-    setActiveStep(0);
-    setSelectedNodeIndex(0);
+  const handleAskQuick = (question: string) => {
+    if (isTyping) return;
+    const now = new Date();
+    const timeStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
 
-    const stepTimings = [0, 500, 1100, 1700];
+    setChatMessages((prev) => [...prev, { sender: 'user', text: question, time: timeStr }]);
+    setIsTyping(true);
 
-    stepTimings.forEach((delay, idx) => {
-      setTimeout(() => {
-        setActiveStep(idx);
-        setSelectedNodeIndex(idx);
-        if (idx === 3) {
-          setTimeout(() => {
-            setIsRunning(false);
-          }, 400);
-        }
-      }, delay);
-    });
+    setTimeout(() => {
+      let reply = '';
+      if (question.includes('Сколько стоит')) {
+        reply = 'Кастомный Telegram-бот с базой знаний и интеграцией в amoCRM/Bitrix24 стоит от 30 000 ₽. Смета фиксируется до старта.';
+      } else if (question.includes('прайс')) {
+        reply = 'Загружаем ваши таблицы, PDF-каталоги и регламенты в векторную базу (RAG). Бот цитирует только проверенные данные компании.';
+      } else {
+        reply = 'Работаем с amoCRM, Bitrix24, МойСклад, 1C и Google Таблицами через официальные API и Webhooks.';
+      }
+
+      setChatMessages((prev) => [...prev, { sender: 'bot', text: reply, time: timeStr }]);
+      setIsTyping(false);
+    }, 600);
   };
 
+  // Tab 3: Parser Table Filter state
+  const [onlyValidFilter, setOnlyValidFilter] = useState<boolean>(false);
+
+  // Tab 4: Automation Flow Step state
+  const [activeFlowStep, setActiveFlowStep] = useState<number>(1);
+
+  const currentService = SERVICES_DATA[activeTab];
+
   return (
-    <section className="bg-[#0A0C13] text-white py-20 sm:py-28 relative overflow-hidden" id="services">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="bg-[#0D0F14] text-white py-20 sm:py-28 relative overflow-hidden" id="services">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
         
-        {/* Rubric Header */}
-        <div className="flex items-center gap-2.5 mb-3 text-sm sm:text-base font-medium text-white/70">
-          <span className="w-1.5 h-1.5 rounded-full bg-blue" aria-hidden="true" />
-          <span>Архитектура решений</span>
-        </div>
-
-        {/* Section Headline */}
-        <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between pb-8 sm:pb-10 border-b border-white/10 gap-6">
+        {/* Section Rubric & Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-white/10">
           <div>
-            <h2 className="font-display font-black text-4xl sm:text-6xl lg:text-7xl tracking-tight leading-none text-white">
-              Четыре вида <span className="font-serif italic font-normal text-blue-light">систем</span>
+            <div className="flex items-center gap-2 mb-3 font-mono text-xs text-white/50 uppercase tracking-widest">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue" />
+              <span>Направления разработки</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-white leading-tight">
+              Четыре вида{' '}
+              <span className="font-serif italic font-normal text-blue-light lowercase">
+                систем
+              </span>
             </h2>
-            <p className="text-sm sm:text-base text-white/70 font-sans mt-3 max-w-xl">
-              Интерактивная среда n8n. Переключайте сценарии, запускайте тест цепочки или протестируйте живой диалог с AI.
-            </p>
           </div>
 
-          {/* Quick Segmented Mode Switcher (Flow vs Live Chat) */}
-          <div className="flex items-center bg-white/5 border border-white/10 rounded-xl p-1 text-xs font-mono select-none">
-            <button
-              type="button"
-              onClick={() => setViewMode('flow')}
-              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition-all cursor-pointer font-semibold ${
-                viewMode === 'flow'
-                  ? 'bg-blue text-white shadow-sm'
-                  : 'text-white/60 hover:text-white'
-              }`}
-            >
-              <GitBranch className="w-3.5 h-3.5" />
-              <span>Схема n8n</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode('chat')}
-              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg transition-all cursor-pointer font-semibold ${
-                viewMode === 'chat'
-                  ? 'bg-blue text-white shadow-sm'
-                  : 'text-white/60 hover:text-white'
-              }`}
-            >
-              <MessageSquare className="w-3.5 h-3.5" />
-              <span>Чат с AI</span>
-            </button>
-          </div>
+          <p className="text-xs sm:text-sm text-white/60 max-w-md font-sans leading-relaxed">
+            Практичные решения, которые окупаются в первые недели за счёт экономии времени и исключения рутины.
+          </p>
         </div>
 
-        {/* Workflow Pills Tabs (Light, clean, responsive) */}
-        <div className="flex items-center gap-2 overflow-x-auto py-5 scrollbar-none select-none">
-          {WORKFLOWS.map((wf, idx) => {
-            const isActive = activeWorkflowIndex === idx;
+        {/* Minimalist Horizontal Tab Selector */}
+        <div className="border-b border-white/10 overflow-x-auto scrollbar-none py-4 flex items-center gap-2 sm:gap-6 select-none">
+          {SERVICES_DATA.map((service, idx) => {
+            const isActive = activeTab === idx;
             return (
               <button
-                key={wf.id}
+                key={service.id}
                 type="button"
-                onClick={() => {
-                  setActiveWorkflowIndex(idx);
-                }}
-                className={`whitespace-nowrap px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-150 border cursor-pointer active:scale-[0.98] flex items-center gap-2 ${
+                onClick={() => setActiveTab(idx)}
+                className={`group py-2.5 px-3.5 sm:px-4 rounded-xl text-xs sm:text-sm font-medium transition-all duration-150 whitespace-nowrap cursor-pointer flex items-center gap-2.5 border ${
                   isActive
-                    ? 'bg-blue text-white border-blue shadow-[0_4px_16px_rgba(61,92,255,0.3)]'
-                    : 'bg-white/[0.03] text-white/70 border-white/10 hover:border-white/20 hover:text-white'
+                    ? 'bg-white/10 text-white border-white/20 shadow-sm'
+                    : 'bg-transparent text-white/50 border-transparent hover:text-white hover:bg-white/5'
                 }`}
               >
-                <span className={`font-mono text-xs ${isActive ? 'text-white/80' : 'text-white/40'}`}>
-                  {wf.num}
+                <span className={`font-mono text-xs ${isActive ? 'text-blue-light font-bold' : 'text-white/40'}`}>
+                  {service.num}
                 </span>
-                <span>{wf.tabLabel}</span>
+                <span className="font-sans font-semibold">{service.tabTitle}</span>
               </button>
             );
           })}
         </div>
 
-        {/* n8n Studio Canvas Box */}
-        <div className="rounded-2xl sm:rounded-3xl border border-white/10 bg-[#0E1017] shadow-2xl overflow-hidden relative">
+        {/* Main 2-Column Minimalist Showcase */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 pt-10 items-stretch">
           
-          {/* Top Bar of n8n Editor */}
-          <div className="px-4 sm:px-6 py-3 bg-black/40 border-b border-white/10 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-3 min-w-0">
-              {/* Window Controls */}
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]/80" />
-                <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]/80" />
-                <span className="w-2.5 h-2.5 rounded-full bg-[#27C93F]/80" />
+          {/* Left Column (5 cols): Clear Business Substance */}
+          <div className="lg:col-span-5 flex flex-col justify-between">
+            <div>
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-white/5 border border-white/10 font-mono text-[10px] text-white/70 font-semibold tracking-wider mb-4">
+                <span>{currentService.badge}</span>
               </div>
 
-              <div className="h-4 w-[1px] bg-white/15 mx-1 hidden sm:block" />
+              <h3 className="font-display font-black text-2xl sm:text-3xl lg:text-4xl text-white tracking-tight leading-tight mb-4">
+                {currentService.headline}
+              </h3>
 
-              {/* Breadcrumb / Title */}
-              <div className="flex items-center gap-2 font-mono text-xs text-white/80 truncate">
-                <span className="text-white/40 hidden sm:inline">workflows /</span>
-                <span className="text-white font-medium">{currentWorkflow.filename}</span>
+              <p className="text-sm sm:text-base text-white/70 font-sans leading-relaxed mb-8">
+                {currentService.subheadline}
+              </p>
+
+              {/* 3 Clear Conditions (Timeline, Budget, Stack) */}
+              <div className="grid grid-cols-2 gap-4 border-t border-b border-white/10 py-5 mb-8 font-sans">
+                <div>
+                  <div className="flex items-center gap-1.5 text-xs text-white/50 font-mono mb-1">
+                    <Clock className="w-3.5 h-3.5 text-blue-light" />
+                    <span>Срок запуска</span>
+                  </div>
+                  <div className="text-sm sm:text-base font-bold text-white">
+                    {currentService.timeline}
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center gap-1.5 text-xs text-white/50 font-mono mb-1">
+                    <Coins className="w-3.5 h-3.5 text-blue-light" />
+                    <span>Ориентир стоимости</span>
+                  </div>
+                  <div className="text-sm sm:text-base font-bold text-white">
+                    {currentService.budget}
+                  </div>
+                </div>
+
+                <div className="col-span-2 pt-2">
+                  <div className="text-xs text-white/50 font-mono mb-2">Стек технологий:</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {currentService.stack.map((item) => (
+                      <span
+                        key={item}
+                        className="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-xs font-mono text-white/80"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              {/* Active status pill */}
-              <span className="hidden md:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                <span>active</span>
-              </span>
+              {/* Business Effect Banner */}
+              <div className="p-4 rounded-xl bg-blue/10 border border-blue/20 text-xs sm:text-sm text-blue-light font-sans mb-8 leading-relaxed">
+                <span className="font-mono text-[10px] uppercase font-bold text-white/90 mr-2 bg-blue px-1.5 py-0.5 rounded">
+                  Эффект
+                </span>
+                {currentService.businessEffect}
+              </div>
             </div>
 
-            {/* Run Button in Top Bar */}
-            {viewMode === 'flow' && (
-              <button
-                type="button"
-                onClick={handleRunSimulation}
-                disabled={isRunning}
-                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium transition-all active:scale-[0.98] cursor-pointer shadow-sm ${
-                  isRunning
-                    ? 'bg-blue/40 text-white/70 cursor-wait'
-                    : 'bg-blue hover:bg-blue-light text-white'
-                }`}
-                title="Запустить выполнение цепочки нод"
-              >
-                {isRunning ? (
-                  <>
-                    <RotateCcw className="w-3.5 h-3.5 animate-spin" />
-                    <span>Выполнение...</span>
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-3.5 h-3.5 fill-white" />
-                    <span>Тест цепочки</span>
-                  </>
-                )}
-              </button>
-            )}
+            {/* Direct CTA Link */}
+            <a
+              href={config.telegramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-white text-ink text-xs sm:text-sm font-black uppercase tracking-wider hover:bg-blue hover:text-white transition-all duration-150 active:scale-[0.98] shadow-md group"
+            >
+              <span>Обсудить задачу в Telegram</span>
+              <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </a>
           </div>
 
-          {/* Canvas Body */}
-          <div className="relative min-h-[460px] flex flex-col justify-between">
-            {/* Dot Grid Background */}
-            <div
-              className="absolute inset-0 opacity-20 pointer-events-none"
-              style={{
-                backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)',
-                backgroundSize: '20px 20px',
-              }}
-            />
-
-            <AnimatePresence mode="wait">
-              {viewMode === 'flow' ? (
-                <motion.div
-                  key={`flow-${activeWorkflowIndex}`}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                  className="p-5 sm:p-8 flex-1 flex flex-col justify-between relative z-10"
-                >
-                  {/* Workflow Description Summary */}
-                  <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono text-white/60 pb-3 border-b border-white/5">
-                    <div>{currentWorkflow.shortDesc}</div>
-                    <div className="text-blue-light font-semibold shrink-0">
-                      Всего узлов: 4 · Время отклика &lt;0.5с
-                    </div>
-                  </div>
-
-                  {/* Horizontal Nodes Chain with Connecting Lines */}
-                  <div className="overflow-x-auto py-4 scrollbar-none">
-                    <div className="min-w-[820px] flex items-center justify-between relative">
-                      
-                      {/* SVG Bezier Connecting Wires */}
-                      <svg
-                        className="absolute top-1/2 -translate-y-1/2 left-0 w-full h-12 pointer-events-none -z-0"
-                        style={{ overflow: 'visible' }}
-                      >
-                        {/* 3 wires between 4 nodes */}
-                        {[0, 1, 2].map((wireIdx) => {
-                          const x1 = (wireIdx * 33.33) + 16.66;
-                          const x2 = ((wireIdx + 1) * 33.33) + 16.66;
-                          const isWireActive = activeStep > wireIdx;
-
-                          return (
-                            <g key={`wire-${wireIdx}`}>
-                              <line
-                                x1={`${x1}%`}
-                                y1="24"
-                                x2={`${x2}%`}
-                                y2="24"
-                                stroke={isWireActive ? '#3D5CFF' : 'rgba(255,255,255,0.12)'}
-                                strokeWidth="2"
-                                strokeDasharray={isWireActive ? 'none' : '4 4'}
-                              />
-                              {isRunning && activeStep === wireIdx && (
-                                <motion.circle
-                                  cx={`${x1}%`}
-                                  cy="24"
-                                  r="4"
-                                  fill="#60a5fa"
-                                  animate={{ cx: [`${x1}%`, `${x2}%`] }}
-                                  transition={{ duration: 0.5, ease: 'easeInOut' }}
-                                />
-                              )}
-                            </g>
-                          );
-                        })}
-                      </svg>
-
-                      {/* 4 n8n Nodes */}
-                      {currentWorkflow.nodes.map((node, nodeIdx) => {
-                        const isExecuted = activeStep >= nodeIdx;
-                        const isCurrentlyRunning = isRunning && activeStep === nodeIdx;
-                        const isSelected = selectedNodeIndex === nodeIdx;
-
-                        return (
-                          <div
-                            key={node.id}
-                            onClick={() => setSelectedNodeIndex(nodeIdx)}
-                            className={`w-[195px] rounded-2xl border p-3.5 transition-all duration-200 select-none relative cursor-pointer active:scale-[0.98] ${
-                              isSelected
-                                ? 'bg-[#181C2B] border-blue shadow-[0_8px_24px_rgba(61,92,255,0.25)]'
-                                : isExecuted
-                                ? 'bg-[#141722] border-white/15 hover:border-white/30'
-                                : 'bg-[#10121A] border-white/5 opacity-50'
-                            }`}
-                          >
-                            {/* Input Pin (left) */}
-                            {nodeIdx > 0 && (
-                              <div
-                                className={`absolute -left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border-2 ${
-                                  isExecuted
-                                    ? 'bg-blue border-[#0E1017]'
-                                    : 'bg-[#2A2F45] border-[#0E1017]'
-                                }`}
-                              />
-                            )}
-
-                            {/* Output Pin (right) */}
-                            {nodeIdx < 3 && (
-                              <div
-                                className={`absolute -right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full border-2 ${
-                                  isExecuted
-                                    ? 'bg-blue border-[#0E1017]'
-                                    : 'bg-[#2A2F45] border-[#0E1017]'
-                                }`}
-                              />
-                            )}
-
-                            {/* Node Header */}
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
-                                {node.icon}
-                              </div>
-                              <span className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-white/50 border border-white/10 font-bold">
-                                {node.badge}
-                              </span>
+          {/* Right Column (7 cols): Minimalist, Clean Interactive Artifact */}
+          <div className="lg:col-span-7 flex flex-col">
+            <div className="flex-1 bg-[#12141D] rounded-2xl border border-white/10 p-5 sm:p-7 flex flex-col justify-between shadow-lg min-h-[460px]">
+              
+              <AnimatePresence mode="wait">
+                {/* 01: Interactive Telegram Bot Chat */}
+                {activeTab === 0 && (
+                  <motion.div
+                    key="chat-artifact"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="flex-1 flex flex-col justify-between"
+                  >
+                    <div>
+                      {/* Clean Chat Header */}
+                      <div className="flex items-center justify-between pb-3 mb-4 border-b border-white/10">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-full bg-blue text-white font-bold text-xs flex items-center justify-center">
+                            AI
+                          </div>
+                          <div>
+                            <div className="text-xs sm:text-sm font-bold text-white">
+                              Ассистент квалификации
                             </div>
-
-                            {/* Node Title & Description */}
-                            <div className="font-bold text-xs text-white truncate mb-1">
-                              {node.title}
-                            </div>
-                            <div className="text-[11px] text-white/60 line-clamp-2 leading-relaxed h-8">
-                              {node.desc}
-                            </div>
-
-                            {/* Node Footer Status */}
-                            <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono">
-                              <span className="text-white/40">{node.latency}</span>
-                              {isCurrentlyRunning ? (
-                                <span className="text-blue-light animate-pulse font-bold">RUNNING</span>
-                              ) : isExecuted ? (
-                                <span className="text-emerald-400 font-bold flex items-center gap-1">
-                                  <span>200 OK</span>
-                                </span>
-                              ) : (
-                                <span className="text-white/30">idle</span>
-                              )}
+                            <div className="text-[11px] text-emerald-400 font-mono">
+                              ● онлайн 24/7 · Telegram Bot API
                             </div>
                           </div>
-                        );
-                      })}
-                    </div>
-                  </div>
+                        </div>
+                        <span className="text-[11px] font-mono text-white/40">
+                          Живой тест
+                        </span>
+                      </div>
 
-                  {/* Selected Node Inspector Tray (Lightweight n8n Data Preview) */}
-                  <div className="mt-6 p-4 rounded-xl bg-black/40 border border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div className="flex items-start md:items-center gap-3 min-w-0">
-                      <span className="font-mono text-xs px-2 py-0.5 rounded bg-blue/20 text-blue-light font-bold shrink-0">
-                        OUTPUT [{currentWorkflow.nodes[selectedNodeIndex].title}]
-                      </span>
-                      <code className="font-mono text-xs text-emerald-400 truncate">
-                        {currentWorkflow.nodes[selectedNodeIndex].outputLabel}
-                      </code>
+                      {/* Chat Messages Log */}
+                      <div className="space-y-3 max-h-[250px] overflow-y-auto pr-1 text-xs sm:text-sm font-sans">
+                        {chatMessages.map((msg, i) => (
+                          <div
+                            key={i}
+                            className={`flex flex-col ${
+                              msg.sender === 'user' ? 'items-end' : 'items-start'
+                            }`}
+                          >
+                            <div
+                              className={`p-3 rounded-2xl max-w-[85%] leading-relaxed ${
+                                msg.sender === 'user'
+                                  ? 'bg-blue text-white rounded-br-none'
+                                  : 'bg-white/10 text-white/90 rounded-bl-none'
+                              }`}
+                            >
+                              {msg.text}
+                            </div>
+                            <span className="text-[10px] font-mono text-white/40 mt-1 px-1">
+                              {msg.time}
+                            </span>
+                          </div>
+                        ))}
+
+                        {isTyping && (
+                          <div className="text-xs font-mono text-white/40 italic flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-blue animate-pulse" />
+                            <span>Бот печатает ответ...</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-3 shrink-0">
-                      {/* Action to test in live chat */}
-                      <button
-                        type="button"
-                        onClick={() => setViewMode('chat')}
-                        className="text-xs font-mono text-blue-light hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
-                      >
-                        <span>Протестировать в чате</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
+                    {/* Quick Question Chips */}
+                    <div className="pt-4 border-t border-white/10 mt-4">
+                      <div className="text-[11px] font-mono text-white/50 mb-2">
+                        Нажмите вопрос для проверки ответа:
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {quickQuestions.map((q) => (
+                          <button
+                            key={q}
+                            type="button"
+                            onClick={() => handleAskQuick(q)}
+                            disabled={isTyping}
+                            className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-sans text-white/80 border border-white/10 transition-colors cursor-pointer text-left active:scale-[0.98]"
+                          >
+                            {q}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  </motion.div>
+                )}
 
-                  {/* Business Outcome Bottom Bar */}
-                  <div className="mt-4 pt-3 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-sans">
-                    <div className="text-white/80 flex items-center gap-2">
-                      <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-white/10 text-white font-bold">
-                        ЭФФЕКТ
-                      </span>
-                      <span>{currentWorkflow.roiResult.replace('Результат: ', '')}</span>
+                {/* 02: Minimalist Voice Call Transcript & Audio Card */}
+                {activeTab === 1 && (
+                  <motion.div
+                    key="voice-artifact"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="flex-1 flex flex-col justify-between"
+                  >
+                    <div>
+                      {/* Top Call Info */}
+                      <div className="flex items-center justify-between pb-3 mb-4 border-b border-white/10">
+                        <div className="flex items-center gap-2.5">
+                          <PhoneCall className="w-4 h-4 text-emerald-400" />
+                          <span className="font-bold text-xs sm:text-sm text-white">
+                            Сценарий: Квалификация входящего лида
+                          </span>
+                        </div>
+                        <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-[10px] font-bold">
+                          Задержка &lt;0.5с
+                        </span>
+                      </div>
+
+                      {/* Caller Meta */}
+                      <div className="bg-white/5 rounded-xl p-3 border border-white/5 mb-4 text-xs font-mono text-white/70 flex justify-between items-center">
+                        <div>
+                          <span className="text-white/40">Абонент: </span>
+                          <span className="text-white font-medium">+7 (926) 410-**-** (ООО «ПромСнаб»)</span>
+                        </div>
+                        <div className="text-white/40">Длительность: 00:48</div>
+                      </div>
+
+                      {/* Real Dialogue Snippet */}
+                      <div className="space-y-2.5 bg-black/30 rounded-xl p-4 border border-white/10 text-xs sm:text-sm font-sans">
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-light font-bold shrink-0 font-mono">[AI Робот]:</span>
+                          <span className="text-white/80">
+                            «Добрый день! Подтверждаем заказ на оптовую партию крепежа. Спецификацию согласовали?»
+                          </span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-emerald-400 font-bold shrink-0 font-mono">[Клиент]:</span>
+                          <span className="text-white/95">
+                            «Да, актуально. Отправьте счёт и договор сразу на рабочую почту.»
+                          </span>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-blue-light font-bold shrink-0 font-mono">[AI Робот]:</span>
+                          <span className="text-white/80">
+                            «Счёт сформирован и уже отправлен. Менеджер на связи в WhatsApp для уточнений.»
+                          </span>
+                        </div>
+                      </div>
                     </div>
 
-                    <a
-                      href={config.telegramUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white/70 hover:text-white text-xs font-medium flex items-center gap-1 underline underline-offset-4 transition-colors"
-                    >
-                      <span>Обсудить реализацию цепочки</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </div>
-                </motion.div>
-              ) : (
-                /* Chat with AI Scene inside n8n Studio */
-                <motion.div
-                  key={`chat-${activeWorkflowIndex}`}
-                  initial={{ opacity: 0, scale: 0.98 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.98 }}
-                  transition={{ duration: 0.16 }}
-                  className="h-[520px] flex-1 relative z-10"
-                >
-                  <TelegramChatScene activeTab={activeWorkflowIndex} />
-                </motion.div>
-              )}
-            </AnimatePresence>
+                    {/* Result Plaque */}
+                    <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono flex items-center justify-between mt-4">
+                      <div className="flex items-center gap-2 font-bold">
+                        <Check className="w-4 h-4" />
+                        <span>Результат звонка: Согласие получено</span>
+                      </div>
+                      <span className="text-emerald-300/70">Сделка в CRM создана</span>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* 03: Clean Minimalist Parser Table */}
+                {activeTab === 2 && (
+                  <motion.div
+                    key="parser-artifact"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="flex-1 flex flex-col justify-between"
+                  >
+                    <div>
+                      {/* Top Bar with Filter */}
+                      <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
+                        <div>
+                          <div className="font-bold text-xs sm:text-sm text-white">
+                            Выгрузка: Оптовые поставщики оборудования
+                          </div>
+                          <div className="text-[11px] font-mono text-white/50">
+                            Источники: 2ГИС · Карты · Отраслевые каталоги
+                          </div>
+                        </div>
+
+                        {/* Filter Toggle */}
+                        <button
+                          type="button"
+                          onClick={() => setOnlyValidFilter(!onlyValidFilter)}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-mono border transition-all cursor-pointer flex items-center gap-1.5 ${
+                            onlyValidFilter
+                              ? 'bg-blue text-white border-blue'
+                              : 'bg-white/5 text-white/70 border-white/10 hover:text-white'
+                          }`}
+                        >
+                          <Filter className="w-3 h-3" />
+                          <span>{onlyValidFilter ? 'Только валидные (3)' : 'Все записи (4)'}</span>
+                        </button>
+                      </div>
+
+                      {/* Clean Data Rows */}
+                      <div className="divide-y divide-white/10 text-xs font-mono">
+                        <div className="py-2 text-[10px] text-white/40 uppercase tracking-wider grid grid-cols-12 gap-2">
+                          <span className="col-span-5">Компания / Сфера</span>
+                          <span className="col-span-4">Контакт ЛПР</span>
+                          <span className="col-span-3 text-right">Статус</span>
+                        </div>
+
+                        <div className="py-2.5 grid grid-cols-12 gap-2 items-center">
+                          <div className="col-span-5 truncate font-medium text-white">
+                            ООО «ПромТехСнаб»
+                            <span className="block text-[10px] text-white/50">Металлообработка</span>
+                          </div>
+                          <div className="col-span-4 text-white/80">+7 (812) 334-**-**</div>
+                          <div className="col-span-3 text-right">
+                            <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 text-[10px] border border-emerald-500/30">
+                              Валиден
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="py-2.5 grid grid-cols-12 gap-2 items-center">
+                          <div className="col-span-5 truncate font-medium text-white">
+                            АО «Завод Крепёж»
+                            <span className="block text-[10px] text-white/50">Производство</span>
+                          </div>
+                          <div className="col-span-4 text-white/80">+7 (495) 710-**-**</div>
+                          <div className="col-span-3 text-right">
+                            <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 text-[10px] border border-emerald-500/30">
+                              Валиден
+                            </span>
+                          </div>
+                        </div>
+
+                        {!onlyValidFilter && (
+                          <div className="py-2.5 grid grid-cols-12 gap-2 items-center opacity-50">
+                            <div className="col-span-5 truncate font-medium text-white">
+                              ИП Смирнов В.А.
+                              <span className="block text-[10px] text-white/50">Розничный магазин</span>
+                            </div>
+                            <div className="col-span-4 text-white/50">Номер не отвечает</div>
+                            <div className="col-span-3 text-right">
+                              <span className="px-2 py-0.5 rounded bg-white/5 text-white/40 text-[10px] border border-white/10">
+                                Отсеян
+                              </span>
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="py-2.5 grid grid-cols-12 gap-2 items-center">
+                          <div className="col-span-5 truncate font-medium text-white">
+                            ООО «СеверСклад»
+                            <span className="block text-[10px] text-white/50">Складская логистика</span>
+                          </div>
+                          <div className="col-span-4 text-white/80">+7 (812) 991-**-**</div>
+                          <div className="col-span-3 text-right">
+                            <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 text-[10px] border border-emerald-500/30">
+                              Валиден
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bottom Status */}
+                    <div className="pt-3 border-t border-white/10 text-xs font-mono text-white/50 flex items-center justify-between mt-3">
+                      <span>Экспорт: Google Sheets, Excel или напрямую в CRM</span>
+                      <span className="text-blue-light font-bold">HLR-проверка номеров</span>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* 04: Linear 3-Step Integration Flow */}
+                {activeTab === 3 && (
+                  <motion.div
+                    key="integration-artifact"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="flex-1 flex flex-col justify-between"
+                  >
+                    <div>
+                      {/* Header */}
+                      <div className="flex items-center justify-between pb-3 mb-4 border-b border-white/10">
+                        <div className="font-bold text-xs sm:text-sm text-white">
+                          Архитектура: Сайт → CRM → Склад → Telegram
+                        </div>
+                        <span className="text-[11px] font-mono text-emerald-400">
+                          ● Синхронизация: 1.1с
+                        </span>
+                      </div>
+
+                      {/* 3 Step Interactive Row */}
+                      <div className="space-y-3 font-sans">
+                        {[
+                          {
+                            step: 1,
+                            title: '1. Клиент оставил заявку',
+                            desc: 'Сайт, Tilda или бот получает имя, телефон и состав заказа.',
+                            payload: 'webhook: POST /lead { name: "Алексей", items: 4 }',
+                          },
+                          {
+                            step: 2,
+                            title: '2. Проверка дублей и резерв',
+                            desc: 'Данные сопоставляются с CRM, в МойСклад ставится резерв.',
+                            payload: 'crm: deal_id #9182 · stock_reserved: true',
+                          },
+                          {
+                            step: 3,
+                            title: '3. Мгновенный алерт команде',
+                            desc: 'Менеджеру уходит пуш в Telegram со ссылкой на сделку.',
+                            payload: 'telegram_bot: sendAlert(chat_id, deal_summary)',
+                          },
+                        ].map((item) => (
+                          <div
+                            key={item.step}
+                            onClick={() => setActiveFlowStep(item.step)}
+                            className={`p-3.5 rounded-xl border transition-all duration-150 cursor-pointer ${
+                              activeFlowStep === item.step
+                                ? 'bg-white/10 border-blue text-white'
+                                : 'bg-white/5 border-white/5 text-white/70 hover:bg-white/[0.08]'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="font-bold text-xs sm:text-sm text-white">
+                                {item.title}
+                              </span>
+                              {activeFlowStep === item.step && (
+                                <span className="font-mono text-[10px] text-blue-light font-bold">
+                                  Выбран
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-xs text-white/60 mb-2">{item.desc}</div>
+                            {activeFlowStep === item.step && (
+                              <code className="block p-2 rounded bg-black/50 font-mono text-[11px] text-emerald-400">
+                                {item.payload}
+                              </code>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="pt-3 border-t border-white/10 text-xs font-mono text-white/50 flex items-center justify-between mt-3">
+                      <span>На базе n8n / Python webhooks</span>
+                      <span className="text-emerald-400">0 потерянных заказов</span>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+            </div>
           </div>
+
         </div>
 
       </div>
 
-      {/* Wide Blue Leopard Stripe Divider at bottom of Services */}
-      <div
-        className="w-full h-12 sm:h-16 mt-16 sm:mt-24 bg-leopard border-t border-b border-black select-none"
-        style={{
-          backgroundSize: '180px 120px',
-          backgroundRepeat: 'repeat',
-        }}
-        aria-hidden="true"
-      />
+      {/* Subtle bottom separator line */}
+      <div className="w-full h-px bg-white/10 mt-20" aria-hidden="true" />
     </section>
   );
 };
