@@ -1,89 +1,63 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { config } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { gsap } from '../../lib/motion';
-import { Check, ArrowUpRight, Clock } from 'lucide-react';
 
-interface ChecklistItem {
+interface FrictionPoint {
   id: string;
   num: string;
-  title: string;
-  description: string;
-  hoursMonthly: number;
-  tag: string;
+  category: string;
+  asIs: string;
+  toBe: string;
+  metricValue: string;
+  metricLabel: string;
 }
 
 export const PainChecklist: React.FC = () => {
-  const [selected, setSelected] = useState<Record<string, boolean>>({
-    'data-transfer': true,
-    'delayed-response': true,
-  });
   const sectionRef = useRef<HTMLElement>(null);
 
-  const items: ChecklistItem[] = [
-    {
-      id: 'data-transfer',
-      num: '01',
-      title: 'Ручной перенос данных',
-      description: 'Менеджеры вручную копируют контакты, заказы и чеки между CRM, мессенджерами и Google Таблицами.',
-      hoursMonthly: 24,
-      tag: 'Потери: ~24 ч/мес',
-    },
-    {
-      id: 'delayed-response',
-      num: '02',
-      title: 'Медленный ответ клиентам',
-      description: 'Заявки вечером и в выходные висят без ответа по несколько часов — клиенты успевают уйти к конкурентам.',
-      hoursMonthly: 18,
-      tag: 'Потери: до 28% лидов',
-    },
-    {
-      id: 'repetitive-dialogs',
-      num: '03',
-      title: 'Однотипные вопросы и прайсы',
-      description: 'Сотрудники тратят до трети рабочего дня на отправку одинаковых PDF, расчет типовых смет и переписку.',
-      hoursMonthly: 20,
-      tag: 'Потери: ~20 ч/мес',
-    },
-    {
-      id: 'manual-scraping',
-      num: '04',
-      title: 'Ручной сбор контактов и цен',
-      description: 'Поиск контрагентов, мониторинг конкурентов и выгрузка баз делаются вручную по справочникам и картам.',
-      hoursMonthly: 26,
-      tag: 'Потери: ~26 ч/мес',
-    },
-    {
-      id: 'lost-leads',
-      num: '05',
-      title: 'Забытые сделки без напоминаний',
-      description: 'Заявки теряются в личных чатах, никто не поставил задачу перезвонить, воронка не контролируется сквозным учетом.',
-      hoursMonthly: 16,
-      tag: 'Потери: ~15% выручки',
-    },
-  ];
-
-  const toggleItem = (id: string) => {
-    setSelected((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent, id: string) => {
-    if (e.key === ' ' || e.key === 'Enter') {
-      e.preventDefault();
-      toggleItem(id);
-    }
-  };
-
-  const selectedItems = items.filter((item) => selected[item.id]);
-  const countChecked = selectedItems.length;
-  const totalHoursLost = selectedItems.reduce((acc, curr) => acc + curr.hoursMonthly, 0);
-
-  const handleResolveClick = () => {
+  const handleTelegramClick = () => {
     trackGoal('click_telegram');
   };
+
+  const points: FrictionPoint[] = [
+    {
+      id: 'data-sync',
+      num: '01',
+      category: 'РУТИНА ДАННЫХ',
+      asIs: 'Сотрудники вручную копируют контакты, заказы и чеки между CRM, мессенджерами и таблицами. Любая опечатка ломает учет.',
+      toBe: 'Автономная шина интеграций: данные мгновенно синхронизируются между сервисами в момент события. Ноль ручного ввода.',
+      metricValue: '+25 ч/мес',
+      metricLabel: 'чистого времени команды',
+    },
+    {
+      id: 'night-leads',
+      num: '02',
+      category: 'СКОРОСТЬ РЕАКЦИИ',
+      asIs: 'Заявка ночью или в выходной висит без ответа часами. К моменту выхода менеджера клиент уже купил у конкурента.',
+      toBe: 'AI-агент первого контакта в Telegram: отвечает за 3 секунды, консультирует по прайсу, квалифицирует лида и готовит сделку.',
+      metricValue: '< 5 сек',
+      metricLabel: 'ответ в любое время суток',
+    },
+    {
+      id: 'manual-parsing',
+      num: '03',
+      category: 'СБОР БАЗ & МОНИТОРИНГ',
+      asIs: 'Менеджеры днями серфят справочники, карты и сайты поставщиков, вручную перепечатывая телефоны и прайсы в Excel.',
+      toBe: 'Автономный парсер на Python: сам собирает номенклатуру по расписанию, фильтрует неликвид и кладет чистую базу в CRM.',
+      metricValue: '60x',
+      metricLabel: 'ускорение сбора базы контактов',
+    },
+    {
+      id: 'fragmented-tools',
+      num: '04',
+      category: 'РАЗРЫВ СЕРВИСОВ',
+      asIs: 'Оплата в одном банке, склад в другой программе, диалоги в Telegram, а собственник тратит вечер на сведение отчета.',
+      toBe: 'Сквозная цепочка n8n & API: автоматическое списание остатков, уведомления и утренний персональный дайджест в 08:30:00.',
+      metricValue: '100%',
+      metricLabel: 'сходимость данных и учета',
+    },
+  ];
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -91,20 +65,20 @@ export const PainChecklist: React.FC = () => {
     if (isReduced) return;
 
     const ctx = gsap.context(() => {
-      const rows = sectionRef.current?.querySelectorAll('.pain-matrix-row');
+      const rows = sectionRef.current?.querySelectorAll('.friction-row');
       if (rows && rows.length) {
         gsap.fromTo(
           rows,
-          { opacity: 0, y: 15 },
+          { opacity: 0, y: 24 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.5,
-            stagger: 0.08,
+            duration: 0.6,
+            stagger: 0.12,
             ease: 'power2.out',
             scrollTrigger: {
               trigger: sectionRef.current,
-              start: 'top 80%',
+              start: 'top 75%',
             },
           }
         );
@@ -117,162 +91,100 @@ export const PainChecklist: React.FC = () => {
   return (
     <section
       ref={sectionRef}
-      className="bg-paper text-ink py-16 sm:py-24 border-b border-line-dark relative overflow-hidden"
       id="problems"
+      className="bg-paper text-ink py-20 sm:py-28 border-b border-line-dark relative overflow-hidden"
     >
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12">
-        
-        {/* Section Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-8 border-b border-line-dark/25">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
+        {/* Section Header with Editorial Rubric */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-line-dark">
           <div>
-            <div className="flex items-center gap-2 mb-3 text-xs font-mono uppercase tracking-wider text-blue font-bold">
-              <span className="w-2 h-2 rounded-full bg-blue" aria-hidden="true" />
-              <span>Диагностика бизнес-процессов</span>
+            <div className="flex items-center gap-2.5 mb-3 text-sm sm:text-base font-medium text-ink">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue" aria-hidden="true" />
+              <span>Анатомия рутины</span>
             </div>
-            <h2 className="text-[clamp(1.9rem,3.8vw,3.25rem)] font-display font-black tracking-tight leading-[1.1] text-ink">
-              Где в компании{' '}
-              <span className="font-serif italic font-normal text-blue whitespace-nowrap">
-                утекает ресурс?
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-ink">
+              Где на самом деле{' '}
+              <span className="font-serif italic font-normal text-blue lowercase">
+                буксуют процессы
               </span>
+              ?
             </h2>
           </div>
-
-          <p className="text-sm sm:text-base text-ink/75 max-w-lg font-sans leading-relaxed">
-            Отметьте операции, которые сейчас выполняются вручную. Калькулятор мгновенно рассчитает примерный объём скрытых потерь рабочего времени.
+          <p className="text-xs sm:text-sm text-ink/75 max-w-md font-sans leading-relaxed">
+            Пока люди часами выполняют механическую работу, бизнес теряет скорость и фокус. Вот 4 узких горлышка, которые я заменяю кодом.
           </p>
         </div>
 
-        {/* 2-Column Diagnostic Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 pt-8 sm:pt-10 items-start">
-          
-          {/* Left Column: Interactive 5 Rows (7 cols) */}
-          <div className="lg:col-span-7 space-y-3" role="group" aria-label="Диагностическая матрица рутины">
-            {items.map((item) => {
-              const isChecked = !!selected[item.id];
-              return (
-                <div
-                  key={item.id}
-                  role="checkbox"
-                  aria-checked={isChecked}
-                  tabIndex={0}
-                  onClick={() => toggleItem(item.id)}
-                  onKeyDown={(e) => handleKeyDown(e, item.id)}
-                  className={`pain-matrix-row p-4 sm:p-5 rounded-2xl border transition-all duration-150 cursor-pointer select-none flex items-start gap-4 ${
-                    isChecked
-                      ? 'bg-white border-blue shadow-md'
-                      : 'bg-white/40 border-line-dark/15 hover:bg-white/70 hover:border-line-dark/30'
-                  }`}
-                >
-                  {/* Custom Pill Checkbox */}
-                  <div
-                    className={`w-6 h-6 rounded-lg border flex items-center justify-center shrink-0 mt-0.5 transition-colors duration-150 ${
-                      isChecked
-                        ? 'bg-blue border-blue text-white'
-                        : 'border-ink/25 bg-white/60'
-                    }`}
-                  >
-                    {isChecked && <Check className="w-3.5 h-3.5 text-white stroke-[2.5]" />}
-                  </div>
-
-                  {/* Text & Meta */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs text-ink/40 font-bold">{item.num}</span>
-                        <h3 className="font-sans font-bold text-base sm:text-lg text-ink tracking-tight">
-                          {item.title}
-                        </h3>
-                      </div>
-                      <span className={`font-mono text-[10px] px-2 py-0.5 rounded font-semibold ${
-                        isChecked 
-                          ? 'bg-blue/10 text-blue border border-blue/20' 
-                          : 'bg-black/5 text-ink/50'
-                      }`}>
-                        {item.tag}
-                      </span>
-                    </div>
-
-                    <p className="text-xs sm:text-sm text-ink/75 font-sans leading-relaxed">
-                      {item.description}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Right Column: Real-time Telemetry & Economic Effect (5 cols) */}
-          <div className="lg:col-span-5 lg:sticky lg:top-24">
-            <div className="p-6 sm:p-8 rounded-3xl bg-ink text-white border border-zinc-800 shadow-2xl relative overflow-hidden">
-              <div className="flex items-center justify-between pb-4 mb-5 border-b border-white/10">
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-blue-light" />
-                  <span className="font-mono text-xs text-zinc-300 uppercase tracking-wider font-semibold">
-                    Оценка потерь ресурса
-                  </span>
-                </div>
-                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
-                  Live расчет
+        {/* Editorial Friction Ledger (Swiss Grid Rows) */}
+        <div className="divide-y divide-line-dark border-b border-line-dark">
+          {points.map((pt) => (
+            <div
+              key={pt.id}
+              className="friction-row py-8 sm:py-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start group hover:bg-black/[0.015] transition-colors duration-150 px-2 sm:px-4"
+            >
+              {/* Col 1: Index & Category */}
+              <div className="lg:col-span-3 flex lg:flex-col items-center lg:items-start justify-between gap-2">
+                <span className="font-mono text-2xl sm:text-3xl font-black text-ink/40 group-hover:text-blue transition-colors">
+                  {pt.num}
+                </span>
+                <span className="font-mono text-xs uppercase tracking-wider text-ink/60 font-semibold">
+                  {pt.category}
                 </span>
               </div>
 
-              {/* Grand Live Hours Numeral */}
-              <div className="mb-6">
-                <div className="font-mono text-xs text-zinc-400 uppercase tracking-wider mb-1">
-                  Скрытые операционные потери:
+              {/* Col 2: The Bottleneck (As Is) */}
+              <div className="lg:col-span-4">
+                <div className="text-xs font-mono text-rose-700 uppercase tracking-wider font-bold mb-2 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                  <span>Как сейчас (ручной труд)</span>
                 </div>
-                <div className="flex items-baseline gap-2">
-                  <span className="font-display font-black text-5xl sm:text-6xl text-white tracking-tight tabular-nums">
-                    {totalHoursLost > 0 ? `~${totalHoursLost}` : '0'}
-                  </span>
-                  <span className="text-xl sm:text-2xl font-display font-bold text-blue-light">
-                    часов / месяц
-                  </span>
-                </div>
-                <div className="text-xs font-sans text-zinc-400 mt-1">
-                  {countChecked === 0
-                    ? 'Выберите процессы слева для диагностики'
-                    : `Выявлено ${countChecked} из 5 узких мест в текущих процессах`}
-                </div>
+                <p className="font-serif italic text-base sm:text-lg text-ink/80 leading-relaxed">
+                  «{pt.asIs}»
+                </p>
               </div>
 
-              {/* Diagnostic Interpretation */}
-              <div className="p-4 rounded-xl bg-white/5 border border-white/10 mb-6 font-sans text-xs sm:text-sm text-zinc-300 leading-relaxed">
-                {countChecked === 0 ? (
-                  <p>Отметьте хотя бы один пункт, чтобы увидеть стратегию автоматизации и оценку сроков запуска.</p>
-                ) : countChecked <= 2 ? (
-                  <p>
-                    <strong className="text-white block mb-1">Точечная автоматизация:</strong>
-                    Эти задачи можно полностью передать Telegram-боту или парсеру за 3–5 рабочих дней. Команда перестанет отвлекаться на монотонный ввод данных.
-                  </p>
-                ) : (
-                  <p>
-                    <strong className="text-emerald-400 block mb-1">Высокая нагрузка рутиной:</strong>
-                    Связка CRM, шины n8n и умного ассистента высвободит время целого сотрудника и полностью исключит человеческие ошибки при обработке заявок.
-                  </p>
-                )}
+              {/* Col 3: The Engineered Fix (To Be) */}
+              <div className="lg:col-span-3">
+                <div className="text-xs font-mono text-emerald-700 uppercase tracking-wider font-bold mb-2 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  <span>Решение кодом</span>
+                </div>
+                <p className="font-sans text-sm sm:text-base text-ink font-medium leading-relaxed">
+                  {pt.toBe}
+                </p>
               </div>
 
-              {/* Action Button */}
-              <a
-                href={config.telegramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={handleResolveClick}
-                className="w-full py-4 px-6 rounded-xl bg-blue hover:bg-blue-dark text-white font-mono text-xs uppercase tracking-wider font-bold transition-all duration-150 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] shadow-lg"
-              >
-                <span>Разобрать процессы в Telegram</span>
-                <ArrowUpRight className="w-4 h-4" />
-              </a>
-
-              <div className="text-[11px] font-mono text-zinc-500 text-center mt-3">
-                Бесплатный разбор одного процесса · Ответ до 15 минут
+              {/* Col 4: Hard Quantitative Effect */}
+              <div className="lg:col-span-2 flex flex-col items-start lg:items-end justify-center pt-2 lg:pt-0">
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-ink font-mono tabular-nums group-hover:text-blue transition-colors">
+                  {pt.metricValue}
+                </div>
+                <div className="text-xs text-ink/60 font-sans mt-0.5 lg:text-right">
+                  {pt.metricLabel}
+                </div>
               </div>
             </div>
-          </div>
-
+          ))}
         </div>
 
+        {/* Bottom Editorial Callout */}
+        <div className="mt-8 pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-paper">
+          <div className="text-xs sm:text-sm text-ink/80 font-medium">
+            Узнали свой процесс хотя бы в одном пункте? Опишите задачу — разберем архитектуру за 15 минут.
+          </div>
+          <a
+            href={config.telegramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={handleTelegramClick}
+            className="group inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider text-blue hover:text-ink transition-colors cursor-pointer select-none whitespace-nowrap"
+          >
+            <span>Разобрать в Telegram</span>
+            <span className="font-sans font-bold transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true">
+              ↗
+            </span>
+          </a>
+        </div>
       </div>
     </section>
   );

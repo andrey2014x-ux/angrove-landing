@@ -7,7 +7,14 @@ declare global {
   }
 }
 
-export type AnalyticsGoal = 'click_guide' | 'form_submit' | 'click_telegram' | 'click_instagram';
+export type AnalyticsGoal =
+  | 'click_guide'
+  | 'form_submit'
+  | 'click_telegram'
+  | 'click_instagram'
+  | 'click_case_discuss'
+  | 'click_process_cta'
+  | 'click_services_cta';
 
 export function initAnalytics(): void {
   if (!config.metrikaId || typeof window === 'undefined') return;
