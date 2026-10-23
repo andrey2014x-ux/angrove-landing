@@ -1,0 +1,111 @@
+@import '@fontsource/onest/400.css';
+@import '@fontsource/onest/500.css';
+@import '@fontsource/onest/700.css';
+@import '@fontsource/onest/800.css';
+@import '@fontsource/onest/900.css';
+@import '@fontsource/lora/cyrillic-400-italic.css';
+@import '@fontsource/lora/cyrillic-500-italic.css';
+@import '@fontsource/lora/400-italic.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+    background-color: #EEEBE5;
+    color: #0A0C16;
+  }
+  
+  body {
+    background-color: #EEEBE5;
+    color: #0A0C16;
+    font-family: 'Onest', sans-serif;
+  }
+
+  /* Accessible focus indicators */
+  :focus-visible {
+    outline: 2px solid #3D5CFF;
+    outline-offset: 3px;
+  }
+
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
+}
+
+/* Drifting leopard pattern in text */
+@keyframes leopardDrift {
+  0% {
+    background-position: 0px 0px;
+  }
+  100% {
+    background-position: 254px 169px;
+  }
+}
+
+.text-leopard-flow {
+  background-image: url('/leopard-pattern.png');
+  background-size: 254px 169px;
+  background-repeat: repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: leopardDrift 20s linear infinite;
+}
+
+/* Link hover animated underline */
+.editorial-link-hover {
+  position: relative;
+  display: inline-block;
+}
+.editorial-link-hover::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 1.5px;
+  bottom: -2px;
+  left: 0;
+  background: #3D5CFF;
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+.editorial-link-hover:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+/* Lenis smooth scrolling class support */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .text-leopard-flow {
+    animation: none !important;
+  }
+}

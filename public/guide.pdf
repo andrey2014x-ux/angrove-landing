@@ -1,0 +1,65 @@
+%PDF-1.4
+1 0 obj
+<< /Title (Kak zastavit programmy rabotat vmesto vas - _angrove_)
+   /Author (Andrey _angrove_)
+   /Creator (_angrove_ guide)
+   /Producer (Python PDF) >>
+endobj
+2 0 obj
+<< /Type /Catalog
+   /Pages 3 0 R >>
+endobj
+3 0 obj
+<< /Type /Pages
+   /Kids [4 0 R]
+   /Count 1 >>
+endobj
+4 0 obj
+<< /Type /Page
+   /Parent 3 0 R
+   /MediaBox [0 0 595 842]
+   /Resources << /Font << /F1 5 0 R >> >>
+   /Contents 6 0 R >>
+endobj
+5 0 obj
+<< /Type /Font
+   /Subtype /Type1
+   /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Length 420 >>
+stream
+BT
+/F1 24 Tf
+50 780 Td
+(_angrove_ - Automation Guide) Tj
+/F1 14 Tf
+0 -40 Td
+(Kak zastavit programmy rabotat vmesto vas) Tj
+0 -30 Td
+(1. Pravilo: esli povtoryaete chto-to 3 raza - otdavayte kodu.) Tj
+0 -25 Td
+(2. 3 instrumenta avtomatizacii dlya biznesa: Webhooks, AI-agenty, Parsery.) Tj
+0 -25 Td
+(3. Chek-list: gde utekaet vremya v operacionke.) Tj
+0 -40 Td
+(Svyaz s Andreem: Telegram @angrove | Instagram @angrove) Tj
+ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000155 00000 n 
+0000000204 00000 n 
+0000000261 00000 n 
+0000000378 00000 n 
+0000000455 00000 n 
+trailer
+<< /Size 7
+   /Root 2 0 R
+   /Info 1 0 R >>
+startxref
+928
+%%EOF
