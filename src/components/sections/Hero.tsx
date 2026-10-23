@@ -3,7 +3,6 @@ import { config } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { gsap } from '../../lib/motion';
 import { ArrowUpRight } from 'lucide-react';
-import { ThreeScene } from '../ui/ThreeScene';
 
 export const Hero: React.FC = () => {
   const heroRef = useRef<HTMLElement>(null);
@@ -57,7 +56,7 @@ export const Hero: React.FC = () => {
   return (
     <section
       ref={heroRef}
-      className="relative bg-paper text-ink pt-10 sm:pt-16 pb-16 sm:pb-24 overflow-hidden"
+      className="relative bg-transparent text-ink pt-10 sm:pt-16 pb-16 sm:pb-24"
       id="hero"
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 relative">
@@ -128,19 +127,14 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Prominent WebGL 3D Core + Clean Photo Frame */}
+          {/* Right Column: Clean Premium Photo Frame framed by Global 3D */}
           <div
             ref={photoBlockRef}
-            className="lg:col-span-5 flex flex-col items-center justify-center w-full relative min-h-[460px] sm:min-h-[520px]"
+            className="lg:col-span-5 flex flex-col items-center justify-center w-full relative min-h-[440px] sm:min-h-[500px]"
           >
-            {/* Prominent, Large 3D WebGL Scene behind and around the photo */}
-            <div className="absolute inset-0 -top-8 -bottom-8 -left-12 -right-12 flex items-center justify-center pointer-events-none z-0">
-              <ThreeScene className="w-full h-full" />
-            </div>
-
-            {/* Clean, Premium Photo of Andrey without cringe badges */}
+            {/* Clean, Premium Photo of Andrey */}
             <div className="w-full max-w-[340px] sm:max-w-[390px] relative z-10">
-              <div className="relative rounded-3xl overflow-hidden bg-zinc-900 border border-black/10 shadow-[0_25px_60px_rgba(0,0,0,0.14)] aspect-[4/5]">
+              <div className="relative rounded-3xl overflow-hidden bg-zinc-900 border border-black/10 shadow-[0_25px_60px_rgba(0,0,0,0.12)] aspect-[4/5]">
                 <img
                   src="/andrey.jpg"
                   alt="Андрей — Архитектор систем"

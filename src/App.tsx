@@ -13,6 +13,7 @@ import { PrivacyPage } from './pages/PrivacyPage';
 import { Preloader } from './components/ui/Preloader';
 import { ScrollProgress } from './components/ui/ScrollProgress';
 import { AmbientAtmosphere } from './components/ui/AmbientAtmosphere';
+import { Global3DCanvas } from './components/ui/Global3DCanvas';
 import { initSmoothScroll } from './lib/motion';
 import { initAnalytics } from './lib/analytics';
 
@@ -48,8 +49,9 @@ export const App: React.FC = () => {
   // Main landing page in editorial style
   return (
     <div className="min-h-[100dvh] flex flex-col bg-paper text-ink selection:bg-blue selection:text-white relative font-sans">
-      {/* Background Motion & Atmosphere (flickering tech runes + ambient light) */}
+      {/* Background Motion & Atmosphere */}
       <AmbientAtmosphere />
+      <Global3DCanvas />
 
       {/* Preloader (< 1.2s, once per session) */}
       <Preloader onComplete={() => setIsPreloaded(true)} />
