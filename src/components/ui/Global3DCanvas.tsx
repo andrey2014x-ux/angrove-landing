@@ -229,51 +229,54 @@ export const Global3DCanvas: React.FC = () => {
       ring3Mat.opacity = 0.38 * scrollFactor;
 
       // Intelligent Spatial Trajectory:
-      // It stays large and flows organically through whitespace & margins:
-      // - Hero (p ~ 0): Right side (x: 2.45), framing Andrey's photo, clear of H1
-      // - Services (p ~ 0.25): Sits gracefully in right margin & depth (x: 2.7, y: 0.3, z: -1.2)
-      // - Cases (p ~ 0.5): Glides to upper right margin (x: 2.3, y: 1.1, z: -1.5)
-      // - Process (p ~ 0.75): Weaves to left margin (x: -2.4, y: 0, z: -1.2)
-      // - Final CTA (p ~ 1.0): Emerges toward center-bottom (x: 0, y: -1.2, z: -0.8)
+      // Always keeps the 3D crystal in the LATERAL MARGINS / FLANKS (x >= 2.5 or x <= -2.7)
+      // and NEVER crosses the center reading column during content or FAQ!
       let targetX = desktop ? 2.45 : 0;
       let targetY = desktop ? 0.05 : -0.2;
       let targetZ = 0;
 
       if (desktop) {
         if (p < 0.15) {
-          // Hero
+          // Hero: Right flank, framing Andrey's portrait
           targetX = 2.45 + mouseX * 0.3;
           targetY = 0.05 - mouseY * 0.3;
           targetZ = 0;
           targetScale = 1.18;
-        } else if (p < 0.4) {
-          // Services: right-flank presence
-          const t = (p - 0.15) / 0.25;
-          targetX = 2.45 + t * 0.3 + mouseX * 0.2;
+        } else if (p < 0.38) {
+          // Services: stays along right whitespace margin
+          const t = (p - 0.15) / 0.23;
+          targetX = 2.45 + t * 0.35 + mouseX * 0.2;
           targetY = 0.05 + t * 0.35 - mouseY * 0.2;
-          targetZ = -t * 1.4;
-          targetScale = 1.08;
-        } else if (p < 0.65) {
-          // Cases: upper-right aura
-          const t = (p - 0.4) / 0.25;
-          targetX = 2.75 - t * 0.6 + mouseX * 0.2;
-          targetY = 0.4 + t * 0.8 - mouseY * 0.2;
-          targetZ = -1.4 - t * 0.4;
+          targetZ = -t * 1.5;
           targetScale = 1.05;
-        } else if (p < 0.88) {
-          // Process & About: left margin accent
-          const t = (p - 0.65) / 0.23;
-          targetX = 2.15 - t * 4.5 + mouseX * 0.2;
-          targetY = 1.2 - t * 1.3 - mouseY * 0.2;
-          targetZ = -1.8 + t * 0.5;
-          targetScale = 1.05;
+        } else if (p < 0.6) {
+          // Cases: upper-right whitespace margin
+          const t = (p - 0.38) / 0.22;
+          targetX = 2.8 + mouseX * 0.2;
+          targetY = 0.4 + t * 0.7 - mouseY * 0.2;
+          targetZ = -1.5 - t * 0.5;
+          targetScale = 1.0;
+        } else if (p < 0.78) {
+          // Process & About: shifts to far-left margin, clear of center
+          const t = (p - 0.6) / 0.18;
+          targetX = 2.8 - t * 5.6 + mouseX * 0.2; // fast transition across gap into -2.8
+          targetY = 1.1 - t * 0.9 - mouseY * 0.2;
+          targetZ = -2.0;
+          targetScale = 1.0;
+        } else if (p < 0.9) {
+          // FAQ & Guide: sits peacefully in the far right margin, completely away from FAQ cards!
+          const t = (p - 0.78) / 0.12;
+          targetX = -2.8 + t * 5.7 + mouseX * 0.2; // glides into right margin
+          targetY = 0.2 - mouseY * 0.2;
+          targetZ = -2.2;
+          targetScale = 0.95;
         } else {
-          // Final CTA & Footer: grounded center glow
-          const t = (p - 0.88) / 0.12;
-          targetX = -2.35 + t * 2.35 + mouseX * 0.2;
-          targetY = -0.1 - t * 1.0 - mouseY * 0.2;
-          targetZ = -1.3 + t * 0.5;
-          targetScale = 1.12;
+          // Final CTA & Footer: grounds into lower center behind the solid black card
+          const t = (p - 0.9) / 0.1;
+          targetX = 2.9 - t * 2.9 + mouseX * 0.2;
+          targetY = 0.2 - t * 1.6 - mouseY * 0.2;
+          targetZ = -1.8;
+          targetScale = 1.1;
         }
       } else {
         // Mobile

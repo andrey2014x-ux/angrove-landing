@@ -83,31 +83,41 @@ export const Faq: React.FC = () => {
           </p>
         </div>
 
-        {/* Clean Accordion List */}
-        <div className="divide-y divide-black/[0.06] border-b border-black/[0.06] mt-4">
+        {/* Clean Accordion Cards List */}
+        <div className="space-y-3.5 mt-8 max-w-4xl">
           {faqs.map((faq, idx) => {
             const isOpen = openId === faq.id;
 
             return (
-              <div key={faq.id} data-reveal="card" className="transition-colors duration-150">
+              <div
+                key={faq.id}
+                data-reveal="card"
+                className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
+                  isOpen
+                    ? 'bg-white border-black/15 shadow-md'
+                    : 'bg-white border-black/[0.06] shadow-sm hover:border-black/20 hover:bg-zinc-50/50'
+                }`}
+              >
                 <button
                   type="button"
                   id={`faq-btn-${idx}`}
                   aria-expanded={isOpen}
                   aria-controls={`faq-content-${idx}`}
                   onClick={() => toggle(faq.id)}
-                  className="w-full text-left py-6 sm:py-8 flex items-start justify-between gap-6 hover:text-blue transition-colors cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2"
+                  className="w-full text-left p-6 sm:p-7 flex items-start justify-between gap-6 cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2"
                 >
-                  <div className="flex items-start gap-4 sm:gap-8 pt-0.5">
-                    <span className="font-mono text-xs sm:text-sm text-ink/40 font-bold group-hover:text-blue transition-colors pt-1">
+                  <div className="flex items-start gap-4 sm:gap-6 pt-0.5">
+                    <span className="font-mono text-xs sm:text-sm text-blue font-bold pt-0.5">
                       0{idx + 1}
                     </span>
-                    <span className="text-lg sm:text-xl md:text-2xl font-bold uppercase tracking-tight text-ink group-hover:text-blue transition-colors leading-snug">
+                    <span className="text-base sm:text-lg md:text-xl font-bold uppercase tracking-tight text-ink group-hover:text-blue transition-colors leading-snug">
                       {faq.question}
                     </span>
                   </div>
 
-                  <span className="w-8 h-8 flex items-center justify-center border border-line-dark text-ink flex-shrink-0 group-hover:border-blue group-hover:text-blue transition-colors mt-0.5">
+                  <span className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors mt-0.5 ${
+                    isOpen ? 'bg-blue text-white' : 'bg-zinc-100 text-ink/70 group-hover:bg-blue/10 group-hover:text-blue'
+                  }`}>
                     {isOpen ? <Minus size={14} /> : <Plus size={14} />}
                   </span>
                 </button>
@@ -124,7 +134,7 @@ export const Faq: React.FC = () => {
                       transition={{ duration: 0.25, ease: 'easeInOut' }}
                       className="overflow-hidden"
                     >
-                      <div className="pl-8 sm:pl-16 pb-8 pt-1 text-ink/80 text-sm sm:text-base leading-relaxed font-sans max-w-3xl">
+                      <div className="pl-6 sm:pl-14 pr-6 pb-6 text-ink/80 text-sm sm:text-base leading-relaxed font-sans border-t border-black/[0.04] pt-4">
                         {faq.answer}
                       </div>
                     </motion.div>
