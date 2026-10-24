@@ -1,18 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export const ScrollProgress: React.FC = () => {
-  const [progress, setProgress] = useState(0);
+  const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
+    let ticking = false;
+
+    const updateProgress = () => {
+      const scrollY = window.scrollY;
       const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalScroll > 0) {
-        const currentProgress = (window.scrollY / totalScroll) * 100;
-        setProgress(Math.min(100, Math.max(0, currentProgress)));
+      if (totalScroll > 0 && barRef.current) {
+        const progress = Math.min(1, Math.max(0, scrollY / totalScroll));
+        barRef.current.style.transform = `scaleX(${progress})`;
+      }
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(updateProgress);
+        ticking = true;
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    updateProgress();
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -22,8 +35,9 @@ export const ScrollProgress: React.FC = () => {
       aria-hidden="true"
     >
       <div 
-        className="h-full bg-gradient-to-r from-accent via-accent-bright to-ice shadow-[0_0_10px_rgba(97,125,255,0.7)] transition-all duration-75"
-        style={{ width: `${progress}%` }}
+        ref={barRef}
+        className="h-full w-full bg-gradient-to-r from-accent via-accent-bright to-ice shadow-[0_0_10px_rgba(97,125,255,0.7)] origin-left will-change-transform"
+        style={{ transform: 'scaleX(0)' }}
       />
     </div>
   );

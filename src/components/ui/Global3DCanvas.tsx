@@ -33,7 +33,7 @@ export const Global3DCanvas: React.FC = () => {
     camera.position.set(0, 0, 8.5);
 
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.25;
     container.appendChild(renderer.domElement);
@@ -66,18 +66,16 @@ export const Global3DCanvas: React.FC = () => {
     const heroCoreGroup = new THREE.Group();
     masterGroup.add(heroCoreGroup);
 
-    // A1. Translucent Physical Crystal
+    // A1. Translucent Physical Crystal (Optimized without heavy transmission buffer pass)
     const crystalGeom = new THREE.IcosahedronGeometry(1.4, 0);
     const crystalMat = new THREE.MeshPhysicalMaterial({
       color: 0x3D5CFF,
       emissive: 0x1A2875,
       emissiveIntensity: 0.35,
-      roughness: 0.15,
-      metalness: 0.1,
-      transmission: 0.65,
-      thickness: 1.2,
+      roughness: 0.12,
+      metalness: 0.15,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.82,
     });
     const crystalMesh = new THREE.Mesh(crystalGeom, crystalMat);
     heroCoreGroup.add(crystalMesh);
@@ -114,6 +112,8 @@ export const Global3DCanvas: React.FC = () => {
       emissiveIntensity: 0.85,
       roughness: 0.3,
       metalness: 0.8,
+      transparent: true,
+      opacity: 0.95,
     });
     const innerCoreMesh = new THREE.Mesh(innerCoreGeom, innerCoreMat);
     heroCoreGroup.add(innerCoreMesh);
@@ -339,10 +339,10 @@ export const Global3DCanvas: React.FC = () => {
       animId = requestAnimationFrame(animate);
       const elapsed = clock.getElapsedTime();
 
-      // Smooth interpolation
-      mouseX += (targetMouseX - mouseX) * 0.05;
-      mouseY += (targetMouseY - mouseY) * 0.05;
-      currentScrollProgress += (targetScrollProgress - currentScrollProgress) * 0.06;
+      // Smooth interpolation (snappy 0.12 lerp synchronized with Lenis)
+      mouseX += (targetMouseX - mouseX) * 0.06;
+      mouseY += (targetMouseY - mouseY) * 0.06;
+      currentScrollProgress += (targetScrollProgress - currentScrollProgress) * 0.12;
 
       const p = currentScrollProgress;
       const desktop = window.innerWidth >= 1024;
@@ -417,9 +417,11 @@ export const Global3DCanvas: React.FC = () => {
 
       heroCoreGroup.scale.setScalar(0.85 + (heroWeight > 0 ? heroWeight * 0.35 : 0.15));
 
-      // Dim contrast in text sections so reading is effortlessly crisp
-      const footerFade = p > 0.88 ? Math.max(0.35, 1 - (p - 0.88) / 0.12 * 0.3) : 1.0;
+      // Dissolve 3D reactor completely when scrolling to the end of the site
+      // Starts dissolving smoothly after FAQ (p > 0.76), fully dissolved (opacity 0) at p >= 0.84
+      const footerFade = p <= 0.76 ? 1.0 : Math.max(0, 1 - (p - 0.76) / 0.08);
       const globalContrastDim = (desktop ? 0.85 : 0.65) * footerFade;
+
       crystalMat.opacity = (0.75 * heroWeight + 0.32 * (1 - heroWeight)) * globalContrastDim;
       cageMat.opacity = (0.5 * heroWeight + 0.22 * (1 - heroWeight)) * globalContrastDim;
       nodeMat.opacity = (0.85 * heroWeight + 0.35 * (1 - heroWeight)) * globalContrastDim;
@@ -427,6 +429,17 @@ export const Global3DCanvas: React.FC = () => {
       ring2Mat.opacity = (0.5 * heroWeight + 0.18 * (1 - heroWeight)) * globalContrastDim;
       ring3Mat.opacity = (0.35 * heroWeight + 0.12 * (1 - heroWeight)) * globalContrastDim;
       tubeMat.opacity = (0.2 + 0.45 * pipelineActivation) * globalContrastDim * pipelineActivation;
+      innerCoreMat.opacity = 0.95 * footerFade;
+      particleMat.opacity = (desktop ? 0.35 : 0.22) * footerFade;
+      pulseLight.intensity = (1.5 + Math.sin(elapsed * 1.5) * 0.5) * footerFade;
+
+      if (footerFade <= 0.002) {
+        masterGroup.visible = false;
+        particles.visible = false;
+      } else {
+        masterGroup.visible = true;
+        particles.visible = true;
+      }
 
       if (desktop) {
         if (p < 0.12) {
@@ -471,16 +484,16 @@ export const Global3DCanvas: React.FC = () => {
           targetZ = -0.9;                           // crisp and luminous in the open right margin
           targetScale = 1.12;                       // calibrated so outer orbital rings stay in right whitespace
         } else {
-          // 7. Final CTA & Footer (p >= 0.88): converges into the bottom reactor behind _ANGROVE_
+          // 7. Final CTA & Footer (p >= 0.88): smoothly dissolves away
           const t = Math.min(1, Math.max(0, (p - 0.88) / 0.12));
-          targetX = 4.30 * (1 - t) + mouseX * 0.15; // smoothly centers at x=0
-          targetY = 0.05 - t * 3.6 - mouseY * 0.15; // drops down behind _ANGROVE_ at bottom
-          targetZ = -3.5;                           // deep behind text layer, zero occlusion
-          targetScale = 1.6;
+          targetX = 4.30 * (1 - t) + mouseX * 0.15;
+          targetY = 0.05 - t * 2.5 - mouseY * 0.15;
+          targetZ = -3.5;
+          targetScale = 1.3 * Math.max(0.05, footerFade);
         }
       } else {
         // Mobile responsive spatial tuning
-        targetScale = 0.7;
+        targetScale = 0.7 * Math.max(0.05, footerFade);
         targetX = mouseX * 0.15;
         targetY = -0.2 + Math.sin(p * Math.PI * 2) * 0.35;
         targetZ = -0.9;
@@ -517,7 +530,10 @@ export const Global3DCanvas: React.FC = () => {
       camera.position.y = -mouseY * 0.25;
       camera.lookAt(0, 0, 0);
 
-      renderer.render(scene, camera);
+      // Only execute GPU render pass when objects are actually visible
+      if (masterGroup.visible || particles.visible) {
+        renderer.render(scene, camera);
+      }
     };
 
     animate();

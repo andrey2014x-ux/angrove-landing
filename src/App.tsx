@@ -12,6 +12,7 @@ import { Footer } from './components/sections/Footer';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { Preloader } from './components/ui/Preloader';
 import { ScrollProgress } from './components/ui/ScrollProgress';
+import { ScrollToTop } from './components/ui/ScrollToTop';
 import { AmbientAtmosphere } from './components/ui/AmbientAtmosphere';
 import { Global3DCanvas } from './components/ui/Global3DCanvas';
 import { initSmoothScroll } from './lib/motion';
@@ -90,6 +91,9 @@ export const App: React.FC = () => {
 
       {/* 11. Подвал (Wave letter wordmark) */}
       <Footer />
+
+      {/* Floating Scroll-to-Top Control Node */}
+      <ScrollToTop />
     </div>
   );
 };

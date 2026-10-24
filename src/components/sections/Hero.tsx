@@ -1,13 +1,55 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { config } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { gsap } from '../../lib/motion';
 import { ArrowUpRight } from 'lucide-react';
 
+function useCountUp(target: number, duration: number = 1400, delay: number = 200) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setCount(target);
+      return;
+    }
+
+    let startTime: number | null = null;
+    let animId: number;
+
+    const timer = setTimeout(() => {
+      const step = (timestamp: number) => {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // Smooth cubic ease-out
+        const ease = 1 - Math.pow(1 - progress, 3);
+        setCount(Math.round(ease * target));
+
+        if (progress < 1) {
+          animId = requestAnimationFrame(step);
+        }
+      };
+
+      animId = requestAnimationFrame(step);
+    }, delay);
+
+    return () => {
+      clearTimeout(timer);
+      cancelAnimationFrame(animId);
+    };
+  }, [target, duration, delay]);
+
+  return count;
+}
+
 export const Hero: React.FC = () => {
   const heroRef = useRef<HTMLElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const photoBlockRef = useRef<HTMLDivElement>(null);
+
+  const projectsCount = useCountUp(70, 1500, 300);
+  const daysCount = useCountUp(3, 1000, 400);
+  const guaranteeCount = useCountUp(100, 1600, 300);
 
   const handleTelegramClick = () => {
     trackGoal('click_telegram');
@@ -140,15 +182,21 @@ export const Hero: React.FC = () => {
             {/* Stats Row */}
             <div className="grid grid-cols-3 gap-4 sm:gap-8 pt-8 mt-8 border-t border-black/[0.06] w-full max-w-lg items-baseline">
               <div className="hero-stat">
-                <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">70+</div>
+                <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">
+                  {projectsCount}+
+                </div>
                 <div className="text-xs text-ink/60 font-sans mt-1">проектов в проде</div>
               </div>
               <div className="hero-stat">
-                <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">3 дня</div>
+                <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">
+                  {daysCount} дня
+                </div>
                 <div className="text-xs text-ink/60 font-sans mt-1">средний срок запуска</div>
               </div>
               <div className="hero-stat">
-                <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">100%</div>
+                <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">
+                  {guaranteeCount}%
+                </div>
                 <div className="text-xs text-ink/60 font-sans mt-1">в срок по смете</div>
               </div>
             </div>

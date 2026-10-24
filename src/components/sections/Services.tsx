@@ -5,6 +5,8 @@ import { trackGoal } from '../../lib/analytics';
 import { WordReveal } from '../ui/WordReveal';
 import { useSectionReveal } from '../../lib/useScrollAnimation';
 import { TelegramChatSimulator } from '../ui/TelegramChatSimulator';
+import { BusinessMeshSimulator } from '../ui/BusinessMeshSimulator';
+import { ParserConsoleSimulator } from '../ui/ParserConsoleSimulator';
 
 export const Services: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -14,37 +16,6 @@ export const Services: React.FC = () => {
 
   // Tab 2: Audio Simulation State
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-
-  // Tab 3: Parser Live Scraper Simulator State
-  const [parsedCount, setParsedCount] = useState(0);
-  const [isParsing, setIsParsing] = useState(false);
-
-  const startScrapeSimulation = () => {
-    if (isParsing) return;
-    setIsParsing(true);
-    setParsedCount(0);
-    let count = 0;
-    const interval = setInterval(() => {
-      count += Math.floor(Math.random() * 35) + 15;
-      if (count >= 340) {
-        setParsedCount(340);
-        setIsParsing(false);
-        clearInterval(interval);
-      } else {
-        setParsedCount(count);
-      }
-    }, 120);
-  };
-
-  // Tab 4: Live Business Pipeline Simulation State
-  const [simStep, setSimStep] = useState<number>(0);
-
-  const triggerPipeline = () => {
-    setSimStep(1);
-    setTimeout(() => setSimStep(2), 600);
-    setTimeout(() => setSimStep(3), 1200);
-    setTimeout(() => setSimStep(4), 1800);
-  };
 
   const handleCtaClick = () => {
     trackGoal('click_services_cta');
@@ -332,61 +303,8 @@ export const Services: React.FC = () => {
               </div>
 
               {/* Right Side: Interactive Scraper Live Table */}
-              <div className="lg:col-span-7 bg-[#0E111A] rounded-3xl p-6 sm:p-8 text-white border border-white/10 shadow-2xl flex flex-col justify-between min-h-[460px]">
-                <div>
-                  <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
-                    <div className="text-xs font-bold">Сбор B2B-реестра (Тест-драйв)</div>
-                    <span className="text-xs font-mono text-emerald-400 font-bold tabular-nums">
-                      {parsedCount} контактов собрано
-                    </span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={startScrapeSimulation}
-                    disabled={isParsing}
-                    className="w-full py-2.5 rounded-xl bg-blue hover:bg-blue-dark disabled:opacity-50 text-white font-bold text-xs uppercase tracking-wider transition-all cursor-pointer mb-4"
-                  >
-                    {isParsing ? 'Идет сбор контактов...' : 'Нажмите: Запустить сбор базы'}
-                  </button>
-
-                  {/* Simulated Table */}
-                  <div className="space-y-2 text-xs font-mono">
-                    <div className="p-2.5 rounded-lg bg-white/5 border border-white/10 flex items-center justify-between">
-                      <div>
-                        <div className="font-bold text-white">ООО «СтройКрепеж»</div>
-                        <div className="text-[10px] text-zinc-400">+7 (921) 450-**-** · ЛПР Михаил</div>
-                      </div>
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px]">
-                        Доступен
-                      </span>
-                    </div>
-
-                    <div className="p-2.5 rounded-lg bg-white/5 border border-white/10 flex items-center justify-between">
-                      <div>
-                        <div className="font-bold text-white">ПКФ «СеверМонтаж»</div>
-                        <div className="text-[10px] text-zinc-400">+7 (911) 220-**-** · Отдел закупок</div>
-                      </div>
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px]">
-                        Доступен
-                      </span>
-                    </div>
-
-                    <div className="p-2.5 rounded-lg bg-white/5 border border-white/10 flex items-center justify-between">
-                      <div>
-                        <div className="font-bold text-white">ГК «БалтТорг»</div>
-                        <div className="text-[10px] text-zinc-400">+7 (812) 330-**-** · Руководитель</div>
-                      </div>
-                      <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px]">
-                        Доступен
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="text-[11px] text-zinc-400 pt-3 border-t border-white/10 mt-3">
-                  ✓ Все дубли отсекаются автоматически, на выходе — готовая таблица без мусора.
-                </div>
+              <div className="lg:col-span-7">
+                <ParserConsoleSimulator />
               </div>
             </div>
           )}
@@ -437,50 +355,9 @@ export const Services: React.FC = () => {
                 </a>
               </div>
 
-              {/* Right Side: Interactive Business Pipeline Simulator */}
-              <div className="lg:col-span-7 bg-[#0E111A] rounded-3xl p-6 sm:p-8 text-white border border-white/10 shadow-2xl flex flex-col justify-between min-h-[460px]">
-                <div>
-                  <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-5">
-                    <div className="text-xs font-bold">Сквозная цепочка (Тест-драйв)</div>
-                    <span className="text-[10px] font-mono text-blue-light">АВТОНОМНЫЙ КОНТУР</span>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={triggerPipeline}
-                    className="w-full py-2.5 rounded-xl bg-blue hover:bg-blue-dark text-white font-bold text-xs uppercase tracking-wider transition-all cursor-pointer mb-5 shadow-md"
-                  >
-                    Нажмите: «Сымитировать оплату клиентом 15 000 ₽»
-                  </button>
-
-                  {/* 4 Pipeline Nodes */}
-                  <div className="space-y-2.5 text-xs">
-                    <div className={`p-3 rounded-xl border transition-all ${
-                      simStep >= 1 ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-200' : 'bg-white/5 border-white/10 text-zinc-400'
-                    }`}>
-                      1. Сайт получил оплату: +15 000 ₽ от клиента
-                    </div>
-                    <div className={`p-3 rounded-xl border transition-all ${
-                      simStep >= 2 ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-200' : 'bg-white/5 border-white/10 text-zinc-400'
-                    }`}>
-                      2. Склад МойСклад: товар автоматически списан (-1 шт)
-                    </div>
-                    <div className={`p-3 rounded-xl border transition-all ${
-                      simStep >= 3 ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-200' : 'bg-white/5 border-white/10 text-zinc-400'
-                    }`}>
-                      3. amoCRM: сделка успешно переведена в статус «Оплачено»
-                    </div>
-                    <div className={`p-3 rounded-xl border transition-all ${
-                      simStep >= 4 ? 'bg-blue/30 border-blue text-white font-bold' : 'bg-white/5 border-white/10 text-zinc-400'
-                    }`}>
-                      4. Telegram собственника: получена сводка с прибылью и чеком
-                    </div>
-                  </div>
-                </div>
-
-                <div className="text-[11px] text-zinc-400 pt-3 border-t border-white/10 mt-3">
-                  Всё произошло за 1.2 секунды. Ни один менеджер не отвлекался от работы.
-                </div>
+              {/* Right Side: Interactive n8n Glowing Nodes Business Pipeline Simulator */}
+              <div className="lg:col-span-7">
+                <BusinessMeshSimulator />
               </div>
             </div>
           )}

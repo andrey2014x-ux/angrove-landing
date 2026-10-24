@@ -12,7 +12,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 left-0 w-full z-50 bg-paper/90 backdrop-blur-md border-b border-black/[0.06]">
+    <header className="sticky top-0 left-0 w-full z-50 bg-paper/90 backdrop-blur-md border-b border-black/[0.06] transform-gpu">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 h-16 sm:h-20 flex items-center justify-between gap-4">
         
         {/* Brand Monogram */}

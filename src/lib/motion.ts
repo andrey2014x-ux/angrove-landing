@@ -36,15 +36,21 @@ export function initSmoothScroll(): Lenis | null {
   }
 
   const lenis = new Lenis({
-    duration: 1.2,
+    duration: 1.15,
     easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease-out
     orientation: 'vertical',
     gestureOrientation: 'vertical',
     smoothWheel: true,
-    touchMultiplier: 1.5,
+    wheelMultiplier: 0.95, // Smooth wheel damping without aggressive jumps
+    touchMultiplier: 1.0,  // Direct 1:1 touch response
+    syncTouch: false,      // Preserves native 120Hz momentum on touch devices
+    autoResize: true,
   });
 
   lenisInstance = lenis;
+  if (typeof window !== 'undefined') {
+    (window as any).lenis = lenis;
+  }
 
   // Sync Lenis scroll with GSAP ScrollTrigger
   lenis.on('scroll', ScrollTrigger.update);
@@ -55,7 +61,15 @@ export function initSmoothScroll(): Lenis | null {
   };
 
   gsap.ticker.add(tickerCallback);
-  gsap.ticker.lagSmoothing(0);
+  // Graceful lag smoothing (clamps frame spikes to 33ms instead of hard jumps)
+  gsap.ticker.lagSmoothing(500, 33);
+
+  // Refresh ScrollTrigger when fonts finish loading to ensure pixel-perfect trigger bounds
+  if (typeof document !== 'undefined' && document.fonts) {
+    document.fonts.ready.then(() => {
+      ScrollTrigger.refresh();
+    });
+  }
 
   // Setup accessible anchor link handling with Lenis
   document.addEventListener('click', (e) => {
