@@ -153,34 +153,42 @@ export const Hero: React.FC = () => {
             </h1>
 
             {/* Subtitle */}
-            <p className="hero-subtitle font-sans text-base sm:text-lg lg:text-xl text-ink/75 font-normal leading-relaxed max-w-xl mb-8">
-              Создаю AI-агентов, парсеры и сквозные интеграции под ваши бизнес-процессы. От идеи и схемы — до работающей системы в ваших сервисах.
+            <p className="hero-subtitle font-sans text-base sm:text-lg lg:text-xl text-ink/75 font-normal leading-relaxed max-w-xl mb-6">
+              Создаю умных AI-ботов и автоматизацию для бизнеса. Они сами общаются с клиентами, записывают на услуги и наводят порядок в данных. Вы развиваете дело, пока рутина работает сама 24/7.
             </p>
 
             {/* Actions: Modern Buttons */}
-            <div className="hero-actions flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
-              <a
-                href={config.telegramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={handleTelegramClick}
-                className="group inline-flex items-center justify-center gap-2.5 bg-blue text-white rounded-full px-8 py-4 text-sm sm:text-base font-bold shadow-[0_10px_25px_rgba(61,92,255,0.35)] hover:shadow-[0_15px_35px_rgba(61,92,255,0.5)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
-              >
-                <span>Обсудить задачу</span>
-                <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </a>
+            <div className="hero-actions flex flex-col items-start gap-3 w-full sm:w-auto">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
+                <a
+                  href={config.telegramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={handleTelegramClick}
+                  className="group inline-flex items-center justify-center gap-2.5 bg-blue text-white rounded-full px-8 py-4 text-sm sm:text-base font-bold shadow-[0_10px_25px_rgba(61,92,255,0.35)] hover:shadow-[0_15px_35px_rgba(61,92,255,0.5)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
+                >
+                  <span>Обсудить задачу</span>
+                  <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
 
-              <a
-                href="#services"
-                className="inline-flex items-center justify-center gap-2 bg-white text-ink rounded-full px-8 py-4 text-sm sm:text-base font-bold border border-black/[0.08] shadow-sm hover:border-black/20 hover:bg-zinc-50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
-              >
-                <span>Смотреть решения</span>
-                <span className="text-ink/40">↓</span>
-              </a>
+                <a
+                  href="#services"
+                  className="inline-flex items-center justify-center gap-2 bg-white text-ink rounded-full px-8 py-4 text-sm sm:text-base font-bold border border-black/[0.08] shadow-sm hover:border-black/20 hover:bg-zinc-50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
+                >
+                  <span>Смотреть решения</span>
+                  <span className="text-ink/40">↓</span>
+                </a>
+              </div>
+
+              {/* Easy Next Step Micro-Offer */}
+              <div className="inline-flex items-center gap-2 text-xs text-ink/65 font-sans pt-1">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Бесплатный экспресс-разбор процессов за 15 минут в Telegram</span>
+              </div>
             </div>
 
             {/* Stats Row */}
-            <div className="grid grid-cols-3 gap-4 sm:gap-8 pt-8 mt-8 border-t border-black/[0.06] w-full max-w-lg items-baseline">
+            <div className="grid grid-cols-3 gap-4 sm:gap-8 pt-8 mt-6 border-t border-black/[0.06] w-full max-w-lg items-baseline">
               <div className="hero-stat">
                 <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">
                   {projectsCount}+
@@ -191,7 +199,7 @@ export const Hero: React.FC = () => {
                 <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">
                   {daysCount} дня
                 </div>
-                <div className="text-xs text-ink/60 font-sans mt-1">средний срок запуска</div>
+                <div className="text-xs text-ink/60 font-sans mt-1">первый рабочий прототип</div>
               </div>
               <div className="hero-stat">
                 <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">

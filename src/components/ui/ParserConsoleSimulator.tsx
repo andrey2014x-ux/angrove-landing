@@ -1,36 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Terminal,
+  Building2,
   FileSpreadsheet,
-  Database,
   CheckCircle2,
-  ShieldCheck,
   Play,
   RotateCcw,
   ExternalLink,
+  Phone,
+  Mail,
+  ShieldCheck,
   Sparkles,
 } from 'lucide-react';
 
-interface LeadRecord {
+interface CompanyRecord {
   id: string;
-  company: string;
-  inn: string;
-  region: string;
-  person: string;
-  role: string;
+  name: string;
+  activity: string;
+  city: string;
   phone: string;
-  hasWhatsapp: boolean;
-  operator: string;
+  phoneDept: string;
+  email: string;
+  website: string;
+  source: string;
 }
 
 interface NichePreset {
   id: string;
   title: string;
   badge: string;
-  query: string;
+  totalFound: number;
   sources: string[];
-  leads: LeadRecord[];
+  companies: CompanyRecord[];
 }
 
 const NICHES: NichePreset[] = [
@@ -38,158 +39,125 @@ const NICHES: NichePreset[] = [
     id: 'construction',
     title: 'Строительство и СМР',
     badge: '🏗️ Стройка',
-    query: 'Генподрядчики, фасадные работы, монолитное строительство',
-    sources: ['2ГИС', 'Яндекс Карты', 'ЕГРЮЛ', 'Rusprofile'],
-    leads: [
+    totalFound: 420,
+    sources: ['2ГИС', 'Яндекс Карты', 'ЕГРЮЛ'],
+    companies: [
       {
         id: 'c1',
-        company: 'ООО «СтройАльянс»',
-        inn: '7810849201',
-        region: 'СПб & ЛО',
-        person: 'Михаил Громов',
-        role: 'Главный инженер / ЛПР',
-        phone: '+7 (921) 840-12-88',
-        hasWhatsapp: true,
-        operator: 'МегаФон',
+        name: 'ООО «СтройАльянс»',
+        activity: 'Генподряд, монолитные и фасадные работы',
+        city: 'Санкт-Петербург',
+        phone: '+7 (812) 385-40-20',
+        phoneDept: 'отдел закупок и снабжения',
+        email: 'snab@stroy-aliance.ru',
+        website: 'stroy-aliance.ru',
+        source: '2ГИС',
       },
       {
         id: 'c2',
-        company: 'ПКФ «СеверМонтаж»',
-        inn: '7724910283',
-        region: 'Москва & МО',
-        person: 'Игорь Власов',
-        role: 'Директор по закупкам',
-        phone: '+7 (916) 304-55-19',
-        hasWhatsapp: true,
-        operator: 'МТС',
+        name: 'ПКФ «СеверМонтаж»',
+        activity: 'Монтаж металлоконструкций, промстроительство',
+        city: 'Москва и МО',
+        phone: '+7 (495) 740-12-90',
+        phoneDept: 'коммерческий отдел / приемная',
+        email: 'zakaz@sever-montazh.ru',
+        website: 'sever-montazh.ru',
+        source: 'Яндекс Карты',
       },
       {
         id: 'c3',
-        company: 'ГК «ЕвроФасад Групп»',
-        inn: '7802773410',
-        region: 'Санкт-Петербург',
-        person: 'Сергей Лебедев',
-        role: 'Генеральный директор',
-        phone: '+7 (981) 120-74-32',
-        hasWhatsapp: true,
-        operator: 'Теле2',
-      },
-      {
-        id: 'c4',
-        company: 'АО «ПромСтройСнаб»',
-        inn: '7705192840',
-        region: 'Москва',
-        person: 'Дмитрий Орлов',
-        role: 'Начальник отдела МТС',
-        phone: '+7 (903) 778-91-04',
-        hasWhatsapp: true,
-        operator: 'Билайн',
+        name: 'ГК «ЕвроФасад Групп»',
+        activity: 'Фасадные работы и промышленный альпинизм',
+        city: 'Санкт-Петербург',
+        phone: '+7 (812) 418-20-10',
+        phoneDept: 'отдел по работе с подрядчиками',
+        email: 'info@eurofasad.spb.ru',
+        website: 'eurofasad.spb.ru',
+        source: '2ГИС',
       },
     ],
   },
   {
     id: 'wholesale',
-    title: 'Оптовая торговля & FMCG',
-    badge: '📦 Опт',
-    query: 'Дистрибьюторы продуктов питания, хозтоваров и упаковки',
-    sources: ['Контур.Фокус', '2ГИС', 'СБИС', 'Каталог B2B'],
-    leads: [
+    title: 'Оптовые поставки и склады',
+    badge: '📦 Опт и склады',
+    totalFound: 360,
+    sources: ['2ГИС', 'Яндекс Карты', 'B2B-каталоги'],
+    companies: [
       {
         id: 'w1',
-        company: 'ТД «БалтТоргСнаб»',
-        inn: '7814529011',
-        region: 'СПб & СЗФО',
-        person: 'Ольга Данилова',
-        role: 'Коммерческий директор',
-        phone: '+7 (921) 412-99-31',
-        hasWhatsapp: true,
-        operator: 'МегаФон',
+        name: 'ТД «БалтТоргСнаб»',
+        activity: 'Оптовые поставки упаковки и тары для бизнеса',
+        city: 'Санкт-Петербург',
+        phone: '+7 (812) 334-19-80',
+        phoneDept: 'отдел оптовых продаж',
+        email: 'opt@balttorg.ru',
+        website: 'balttorg.ru',
+        source: '2ГИС',
       },
       {
         id: 'w2',
-        company: 'ООО «РитейлЛогистик»',
-        inn: '7719882310',
-        region: 'Москва',
-        person: 'Павел Кравцов',
-        role: 'Руководитель опта',
-        phone: '+7 (915) 238-41-77',
-        hasWhatsapp: true,
-        operator: 'МТС',
+        name: 'ООО «АльфаПромСклад»',
+        activity: 'Комплексное снабжение строительных баз',
+        city: 'Москва',
+        phone: '+7 (495) 662-81-10',
+        phoneDept: 'отдел снабжения и закупок',
+        email: 'info@alfapromsklad.ru',
+        website: 'alfapromsklad.ru',
+        source: 'Яндекс Карты',
       },
       {
         id: 'w3',
-        company: 'ПК «АгроПромХолдинг»',
-        inn: '2310492817',
-        region: 'ЮФО & Москва',
-        person: 'Виталий Зубов',
-        role: 'Директор по снабжению',
-        phone: '+7 (918) 441-20-85',
-        hasWhatsapp: true,
-        operator: 'Билайн',
-      },
-      {
-        id: 'w4',
-        company: 'ГК «НордТрейд»',
-        inn: '7811620943',
-        region: 'Санкт-Петербург',
-        person: 'Анна Смирнова',
-        role: 'Директор по развитию',
-        phone: '+7 (931) 501-19-64',
-        hasWhatsapp: true,
-        operator: 'Теле2',
+        name: 'ПКФ «Гермес-Логистик»',
+        activity: 'Складское хранение и распределительный центр',
+        city: 'Московская обл.',
+        phone: '+7 (495) 901-44-20',
+        phoneDept: 'отдел логистики и заказов',
+        email: 'sales@germes-log.ru',
+        website: 'germes-log.ru',
+        source: 'B2B-каталог',
       },
     ],
   },
   {
     id: 'equipment',
-    title: 'Спецтехника & Аренда',
-    badge: '🚜 Техника',
-    query: 'Аренда экскаваторов, тралов, самосвалов, грузоперевозки',
-    sources: ['Авито Спецтехника', '2ГИС', 'Яндекс Карты', 'ЕГРЮЛ'],
-    leads: [
+    title: 'Спецтехника и автосервис',
+    badge: '🚜 Спецтехника & СТО',
+    totalFound: 290,
+    sources: ['2ГИС', 'Яндекс Карты'],
+    companies: [
       {
         id: 'e1',
-        company: 'ООО «СпецТехПарк»',
-        inn: '7805128490',
-        region: 'СПб & ЛО',
-        person: 'Артем Ковалев',
-        role: 'Начальник автопарка',
-        phone: '+7 (921) 993-28-11',
-        hasWhatsapp: true,
-        operator: 'МегаФон',
+        name: 'ООО «СпецТехПарк»',
+        activity: 'Аренда кранов, экскаваторов и тралов',
+        city: 'Санкт-Петербург',
+        phone: '+7 (812) 640-15-50',
+        phoneDept: 'диспетчерская служба 24/7',
+        email: 'arenda@spectehpark.ru',
+        website: 'spectehpark.ru',
+        source: '2ГИС',
       },
       {
         id: 'e2',
-        company: 'ГК «МагистральТранс»',
-        inn: '7728193420',
-        region: 'Москва & РФ',
-        person: 'Владимир Чернов',
-        role: 'Диспетчер негабарита',
-        phone: '+7 (905) 554-19-82',
-        hasWhatsapp: true,
-        operator: 'Билайн',
+        name: 'ГК «МагистральТранс»',
+        activity: 'Перевозка негабаритных грузов и аренда техники',
+        city: 'Москва',
+        phone: '+7 (495) 789-30-40',
+        phoneDept: 'коммерческий отдел спецтехники',
+        email: 'b2b@magistral-trans.ru',
+        website: 'magistral-trans.ru',
+        source: 'Яндекс Карты',
       },
       {
         id: 'e3',
-        company: 'ПКФ «КранМонтаж»',
-        inn: '5032910481',
-        region: 'Московская обл.',
-        person: 'Денис Морозов',
-        role: 'Руководитель логистики',
-        phone: '+7 (916) 720-33-49',
-        hasWhatsapp: true,
-        operator: 'МТС',
-      },
-      {
-        id: 'e4',
-        company: 'ООО «НеваТралСервис»',
-        inn: '7816401928',
-        region: 'Санкт-Петербург',
-        person: 'Максим Ильин',
-        role: 'Главный диспетчер',
-        phone: '+7 (981) 840-02-71',
-        hasWhatsapp: true,
-        operator: 'Теле2',
+        name: 'ПКФ «КранМонтаж»',
+        activity: 'Услуги автовышек и манипуляторов',
+        city: 'Московская обл.',
+        phone: '+7 (495) 554-12-00',
+        phoneDept: 'отдел аренды оборудования',
+        email: 'info@kran-montazh.ru',
+        website: 'kran-montazh.ru',
+        source: '2ГИС',
       },
     ],
   },
@@ -200,30 +168,22 @@ export const ParserConsoleSimulator: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'running' | 'completed'>('idle');
   const [streamProgress, setStreamProgress] = useState(0);
   const [streamCount, setStreamCount] = useState(0);
-  const [activeLogIndex, setActiveLogIndex] = useState(0);
+  const [visibleCardsCount, setVisibleCardsCount] = useState(0);
   const [exportFeedback, setExportFeedback] = useState<string | null>(null);
 
   const activeNiche = NICHES[selectedNicheIndex];
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const logMessages = [
-    '2ГИС & Яндекс API: сканирование категории...',
-    'Rusprofile: валидация ИНН и извлечение контактов ЛПР...',
-    'HLR-валидация: проверка активности номеров в сотовой сети...',
-    'Фильтрация: исключение закрытых юрлиц и дедупликация SHA-256...',
-    'Экспорт: 380 чистых контактов с мобильными телефонами ЛПР готовы к выгрузке',
-  ];
 
   const handleStartScrape = () => {
     if (status === 'running') return;
     setStatus('running');
     setStreamProgress(5);
     setStreamCount(0);
-    setActiveLogIndex(0);
+    setVisibleCardsCount(0);
     setExportFeedback(null);
 
     const startTime = Date.now();
-    const duration = 2400; // 2.4s simulation
+    const duration = 2200; // 2.2s interactive animation
 
     if (timerRef.current) clearInterval(timerRef.current);
 
@@ -232,22 +192,26 @@ export const ParserConsoleSimulator: React.FC = () => {
       const progress = Math.min(100, Math.floor((elapsed / duration) * 100));
       setStreamProgress(progress);
 
-      const targetCount = 380;
+      const targetCount = activeNiche.totalFound;
       const currentCount = Math.floor((progress / 100) * targetCount);
       setStreamCount(currentCount);
 
-      const logIdx = Math.min(
-        logMessages.length - 1,
-        Math.floor((progress / 100) * logMessages.length)
-      );
-      setActiveLogIndex(logIdx);
+      // Staggered dynamic card pop-in during scrape
+      if (progress >= 85) {
+        setVisibleCardsCount(3);
+      } else if (progress >= 50) {
+        setVisibleCardsCount(2);
+      } else if (progress >= 20) {
+        setVisibleCardsCount(1);
+      }
 
       if (progress >= 100) {
         if (timerRef.current) clearInterval(timerRef.current);
-        setStreamCount(380);
+        setStreamCount(activeNiche.totalFound);
+        setVisibleCardsCount(3);
         setStatus('completed');
       }
-    }, 60);
+    }, 45);
   };
 
   const handleReset = () => {
@@ -255,19 +219,16 @@ export const ParserConsoleSimulator: React.FC = () => {
     setStatus('idle');
     setStreamProgress(0);
     setStreamCount(0);
-    setActiveLogIndex(0);
+    setVisibleCardsCount(0);
     setExportFeedback(null);
   };
 
-  const handleExportSim = (type: 'excel' | 'crm') => {
+  const handleExport = (type: 'excel' | 'crm') => {
     if (type === 'excel') {
-      setExportFeedback(`✓ Файл «База_${activeNiche.title}.xlsx» (380 строк) сформирован`);
+      setExportFeedback(`✓ Файл «База_${activeNiche.title}.xlsx» (${activeNiche.totalFound} компаний) сформирован`);
     } else {
-      setExportFeedback('✓ 380 контактов переданы в воронку amoCRM');
+      setExportFeedback(`✓ Контакты ${activeNiche.totalFound} компаний синхронизированы с amoCRM`);
     }
-    setTimeout(() => {
-      setExportFeedback(null);
-    }, 3200);
   };
 
   useEffect(() => {
@@ -277,264 +238,288 @@ export const ParserConsoleSimulator: React.FC = () => {
   }, []);
 
   return (
-    <div className="bg-[#0A0C16] rounded-3xl p-4 sm:p-6 text-white border border-white/10 shadow-2xl relative overflow-hidden flex flex-col justify-between min-h-[500px]">
-      {/* Ambient background glow */}
-      <div className="absolute top-0 right-0 w-80 h-80 bg-blue/15 rounded-full blur-[90px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-72 h-72 bg-emerald-500/10 rounded-full blur-[90px] pointer-events-none" />
-
-      {/* Header Bar */}
-      <div className="relative z-10 pb-3 border-b border-white/10 mb-3.5">
-        <div className="flex flex-wrap items-center justify-between gap-2.5">
-          <div className="flex items-center gap-2.5">
-            {/* macOS terminal dots */}
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]/80" />
-              <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]/80" />
-              <span className="w-2.5 h-2.5 rounded-full bg-[#27C93F]/80" />
-            </div>
-            <div className="flex items-center gap-1.5 ml-1">
-              <Terminal className="w-3.5 h-3.5 text-blue" />
-              <span className="text-xs font-mono font-bold text-white/90">
-                b2b_crawler_v4.2 · python/aiohttp
+    <div className="w-full bg-[#0E1621] rounded-3xl border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.4)] overflow-hidden flex flex-col font-sans select-none">
+      
+      {/* 1. Header Bar */}
+      <div className="bg-[#17212B] px-4 sm:px-6 py-3.5 border-b border-[#101720] flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-blue/20 text-blue-light flex items-center justify-center shrink-0">
+            <Building2 className="w-4 h-4" />
+          </div>
+          <div>
+            <div className="text-sm font-bold text-white tracking-tight flex items-center gap-2">
+              <span>Сбор B2B-базы организаций</span>
+              <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-mono font-medium">
+                152-ФЗ
               </span>
+            </div>
+            <div className="text-[11px] text-[#798B9B]">
+              Открытые общедоступные контакты компаний из 2ГИС и Яндекс Карт
             </div>
           </div>
+        </div>
 
-          {/* Telemetry pill */}
-          <div className="flex items-center gap-2">
-            {status === 'running' ? (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue/15 border border-blue/40 text-blue text-[11px] font-mono font-semibold">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue animate-pulse" />
-                140 req/s · 48 proxies
+        {status === 'completed' && (
+          <button
+            type="button"
+            onClick={handleReset}
+            title="Сбросить и протестировать другую нишу"
+            className="text-xs text-[#798B9B] hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer px-2.5 py-1 rounded-lg hover:bg-white/5"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Сбросить</span>
+          </button>
+        )}
+      </div>
+
+      {/* 2. Interactive Canvas */}
+      <div className="p-4 sm:p-6 space-y-4">
+        
+        {/* Step 1: Niche Selector */}
+        <div>
+          <div className="text-[11px] font-bold uppercase tracking-wider text-[#798B9B] mb-2">
+            Шаг 1. Выберите нишу компаний:
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            {NICHES.map((niche, idx) => {
+              const isSelected = selectedNicheIndex === idx;
+              return (
+                <button
+                  key={niche.id}
+                  type="button"
+                  onClick={() => {
+                    setSelectedNicheIndex(idx);
+                    if (status !== 'idle') handleReset();
+                  }}
+                  className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                    isSelected
+                      ? 'bg-[#1E2D3D] border-[#5288C1] text-white shadow-md'
+                      : 'bg-[#121B26] border-white/5 text-[#A2B5C6] hover:bg-[#182433] hover:text-white'
+                  }`}
+                >
+                  <div className="text-xs font-bold mb-0.5">{niche.badge}</div>
+                  <div className="text-[11px] text-white/50">{niche.totalFound} организаций в РФ</div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Step 2: 1-Click Action Button & Progress */}
+        <div>
+          {status === 'idle' && (
+            <button
+              type="button"
+              onClick={handleStartScrape}
+              className="w-full py-3.5 px-6 rounded-2xl bg-[#5288C1] hover:bg-[#4377B0] text-white font-bold text-sm uppercase tracking-wider transition-all duration-200 cursor-pointer shadow-lg hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2"
+            >
+              <Play className="w-4 h-4 fill-white" />
+              <span>Запустить сбор B2B-базы: {activeNiche.title}</span>
+            </button>
+          )}
+
+          {status === 'running' && (
+            <div className="w-full p-4 rounded-2xl bg-[#121B26] border border-blue/30 text-white space-y-2">
+              <div className="flex items-center justify-between text-xs font-medium">
+                <span className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-blue-light animate-ping" />
+                  <span>Поиск организаций в 2ГИС, Яндекс Картах и реестрах...</span>
+                </span>
+                <span className="font-mono text-blue-light font-bold">
+                  {streamCount} из {activeNiche.totalFound} компаний ({streamProgress}%)
+                </span>
+              </div>
+              <div className="w-full h-2 rounded-full bg-black/40 overflow-hidden">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-blue to-emerald-400 rounded-full"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${streamProgress}%` }}
+                  transition={{ duration: 0.1 }}
+                />
+              </div>
+            </div>
+          )}
+
+          {status === 'completed' && (
+            <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                <div className="text-xs">
+                  <strong className="text-white block font-bold">
+                    База успешно сформирована: {activeNiche.totalFound} организаций
+                  </strong>
+                  <span className="text-emerald-400/80">
+                    Официальные многоканальные телефоны, отделы снабжения и корпоративные email
+                  </span>
+                </div>
+              </div>
+              <span className="px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold uppercase hidden sm:block">
+                ГОТОВО
               </span>
-            ) : status === 'completed' ? (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-semibold">
-                <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                380 контактов валидно
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-zinc-400 text-[11px] font-mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                Готов к запуску · 0 дублей
-              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Step 3: Dynamic Company Cards with Pixel-Perfect Grid Alignment */}
+        <div>
+          {/* Header Row for Cards */}
+          <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-[#798B9B] mb-2 px-1">
+            <span>
+              {status === 'idle'
+                ? 'Образец карточек (появятся при запуске):'
+                : `Найдено организаций (${visibleCardsCount} из ${activeNiche.totalFound}):`}
+            </span>
+            <span className="text-emerald-400 font-medium normal-case flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              100% открытые данные (152-ФЗ)
+            </span>
+          </div>
+
+          {/* Cards Container */}
+          <div className="space-y-2">
+            {/* Idle State Placeholder */}
+            {status === 'idle' && (
+              <div className="py-7 px-4 rounded-2xl border border-dashed border-white/10 bg-[#121B26]/40 text-center flex flex-col items-center justify-center">
+                <div className="w-9 h-9 rounded-full bg-blue/10 text-blue-light flex items-center justify-center mb-2">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div className="text-xs font-semibold text-white/90 mb-1">
+                  Нажмите синюю кнопку выше, чтобы запустить сбор
+                </div>
+                <div className="text-[11px] text-[#798B9B] max-w-sm">
+                  Карточки найденных компаний с проверенными городскими телефонами отделов снабжения появятся прямо здесь в реальном времени.
+                </div>
+              </div>
+            )}
+
+            {/* Dynamic Animated Cards during running and completed */}
+            {status !== 'idle' && (
+              <div className="space-y-2">
+                <AnimatePresence>
+                  {activeNiche.companies.slice(0, visibleCardsCount).map((company) => (
+                    <motion.div
+                      key={company.id}
+                      initial={{ opacity: 0, y: -12, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ duration: 0.28, ease: 'easeOut' }}
+                      className="p-3.5 rounded-xl bg-[#121B26] border border-white/10 shadow-sm"
+                    >
+                      {/* Desktop Strict Grid (>= 768px) */}
+                      <div className="hidden md:grid md:grid-cols-12 gap-x-4 items-center">
+                        {/* 1. Name & Activity (Col 1-4) */}
+                        <div className="col-span-4 min-w-0 pr-1">
+                          <div className="font-bold text-white text-xs sm:text-sm truncate">
+                            {company.name}
+                          </div>
+                          <div className="text-[11px] text-[#A2B5C6] truncate mt-0.5">
+                            {company.activity}
+                          </div>
+                        </div>
+
+                        {/* 2. City Badge (Col 5-7) - ample width, centered with generous breathing room */}
+                        <div className="col-span-3 flex justify-center">
+                          <span className="inline-block px-3 py-1 rounded-md bg-white/5 text-[#8E9FA5] text-[11px] font-medium whitespace-nowrap border border-white/5">
+                            {company.city}
+                          </span>
+                        </div>
+
+                        {/* 3. Phone & Department (Col 8-10) */}
+                        <div className="col-span-3 min-w-0 pl-1">
+                          <div className="flex items-center gap-1.5 text-emerald-400 font-mono text-xs font-bold whitespace-nowrap">
+                            <Phone className="w-3.5 h-3.5 shrink-0" />
+                            <span>{company.phone}</span>
+                          </div>
+                          <div className="text-[10px] text-zinc-400 truncate mt-0.5 whitespace-nowrap">
+                            {company.phoneDept}
+                          </div>
+                        </div>
+
+                        {/* 4. Corporate Email & Website (Col 11-12) */}
+                        <div className="col-span-2 min-w-0 text-right">
+                          <div className="flex items-center justify-end gap-1 text-[#8E9FA5] text-xs font-mono whitespace-nowrap truncate">
+                            <Mail className="w-3 h-3 shrink-0" />
+                            <span className="truncate">{company.email}</span>
+                          </div>
+                          <div className="text-[10px] text-blue-light/70 truncate mt-0.5 whitespace-nowrap">
+                            {company.website}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Mobile Layout (< 768px) */}
+                      <div className="md:hidden space-y-2">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-bold text-white text-xs truncate">
+                            {company.name}
+                          </span>
+                          <span className="shrink-0 px-2 py-0.5 rounded bg-white/5 text-[#8E9FA5] text-[10px] whitespace-nowrap border border-white/5">
+                            {company.city}
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-[#A2B5C6] line-clamp-1">
+                          {company.activity}
+                        </div>
+                        <div className="pt-2 border-t border-white/5 flex items-center justify-between gap-2 text-xs">
+                          <div className="flex items-center gap-1.5 text-emerald-400 font-mono font-bold whitespace-nowrap">
+                            <Phone className="w-3.5 h-3.5 shrink-0" />
+                            <span>{company.phone}</span>
+                          </div>
+                          <div className="flex items-center gap-1 text-[#8E9FA5] text-[11px] font-mono whitespace-nowrap truncate">
+                            <Mail className="w-3 h-3 shrink-0" />
+                            <span className="truncate">{company.email}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
             )}
           </div>
         </div>
-      </div>
 
-      {/* Niche Selector Pills */}
-      <div className="relative z-10 mb-3">
-        <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 mb-2">
-          <span>Выберите нишу для тест-драйва:</span>
-          <span className="text-[10px] text-zinc-500">Пул: РФ + СНГ</span>
-        </div>
-        <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
-          {NICHES.map((niche, idx) => {
-            const isSelected = idx === selectedNicheIndex;
-            return (
-              <button
-                key={niche.id}
-                type="button"
-                onClick={() => {
-                  setSelectedNicheIndex(idx);
-                  if (status === 'completed') handleReset();
-                }}
-                className={`py-2 px-2 sm:px-3 rounded-xl text-left transition-all text-xs font-sans cursor-pointer flex flex-col justify-center border ${
-                  isSelected
-                    ? 'bg-blue/20 border-blue/50 text-white shadow-[0_0_15px_rgba(61,92,255,0.25)]'
-                    : 'bg-white/5 hover:bg-white/10 border-white/10 text-zinc-300'
-                }`}
-              >
-                <span className="font-semibold truncate text-[11px] sm:text-xs">{niche.badge}</span>
-                <span className="text-[10px] text-zinc-400 truncate hidden sm:block">
-                  {niche.title}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Query Bar & Active Sources */}
-      <div className="relative z-10 p-2.5 rounded-xl bg-white/[0.03] border border-white/10 mb-3 text-xs font-mono flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-        <div className="flex items-center gap-2 truncate text-zinc-300">
-          <span className="text-zinc-500 text-[11px]">ФИЛЬТР:</span>
-          <span className="truncate text-white text-[11px] font-sans font-medium">
-            {activeNiche.query}
-          </span>
-        </div>
-        <div className="flex items-center gap-1.5 shrink-0 text-[10px] text-zinc-400">
-          <Database className="w-3 h-3 text-blue" />
-          <span>{activeNiche.sources.join(' · ')}</span>
-        </div>
-      </div>
-
-      {/* Main Interactive Button */}
-      <div className="relative z-10 mb-3">
-        <button
-          type="button"
-          onClick={status === 'completed' ? handleReset : handleStartScrape}
-          disabled={status === 'running'}
-          className={`w-full py-3 px-4 rounded-xl font-bold text-xs sm:text-sm tracking-wide transition-all duration-200 select-none shadow-lg cursor-pointer flex items-center justify-center gap-2.5 ${
-            status === 'running'
-              ? 'bg-blue/60 text-white/80 cursor-wait'
-              : status === 'completed'
-                ? 'bg-white/10 hover:bg-white/15 text-white border border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.08)]'
-                : 'bg-blue hover:bg-blue-dark text-white shadow-[0_10px_25px_rgba(61,92,255,0.4)] hover:shadow-[0_15px_35px_rgba(61,92,255,0.6)] hover:-translate-y-0.5 active:translate-y-0'
-          }`}
-        >
-          {status === 'running' ? (
-            <>
-              <RotateCcw className="w-4 h-4 animate-spin text-white" />
-              <span>
-                Сбор и HLR-проверка: {streamCount} из 380 контактов ({streamProgress}%)
-              </span>
-            </>
-          ) : status === 'completed' ? (
-            <>
-              <RotateCcw className="w-4 h-4 text-emerald-400" />
-              <span>База собрана (380 контактов). Запустить тест заново</span>
-            </>
-          ) : (
-            <>
-              <Play className="w-4 h-4 fill-white text-white" />
-              <span>Запустить сбор B2B-базы: {activeNiche.title}</span>
-            </>
-          )}
-        </button>
-
-        {/* Progress Bar (Visible when running or completed) */}
-        {(status === 'running' || status === 'completed') && (
-          <div className="mt-2 w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-blue via-indigo-400 to-emerald-400 transition-all duration-150 rounded-full"
-              style={{ width: `${status === 'completed' ? 100 : streamProgress}%` }}
-            />
+        {/* Step 4: Export Buttons */}
+        <div className="pt-2 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="text-[11px] text-[#798B9B] flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            <span>Источники: 2ГИС, Яндекс Карты, официальные сайты компаний</span>
           </div>
-        )}
-      </div>
 
-      {/* Live Log Terminal Ticker */}
-      <div className="relative z-10 px-3 py-2 rounded-lg bg-black/60 border border-white/10 mb-3 text-[11px] font-mono flex items-center justify-between text-zinc-300">
-        <div className="flex items-center gap-2 truncate">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-          <span className="text-zinc-500 shrink-0">LOG:</span>
-          <span className="text-emerald-400 truncate">
-            {status === 'running'
-              ? logMessages[activeLogIndex]
-              : status === 'completed'
-                ? '✓ 380/380 номеров проверены на активность (WhatsApp / сотовая сеть)'
-                : 'Стенд инициализирован: прокси активны, антикапча подключена'}
-          </span>
-        </div>
-        <span className="text-[10px] text-zinc-500 font-mono shrink-0 pl-2">
-          {status === 'completed' ? '100% OK' : status === 'running' ? `${streamProgress}%` : 'IDLE'}
-        </span>
-      </div>
-
-      {/* Data Table */}
-      <div className="relative z-10 rounded-xl bg-black/40 border border-white/10 overflow-hidden mb-3">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr className="border-b border-white/10 bg-white/[0.04] text-[10px] font-mono text-zinc-400 uppercase tracking-wider">
-                <th className="py-2 px-3">Компания / ИНН</th>
-                <th className="py-2 px-3 hidden sm:table-cell">Регион</th>
-                <th className="py-2 px-3">ЛПР / Должность</th>
-                <th className="py-2 px-3">Телефон (HLR)</th>
-                <th className="py-2 px-3 text-right">Статус</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5 font-mono text-[11px]">
-              {activeNiche.leads.map((lead, idx) => {
-                // If running, progressively highlight or reveal
-                const isRevealed =
-                  status === 'idle' ||
-                  status === 'completed' ||
-                  streamProgress >= (idx + 1) * 20;
-
-                return (
-                  <tr
-                    key={lead.id}
-                    className={`transition-colors duration-200 hover:bg-white/[0.04] ${
-                      !isRevealed ? 'opacity-40 blur-[0.5px]' : 'opacity-100'
-                    }`}
-                  >
-                    <td className="py-2.5 px-3">
-                      <div className="font-sans font-bold text-white text-xs">{lead.company}</div>
-                      <div className="text-[10px] text-zinc-400 font-mono">ИНН {lead.inn}</div>
-                    </td>
-                    <td className="py-2.5 px-3 text-zinc-300 hidden sm:table-cell text-[11px]">
-                      {lead.region}
-                    </td>
-                    <td className="py-2.5 px-3">
-                      <div className="font-sans font-medium text-zinc-200">{lead.person}</div>
-                      <div className="text-[10px] text-zinc-400">{lead.role}</div>
-                    </td>
-                    <td className="py-2.5 px-3">
-                      <div className="text-white font-mono font-medium">{lead.phone}</div>
-                      <div className="text-[10px] text-emerald-400 flex items-center gap-1">
-                        <span>✓ WA</span>
-                        <span className="text-zinc-500">·</span>
-                        <span className="text-zinc-400">{lead.operator}</span>
-                      </div>
-                    </td>
-                    <td className="py-2.5 px-3 text-right">
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-medium font-sans">
-                        <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
-                        Валиден
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Simulated Export Action Bar & Guarantee Footer */}
-      <div className="relative z-10 pt-2 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div className="text-[11px] text-zinc-400 flex items-center gap-1.5">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-          <span>Сверка по ЕГРЮЛ, отсев дублей и живые мобильные телефоны ЛПР</span>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={() => handleExport('excel')}
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-[#1E2D3D] hover:bg-[#2A3E54] text-white text-xs font-medium border border-white/10 transition-colors cursor-pointer"
+            >
+              <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Выгрузить Excel (.xlsx)</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleExport('crm')}
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-[#1E2D3D] hover:bg-[#2A3E54] text-white text-xs font-medium border border-white/10 transition-colors cursor-pointer"
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-blue-light" />
+              <span>Экспорт в amoCRM</span>
+            </button>
+          </div>
         </div>
 
-        {/* Export Buttons */}
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <button
-            type="button"
-            onClick={() => handleExportSim('excel')}
-            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-200 text-xs font-mono transition-all cursor-pointer"
-          >
-            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Excel (.xlsx)</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => handleExportSim('crm')}
-            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-200 text-xs font-mono transition-all cursor-pointer"
-          >
-            <ExternalLink className="w-3.5 h-3.5 text-blue" />
-            <span>в amoCRM</span>
-          </button>
-        </div>
-      </div>
+        {/* Export Feedback notification */}
+        <AnimatePresence>
+          {exportFeedback && (
+            <motion.div
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="p-2.5 rounded-xl bg-blue/15 border border-blue/30 text-blue-light text-xs font-medium text-center"
+            >
+              {exportFeedback}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-      {/* Floating Export Toast */}
-      <AnimatePresence>
-        {exportFeedback && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            className="absolute bottom-16 left-1/2 -translate-x-1/2 bg-emerald-950/90 border border-emerald-500/40 text-emerald-200 text-xs px-4 py-2 rounded-xl backdrop-blur-md shadow-2xl flex items-center gap-2 z-20 pointer-events-none"
-          >
-            <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span className="font-medium font-sans">{exportFeedback}</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </div>
     </div>
   );
 };

@@ -34,27 +34,27 @@ export const GuideForm: React.FC = () => {
 
               <WordReveal
                 as="h2"
-                text="Руководство по ликвидации рутины в бизнесе"
+                text="Чек-лист и 5 схем автоматизации бизнеса"
                 className="text-2xl sm:text-3xl lg:text-4xl font-black uppercase tracking-tight text-white mb-3"
-                highlightWords={{ 'рутины': 'font-serif italic font-normal text-blue-light lowercase' }}
+                highlightWords={{ 'схем': 'font-serif italic font-normal text-blue-light lowercase' }}
               />
 
               <p data-reveal="desc" className="text-sm sm:text-base text-zinc-300 font-sans leading-relaxed max-w-xl mb-6">
-                12-страничный PDF-документ: как быстро оцифровать повторяющиеся процессы и выбрать стек без переплаты за дорогие зарубежные SaaS.
+                12-страничный практический PDF: пошаговый план, как сократить до 150 часов ручного труда команды в месяц, готовые промпты для AI-ботов и архитектура связки сервисов без переплат.
               </p>
 
               <div data-reveal="card" className="flex flex-wrap gap-4 text-xs text-zinc-400">
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span>Правило трёх повторений</span>
+                  <span>5 готовых схем связки n8n</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span>Архитектура Python + n8n</span>
+                  <span>Шаблоны промптов для ботов</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span>Чек-лист готовности к AI</span>
+                  <span>Калькулятор экономии ФОТ</span>
                 </div>
               </div>
             </div>

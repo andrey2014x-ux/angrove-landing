@@ -23,8 +23,33 @@ export const TelegramChatSimulator: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [lastCrmAlert, setLastCrmAlert] = useState<string | null>(null);
+  const [fallbackIndex, setFallbackIndex] = useState(0);
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  // Direct native wheel handler to guarantee 100% reliable scrolling inside Lenis
+  useEffect(() => {
+    const el = chatContainerRef.current;
+    if (!el) return;
+
+    const onWheel = (e: WheelEvent) => {
+      e.stopPropagation();
+      const { deltaY } = e;
+      const { scrollTop, scrollHeight, clientHeight } = el;
+      const atTop = scrollTop <= 2;
+      const atBottom = scrollTop + clientHeight >= scrollHeight - 4;
+
+      if ((deltaY < 0 && !atTop) || (deltaY > 0 && !atBottom)) {
+        el.scrollTop += deltaY;
+        e.preventDefault();
+      }
+    };
+
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => {
+      el.removeEventListener('wheel', onWheel);
+    };
+  }, []);
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -41,154 +66,437 @@ export const TelegramChatSimulator: React.FC = () => {
 
   const quickQuestions = [
     'Сколько стоит бот под ключ?',
-    'Какие сроки на парсер?',
+    'Запиши меня к Андрею',
     'У меня студия ремонта, как поможет?',
+    'А если бот ошибется клиенту?',
     'Стек: n8n или чистый Python?',
-    'Как заявка попадает в CRM?',
   ];
 
-  const getAiAnswer = (query: string): { reply: string; crmAction?: string } => {
+  const getAiAnswer = (query: string, history: ChatMessage[]): { reply: string; crmAction?: string } => {
     const q = query.toLowerCase().trim();
-    const words = q.split(/[\s,.:;!?()+–—-]+/).filter(Boolean);
+    const words = q.split(/[\s,.:;!?()+–—"'-]+/).filter(Boolean);
     const hasWord = (w: string) => words.includes(w);
     const hasAnyWord = (list: string[]) => list.some((w) => words.includes(w));
+    const hasSubstring = (sub: string) => q.includes(sub);
 
-    // 1. Greetings
-    if (hasAnyWord(['привет', 'здравствуйте', 'добрый', 'хай', 'ку', 'салют', 'вечер', 'утро'])) {
-      return {
-        reply: 'Здравствуйте! Рад знакомству. Я интерактивный ассистент Андрея — отвечаю за 5 секунд, считаю смету и помогаю автоматизировать рутину в бизнесе.\n\nЗадайте любой вопрос по вашей задаче или выберите подсказку ниже 👇',
-      };
-    }
+    // Context: last bot message
+    const lastBotMsg = [...history].reverse().find((m) => m.sender === 'bot')?.text.toLowerCase() || '';
 
-    // 2. Who is Andrey / About creator
-    if (q.includes('кто такой') || q.includes('кто ты') || q.includes('ты кто') || hasWord('автор') || hasWord('создатель') || q.includes('обо мне')) {
-      return {
-        reply: 'Андрей (@ANGROVE) — инженер-архитектор систем автоматизации. Более 70 боевых проектов в проде: разрабатывает умных Telegram-ботов с AI, высоконагруженные парсеры на Python и сквозные связки CRM/склада.\n\nРаботает без менеджеров и посредников — прямой контакт с автором системы. Напишите, какая у вас задача — посчитаем решение!',
-        crmAction: 'amoCRM: Интерес к автору системы · Личный контакт',
-      };
-    }
-
-    // 3. Price & Cost (STRICTLY PRIORITIZED before specific niches!)
+    // ==========================================
+    // 1. Direct Booking / Appointment with Andrey
+    // ==========================================
     if (
-      q.includes('скольк') ||
-      q.includes('стои') ||
-      q.includes('цен') ||
-      q.includes('прайс') ||
-      q.includes('тариф') ||
-      q.includes('расценк') ||
-      q.includes('бюджет') ||
+      hasSubstring('запиши') ||
+      hasSubstring('записа') ||
+      hasSubstring('созвон') ||
+      hasSubstring('встреч') ||
+      hasSubstring('консультаци') ||
+      hasSubstring('к андрею') ||
+      hasSubstring('с андреем') ||
+      hasSubstring('поговорить с андреем') ||
+      hasSubstring('позови андрея') ||
+      hasSubstring('свяжи с андреем') ||
+      hasSubstring('дай андрея') ||
+      hasSubstring('переведи на андрея') ||
+      hasSubstring('номер андрея')
+    ) {
+      return {
+        reply: 'С удовольствием запишу вас к Андрею! 🤝\n\nНа какой день и примерное время (по МСК) вам удобнее запланировать 20-минутный разбор? Напишите удобное время и ваш контакт (телефон или ник в Telegram), либо можете написать напрямую Андрею в Telegram: @ANGROVE — он ответит в течение 15 минут.',
+        crmAction: 'amoCRM: Запрос на запись к Андрею · Создан лид «Согласование слота»',
+      };
+    }
+
+    // ==========================================
+    // 2. Time, Days, Contacts, Confirmation in Follow-up
+    // ==========================================
+    const hasTimeOrContact =
+      hasAnyWord(['завтра', 'сегодня', 'понедельник', 'вторник', 'среду', 'четверг', 'пятницу', 'субботу', 'воскресенье']) ||
+      hasAnyWord(['утром', 'днем', 'вечером', 'после', 'мск']) ||
+      /\d{1,2}[:.]\d{2}/.test(q) ||
+      /\+?[78]\d{9,10}/.test(q) ||
+      q.includes('@') ||
+      hasSubstring('в 1') ||
+      hasSubstring('в 2') ||
+      hasSubstring('в 3') ||
+      hasSubstring('в 4') ||
+      hasSubstring('в 5');
+
+    if (hasTimeOrContact && (lastBotMsg.includes('запишу') || lastBotMsg.includes('время') || lastBotMsg.includes('созвон') || lastBotMsg.includes('день'))) {
+      return {
+        reply: 'Отлично! Время зафиксировал в CRM. Передал заявку Андрею в личные сообщения. Он подтвердит слот в течение 15 минут в Telegram.\n\nКакую задачу или сферу бизнеса хотите разобрать на созвоне в первую очередь?',
+        crmAction: 'amoCRM: Слот на созвон зафиксирован · Контакт передан Андрею @ANGROVE',
+      };
+    }
+
+    // ==========================================
+    // 3. Human / Operator Hand-off
+    // ==========================================
+    if (
+      hasAnyWord(['человек', 'человека', 'человеком', 'оператор', 'оператора', 'менеджер', 'менеджера', 'живой']) ||
+      hasSubstring('дай человека') ||
+      hasSubstring('позови человека') ||
+      hasSubstring('не с ботом')
+    ) {
+      return {
+        reply: 'Без проблем! Переключаю диалог на человека. Андрей (@ANGROVE) работает без посредников и менеджеров — вы можете сразу написать ему в личные сообщения: @ANGROVE.\n\nОн на связи и подробно ответит на любые технические вопросы по проекту.',
+        crmAction: 'CRM: Запрос перевода на живого инженера @ANGROVE',
+      };
+    }
+
+    // ==========================================
+    // 4. Agreement / Ready to proceed
+    // ==========================================
+    if (
+      hasAnyWord(['да', 'давай', 'хочу', 'интересно', 'согласен', 'готов', 'погнали', 'давайте', 'ок давай', 'го']) &&
+      words.length <= 4
+    ) {
+      return {
+        reply: 'Договорились! Чтобы не терять время, напишите напрямую Андрею в Telegram: @ANGROVE — он покажет живой пример работы бота именно в вашей нише и сориентирует по точной смете.',
+        crmAction: 'amoCRM: Клиент подтвердил готовность · Лид высокой температуры',
+      };
+    }
+
+    // ==========================================
+    // 5. Casual, Small Talk & Greetings
+    // ==========================================
+    if (hasAnyWord(['привет', 'здравствуйте', 'добрый', 'хай', 'ку', 'салют', 'вечер', 'утро', 'день', 'йо'])) {
+      return {
+        reply: 'Здравствуйте! Рад знакомству. Я интерактивный AI-ассистент Андрея — отвечаю за 5 секунд, считаю смету и помогаю бизнесу не терять клиентов 24/7.\n\nЗадайте вопрос по вашей задаче или выберите подсказку ниже 👇',
+      };
+    }
+
+    if (hasSubstring('как дела') || hasSubstring('как жизнь') || hasSubstring('че как') || hasSubstring('что нового') || hasSubstring('как ты')) {
+      return {
+        reply: 'Отлично! Работаю в режиме 24/7 без сна и выходных, квалифицирую лидов и экономлю владельцам бизнеса сотни часов рутины каждый месяц.\n\nКакую задачу в вашем проекте хотите решить?',
+      };
+    }
+
+    if (hasAnyWord(['спасибо', 'благодарю', 'от души', 'мерси', 'thanks', 'thx'])) {
+      return {
+        reply: 'Всегда рад помочь! Если хотите внедрить такого же ассистента или автоматизировать рутину у себя в бизнесе — напишите Андрею напрямую в Telegram: @ANGROVE 🤝',
+      };
+    }
+
+    if (hasAnyWord(['круто', 'огонь', 'кайф', 'супер', 'класс', 'топ', 'норм', 'четко', 'понял', 'ясно', 'ок', 'хорошо', 'ладно', 'гуд']) && words.length <= 3) {
+      return {
+        reply: 'Приятно слышать! В реальном проекте мы можем обучить бота вашей базе знаний, каталогу услуг или связать с CRM за 3–7 дней. Хотите прикинуть смету под вашу нишу?',
+        crmAction: 'CRM: Положительная реакция клиента · Готовность к диалогу',
+      };
+    }
+
+    // ==========================================
+    // 6. Tests, Math, Humor & Objections on Intelligence
+    // ==========================================
+    if (q.includes('2+2') || q.includes('2 + 2') || hasSubstring('сколько будет') || hasSubstring('посчитай')) {
+      return {
+        reply: 'Ровно 4! Считать я умею мгновенно, но лучше всего у меня получается считать конверсию и сэкономленные часы владельцев бизнеса 😉 Какую задачу хотите автоматизировать?',
+      };
+    }
+
+    if (hasAnyWord(['анекдот', 'шутка', 'шутку', 'прикол', 'рассмеши'])) {
+      return {
+        reply: 'Владелец бизнеса решил сэкономить и посадил троих менеджеров вручную копировать лиды из мессенджера в Excel. Через месяц бот на Python за 30 000 ₽ сделал ту же работу за 3 секунды. Мораль: автоматизация бережет нервы и бюджет 🚀',
+      };
+    }
+
+    if (
+      hasAnyWord(['тупой', 'дурак', 'глупый', 'тупишь', 'не понимаешь']) ||
+      hasSubstring('бот тупой') ||
+      hasSubstring('не очень умный')
+    ) {
+      return {
+        reply: 'Я учусь каждый день! В боевых проектах Андрей обучает меня по конкретным регламентам и базе знаний вашей компании, поэтому с вашими реальными клиентами я общаюсь четко, вежливо и строго по регламенту.\n\nНапишите вашу нишу — расскажу, как бот окупит себя у вас!',
+      };
+    }
+
+    if (hasSubstring('почему андрей') || hasSubstring('почему именно') || hasSubstring('агентство') || hasSubstring('студия')) {
+      return {
+        reply: 'В агентстве вы переплачиваете 2-3 цены за офис, аккаунт-менеджеров и бюрократию, а проект отдают джуниору. С Андреем (@ANGROVE) вы работаете напрямую с senior-инженером: прозрачная смета, прототип за 48 часов и личная гарантия за каждый коммит.',
+      };
+    }
+
+    // ==========================================
+    // 7. Technical Risks & Failure Modes
+    // ==========================================
+    if (
+      hasSubstring('завис') ||
+      hasSubstring('упадет') ||
+      hasSubstring('слома') ||
+      hasSubstring('сбой') ||
+      hasSubstring('баг') ||
+      hasSubstring('ляжет')
+    ) {
+      return {
+        reply: 'Система строится по отказоустойчивым стандартам: автоматический перезапуск контейнеров в Docker, повторные попытки вебхуков (retry queue), логирование в Sentry и мгновенный алерт в Telegram, если внешняя база или банк на минуту зависли. Ни одна заявка клиента не потеряется.',
+        crmAction: 'CRM: Снятие технического возражения (отказоустойчивость)',
+      };
+    }
+
+    if (
+      hasSubstring('заблок') ||
+      hasSubstring('бан') ||
+      hasSubstring('блок') ||
+      hasSubstring('забанят') ||
+      hasSubstring('спам')
+    ) {
+      return {
+        reply: 'Боты работают строго через официальный Telegram Bot API (токены от @BotFather) — это на 100% легальный белый протокол, блокировки здесь исключены. А для парсеров мы используем ротацию пулов мобильных прокси и эмуляцию живого браузера, поэтому защита сайтов видит только естественные запросы обычных пользователей.',
+        crmAction: 'CRM: Снятие возражения о блокировках',
+      };
+    }
+
+    if (
+      hasSubstring('ошиб') ||
+      hasSubstring('галлюцин') ||
+      hasSubstring('врет') ||
+      hasSubstring('напутает') ||
+      hasSubstring('придумает')
+    ) {
+      return {
+        reply: 'Отличный вопрос! Чтобы AI не придумывал лишнего, настраивается строгая RAG-архитектура: бот отвечает ТОЛЬКО по вашей утвержденной базе знаний (регламенты, прайсы, FAQ). Если клиент задает вопрос вне базы, бот честно говорит: «Уточняю у специалиста» и передает диалог живому менеджеру без неловких выдумок.',
+        crmAction: 'CRM: Снятие возражения по галлюцинациям AI',
+      };
+    }
+
+    // ==========================================
+    // 8. Prices, Budget & Discounts
+    // ==========================================
+    if (
+      hasSubstring('скольк') ||
+      hasSubstring('стои') ||
+      hasSubstring('цен') ||
+      hasSubstring('прайс') ||
+      hasSubstring('тариф') ||
+      hasSubstring('расценк') ||
+      hasSubstring('бюджет') ||
+      hasSubstring('дорого') ||
+      hasSubstring('дешев') ||
       hasWord('почем') ||
       hasWord('рублей')
     ) {
       return {
-        reply: 'Фиксированные ориентиры по стоимости разработки:\n\n• Точечный парсер данных — от 15 000 ₽ (2–4 дня)\n• Telegram-бот со сценарием продаж — от 30 000 ₽ (3–5 дней)\n• Умный AI-ассистент под ключ (Claude / GPT + CRM) — от 50 000 ₽ (1–2 нед)\n• Сквозная связка всех систем бизнеса — от 70 000 ₽\n\nСмета фиксируется в договоре до начала работ без скрытых доплат. Под какую нишу подбираете решение?',
+        reply: 'Фиксированные ориентиры по стоимости разработки:\n\n• Точечный парсер данных — от 15 000 ₽ (2–4 дня)\n• Telegram-бот со сценарием продаж — от 30 000 ₽ (3–5 дней)\n• Умный AI-ассистент под ключ (Claude / GPT + CRM) — от 50 000 ₽ (1–2 нед)\n• Сквозная связка всех систем бизнеса — от 70 000 ₽\n\nСмета фиксируется в договоре до старта работ. Под какую нишу подбираете решение?',
         crmAction: 'amoCRM: Запрос прайс-листа · Смета зафиксирована',
       };
     }
 
-    // 4. Timeline
-    if (q.includes('срок') || q.includes('дней') || q.includes('быстро') || q.includes('когда') || q.includes('дедлайн') || q.includes('времени')) {
+    // ==========================================
+    // 9. Timelines & Speed
+    // ==========================================
+    if (
+      hasSubstring('срок') ||
+      hasSubstring('дней') ||
+      hasSubstring('быстро') ||
+      hasSubstring('когда') ||
+      hasSubstring('дедлайн') ||
+      hasSubstring('времени')
+    ) {
       return {
-        reply: 'По срокам запуска:\n\n• Базовый парсер или типовой бот — 3–5 рабочих дней\n• Комплексная связка с AI-агентом и CRM — 1–2 недели\n\nРаботаем недельными спринтами: первый рабочий прототип вы тестируете уже через 48 часов после старта!',
+        reply: 'Сроки запуска:\n\n• Базовый парсер или типовой бот — 3–5 рабочих дней\n• Комплексная связка с AI-агентом и CRM — 1–2 недели\n\nРаботаем быстрыми спринтами: первый рабочий прототип вы тестируете уже через 48 часов после старта!',
         crmAction: 'amoCRM: Уточнение сроков внедрения',
       };
     }
 
-    // 5. Tech Stack
-    if (q.includes('стек') || q.includes('python') || q.includes('n8n') || q.includes('технолог') || (q.includes('баз') && q.includes('данных'))) {
+    // ==========================================
+    // 10. Tech Stack
+    // ==========================================
+    if (
+      hasSubstring('стек') ||
+      hasSubstring('python') ||
+      hasSubstring('n8n') ||
+      hasSubstring('технолог') ||
+      hasSubstring('сервер') ||
+      (hasSubstring('баз') && hasSubstring('данных'))
+    ) {
       return {
-        reply: 'Коммерческий продакшн-стек:\n\n• Бэкенд: Python 3.12, FastAPI, PostgreSQL, Redis\n• Сценарии и вебхуки: n8n, Docker\n• Парсинг: Playwright, BeautifulSoup, прокси-пулы\n• AI: Claude 3.5/3.7 Sonnet, OpenAI GPT-4o, LangChain\n• CRM: amoCRM REST API, Bitrix24 Webhooks, МойСклад JSON API\n\nВсё разворачивается на защищенном сервере клиента или выделенном VPS.',
+        reply: 'Коммерческий продакшн-стек:\n\n• Бэкенд: Python 3.12, FastAPI, PostgreSQL, Redis\n• Сценарии и вебхуки: n8n, Docker\n• Парсинг: Playwright, BeautifulSoup, резидентные прокси\n• AI: Claude 3.5/3.7 Sonnet, OpenAI GPT-4o, LangChain\n• CRM: amoCRM REST API, Bitrix24 Webhooks, МойСклад JSON API\n\nВсё разворачивается на защищенном сервере клиента или выделенном VPS.',
       };
     }
 
-    // 6. Parsers & Web Scraping
-    if (q.includes('парсер') || q.includes('парсинг') || q.includes('сбор баз') || q.includes('2гис') || q.includes('авито') || q.includes('яндекс карт') || q.includes('циан')) {
+    // ==========================================
+    // 11. Parsers & Web Scraping
+    // ==========================================
+    if (
+      hasSubstring('парсер') ||
+      hasSubstring('парсинг') ||
+      hasSubstring('сбор баз') ||
+      hasSubstring('2гис') ||
+      hasSubstring('авито') ||
+      hasSubstring('яндекс карт') ||
+      hasSubstring('циан')
+    ) {
       return {
-        reply: 'Разрабатываю отказоустойчивые парсеры на Python + Playwright:\n\n• Обход капчи, Cloudflare и блокировок\n• Сбор контактов с 2ГИС, Яндекс Карт, маркетплейсов и закрытых B2B-каталогов\n• HLR-валидация номеров (отсекаем битые телефоны)\n• Выгрузка прямо в Google Таблицу или вашу CRM\n\nСтоимость — от 15 000 ₽. С каких источников нужно собирать данные?',
-        crmAction: 'amoCRM: Заявка на разработку парсера данных',
+        reply: 'Разрабатываю парсеры открытых данных на Python:\n\n• 100% законно по 152-ФЗ: сбор официальных контактов организаций из открытых источников\n• 2ГИС, Яндекс Карты, маркетплейсы и открытые B2B-реестры\n• Фильтрация дублей, проверка доступности номеров компаний\n• Выгрузка прямо в Google Таблицу, Excel или вашу CRM\n\nСтоимость — от 15 000 ₽. В какой сфере вам нужны контакты компаний?',
+        crmAction: 'amoCRM: Заявка на сбор B2B-базы организаций (152-ФЗ)',
       };
     }
 
-    // 7. AI Agents & LLM (Claude, GPT)
-    if (q.includes('ии') || q.includes('нейросет') || q.includes('ai') || q.includes('claude') || q.includes('gpt') || q.includes('чатгпт') || q.includes('гпт')) {
+    // ==========================================
+    // 12. AI Agents & LLM (Claude, GPT)
+    // ==========================================
+    if (
+      hasSubstring('нейросет') ||
+      hasSubstring('claude') ||
+      hasSubstring('gpt') ||
+      hasSubstring('чатгпт') ||
+      hasSubstring('гпт') ||
+      hasWord('ai') ||
+      hasWord('ии')
+    ) {
       return {
-        reply: 'Внедряю языковые модели (Claude 3.5/3.7 Sonnet, OpenAI GPT-4o) прямо в бизнес:\n\n• AI-ассистенты продаж: квалифицируют лидов, помнят контекст диалога и доводят до оплаты\n• База знаний RAG: бот отвечает строго по вашим регламентам и прайсам без выдумок\n• Голосовые ответы: понимает аудиосообщения клиентов и переводит в текст\n\nСтоимость умного агента под ключ — от 50 000 ₽.',
+        reply: 'Внедряю современные языковые модели (Claude 3.5/3.7 Sonnet, GPT-4o) прямо в бизнес:\n\n• AI-ассистенты продаж: квалифицируют лидов, помнят контекст диалога и доводят до оплаты\n• База знаний RAG: бот отвечает строго по вашим регламентам без выдумок\n• Голосовые ответы: понимает аудиосообщения клиентов и транскрибирует в текст\n\nСтоимость умного агента под ключ — от 50 000 ₽.',
         crmAction: 'amoCRM: Запрос на AI-ассистента под ключ',
       };
     }
 
-    // 8. CRM Integrations
-    if (q.includes('crm') || q.includes('амо') || q.includes('битрикс') || q.includes('bitrix') || q.includes('amo') || q.includes('склад') || q.includes('1с') || q.includes('интеграци')) {
+    // ==========================================
+    // 13. CRM Integrations
+    // ==========================================
+    if (
+      hasSubstring('crm') ||
+      hasSubstring('амо') ||
+      hasSubstring('битрикс') ||
+      hasSubstring('bitrix') ||
+      hasSubstring('amo') ||
+      hasSubstring('1с') ||
+      hasSubstring('интеграци')
+    ) {
       return {
-        reply: 'Интеграция бесшовная: как только клиент пишет в бота или звонит, в amoCRM или Bitrix24 мгновенно создается сделка с контактом, резюме диалога от AI и суммой сметы. Менеджеру в Telegram падает уведомление: «Горячий лид готов к закрытию».',
-        crmAction: 'amoCRM Webhook: Сделка #8821 создана за 0.8 сек',
+        reply: 'Интеграция бесшовная: как только клиент пишет в бота или оставляет заявку, в amoCRM или Bitrix24 мгновенно создается сделка с контактом, резюме диалога от AI и суммой сметы. Менеджеру в Telegram падает уведомление: «Горячий лид готов к закрытию».',
+        crmAction: 'amoCRM Webhook: Сделка синхронизирована за 0.8 сек',
       };
     }
 
-    // 9. Voice Telephony
-    if (q.includes('голос') || q.includes('звон') || q.includes('обзвон') || (hasWord('робот') && !hasWord('бот'))) {
+    // ==========================================
+    // 14. Specific Niches
+    // ==========================================
+    // Beauty, Stylists, Salons
+    if (
+      hasAnyWord(['стилист', 'стилиста', 'стилисту', 'салон', 'салона', 'парикмахер', 'барбер', 'барбершоп', 'маникюр', 'ресницы', 'брови', 'бьюти', 'массаж', 'косметолог']) ||
+      hasSubstring('стилист') ||
+      hasSubstring('бьюти')
+    ) {
       return {
-        reply: 'Голосовой AI-робот обзванивает базу или принимает входящие живой русской речью без роботизированного акцента (задержка ответа < 0.4 сек). Заменяет 3–4 операторов колл-центра, квалифицирует клиентов и переводит готовых на менеджеров. Себестоимость — от 2 ₽/мин.',
-        crmAction: 'amoCRM: Запрос демонстрации голосового робота',
+        reply: 'Для бьюти-сферы и стилистов:\n\n• Связываем Telegram и Instagram с YClients или DIKIDI\n• Бот показывает портфолио по категориям (окрашивание, стрижки, капсулы гардероба)\n• Проверяет свободные слоты в календаре мастера и сам оформляет запись\n• Автоматически отправляет напоминание за 3 часа, чтобы клиент не забыл о визите\n\nНи один клиент из Direct или Telegram не потеряется ночью!',
+        crmAction: 'amoCRM: Заявка на автоматизацию бьюти/стилиста · Интеграция с YClients',
       };
     }
 
-    // 10. Specific Niches (Safe word matching)
-    if (hasAnyWord(['ремонт', 'ремонта', 'стройк', 'стройка', 'квартир', 'квартиры', 'отделка', 'замер'])) {
+    // Construction, Renovation, Interior Design
+    if (
+      hasAnyWord(['ремонт', 'ремонта', 'стройк', 'стройка', 'квартир', 'квартиры', 'отделка', 'замер', 'замерщик', 'интерьер', 'дизайн', 'дизайнер', 'мебель']) ||
+      hasSubstring('ремонт') ||
+      hasSubstring('стройк')
+    ) {
       return {
-        reply: 'Для строительных компаний и студий ремонта:\n\nБот уточняет метраж, тип объекта (новостройка/вторичка) и бюджет, моментально рассчитывает вилку сметы (например, «от 450 000 ₽») и предлагает свободное окно для выезда замерщика.',
+        reply: 'Для строительных компаний, студий ремонта и мебели:\n\n• Бот уточняет метраж, тип объекта (новостройка/вторичка) и пожелания\n• Мгновенно рассчитывает вилку сметы (например, «от 450 000 ₽»)\n• Предлагает свободные окна для бесплатного выезда замерщика\n• В amoCRM падает готовая карточка с параметрами объекта и контактом.',
         crmAction: 'Сделка «Ремонт под ключ» создана в amoCRM · Бюджет 450 000 ₽',
       };
     }
 
-    if (hasAnyWord(['недвижимость', 'риелтор', 'агентство', 'квартира', 'жк', 'аренда', 'новостройки'])) {
+    // Dentistry, Clinics, Doctors, Medicine
+    if (
+      hasAnyWord(['клиника', 'клиники', 'стоматолог', 'стоматология', 'врач', 'врача', 'доктор', 'медицин', 'анализы', 'прием']) ||
+      hasSubstring('клиник') ||
+      hasSubstring('стоматолог')
+    ) {
       return {
-        reply: 'В недвижимости:\n\nБот за 5 секунд выявляет бюджет, локацию и тип объекта (покупка/инвестиции). Горячим клиентам сразу отправляет PDF-презентацию ЖК и ставит задачу брокеру.',
-        crmAction: 'amoCRM: Лид квалифицирован · Сегмент «Премиум новостройки»',
+        reply: 'Для медицины и стоматологий:\n\n• Первичный триаж: бот уточняет симптомы или необходимую услугу\n• Подбор специалиста и свободного времени в МИС (Инфоклиника, Medesk, 1C:Медицина)\n• Снижение неявок до 70% за счет подтверждения записи в мессенджере\n• Контакт и история обращения сразу фиксируются в карте пациента.',
+        crmAction: 'amoCRM: Запись пациента · МИС интеграция',
       };
     }
 
-    if (hasAnyWord(['авто', 'автосервис', 'машина', 'машины', 'автомойка', 'шиномонтаж', 'запчасти', 'сто'])) {
+    // E-commerce, Marketplaces (WB, Ozon), Retail
+    if (
+      hasAnyWord(['wb', 'ozon', 'вайлдберриз', 'озон', 'маркетплейс', 'магазин', 'одежда', 'шоурум', 'доставка', 'товар', 'товары']) ||
+      hasSubstring('вайлдберриз') ||
+      hasSubstring('озон') ||
+      hasSubstring('маркетплейс')
+    ) {
       return {
-        reply: 'Для автосервисов и автобизнеса:\n\nБот запрашивает VIN или госномер, марку авто и причину обращения, проверяет свободный подъемник в календаре и записывает клиента на удобное время.',
-        crmAction: 'amoCRM: Запись на сервис создана · VIN зафиксирован',
+        reply: 'Для селлеров и e-commerce:\n\n• Автоматический мониторинг цен конкурентов и остатков на складах\n• Бот поддержки: статус заказа по трек-номеру через API МойСклад или служб доставки\n• Каталог товаров прямо в Telegram WebApp с оплатой в 1 клик\n• Сбор отзывов и повторные продажи по базе покупателей.',
+        crmAction: 'amoCRM: Лид из E-commerce · МойСклад API',
       };
     }
 
-    if (hasAnyWord(['клиника', 'врач', 'стоматолог', 'стоматология', 'салон', 'массаж'])) {
+    // Wholesale, Warehouses, B2B Manufacturing
+    if (
+      hasAnyWord(['опт', 'оптом', 'склад', 'склада', 'производство', 'завод', 'поставки', 'b2b']) ||
+      hasSubstring('оптом') ||
+      hasSubstring('склад')
+    ) {
       return {
-        reply: 'Для медицины и сферы услуг:\n\nИнтеграция с YClients или CRM, онлайн-выбор специалиста, расписание в реальном времени и автоматическое напоминание клиенту за 2 часа, чтобы снизить неявки.',
-        crmAction: 'amoCRM: Онлайн-запись на услугу создана',
+        reply: 'Для B2B, опта и складских компаний:\n\n• Авто-квалификация контрагента по ИНН через DaData/Контур.Фокус\n• Проверка остатков номенклатуры в 1С / МойСклад в реальном времени\n• Формирование и отправка PDF-счета и КП за 15 секунд\n• Разгрузка отдела продаж от рутинных переписок с мелкими запросами.',
+        crmAction: 'amoCRM: B2B Оптовый клиент · Проверка контрагента выполнена',
       };
     }
 
-    // 11. Guarantees & Contract
-    if (q.includes('гарант') || q.includes('договор') || q.includes('оплат') || q.includes('аванс') || q.includes('ип')) {
+    // General Services
+    if (hasAnyWord(['услуги', 'услуг', 'сервис', 'консультант']) && words.length <= 3) {
       return {
-        reply: 'Работаем строго по договору с ИП. Оплата делится на этапы (50% аванс / 50% после проверки в боевых условиях). После сдачи предоставляю 14 дней гарантийной техподдержки и обучающую видеоинструкцию для ваших сотрудников.',
+        reply: 'Для сферы услуг главное — исключить долгое ожидание ответа. Бот моментально показывает прайс, свободные слоты в календаре мастера/эксперта, принимает предоплату и шлет напоминания. Какая конкретно у вас услуга?',
+        crmAction: 'amoCRM: Сегмент «Сфера услуг»',
       };
     }
 
-    // 12. Discounts
-    if (q.includes('скидк') || q.includes('дешев') || q.includes('уступк') || q.includes('акци')) {
+    // Auto Service, Detailing, Parts
+    if (
+      hasAnyWord(['авто', 'автосервис', 'машина', 'машины', 'автомойка', 'шиномонтаж', 'запчасти', 'сто', 'детейлинг']) ||
+      hasSubstring('автосервис')
+    ) {
       return {
-        reply: 'Цены фиксированные и честные, без скрытых переплат. При заказе комплексной связки (например: парсер + умный бот + CRM) действует пакетная скидка 15% на общую стоимость проекта.',
+        reply: 'Для автосервисов и детейлинга:\n\n• Бот запрашивает марку, год и госномер/VIN\n• Озвучивает вилку стоимости регламентных работ или оклейки\n• Записывает на свободный подъемник/бокс с синхронизацией в CRM.',
+        crmAction: 'amoCRM: Запись на сервис создана · Автомобиль зафиксирован',
       };
     }
 
-    // 13. Direct Contact & Booking
-    if (q.includes('заказ') || q.includes('связаться') || q.includes('написать') || q.includes('контакт') || q.includes('разбор') || q.includes('созвон') || q.includes('купить')) {
+    // Online Schools, Coaches, Infobiz
+    if (
+      hasAnyWord(['курс', 'курсы', 'школа', 'обучение', 'коуч', 'инфобиз', 'клуб', 'вебинар', 'подписка']) ||
+      hasSubstring('инфобиз') ||
+      hasSubstring('онлайн-школ')
+    ) {
       return {
-        reply: 'Отлично! Напишите напрямую Андрею в Telegram: @ANGROVE — договоримся о бесплатном 20-минутном созвоне, разберем ваши процессы и покажем схему автоматизации.',
-        crmAction: 'CRM: Лид готов к созвону с Андреем @ANGROVE',
+        reply: 'Для онлайн-школ и экспертов:\n\n• Автовыдача лид-магнитов и прогревающие воронки сообщений\n• Платные закрытые Telegram-каналы по подписке (Prodamus/ЮKassa + авто-кик)\n• Интеграция с GetCourse и CRM, дожим сомневающихся до оплаты.',
+        crmAction: 'amoCRM: Лид из образовательной воронки',
       };
     }
 
-    // 14. Intelligent Fallback
-    return {
-      reply: 'Понял вашу задачу! В таких проектах отлично работает автоматический сценарий: бот квалифицирует клиента, рассчитывает смету и сразу передает данные в CRM.\n\nНапишите Андрею в Telegram @ANGROVE — за 20 минут бесплатно разберем структуру и предложим готовое решение!',
-      crmAction: 'CRM: Запрос индивидуальной консультации',
-    };
+    // Guarantees & Contract
+    if (
+      hasSubstring('гарант') ||
+      hasSubstring('договор') ||
+      hasSubstring('оплат') ||
+      hasSubstring('аванс') ||
+      hasSubstring('ип') ||
+      hasSubstring('безнал')
+    ) {
+      return {
+        reply: 'Работаем официально по договору с ИП. Оплата делится на этапы (50% аванс / 50% после проверки системы в бою). После сдачи действует 14 дней гарантийной поддержки и обучающая видеоинструкция для команды.',
+      };
+    }
+
+    // ==========================================
+    // 15. Dynamic Rotating Contextual Fallbacks
+    // ==========================================
+    const fallbacks = [
+      {
+        reply: 'Интересная мысль! Я демонстрационный AI-ассистент Андрея (@ANGROVE).\n\nПодскажите, что в вашем бизнесе отнимает больше всего времени: переписка с клиентами 24/7, перенос заявок в CRM, расчет смет или сбор контактов?',
+        crmAction: 'CRM: Уточнение бизнес-процесса клиента',
+      },
+      {
+        reply: 'Понял вас! Любой нестандартный сценарий или интеграцию Андрей реализует под ключ на Python и n8n.\n\nНапишите Андрею напрямую в Telegram: @ANGROVE — он за 15 минут сориентирует по архитектуре и стоимости решения именно для вас.',
+        crmAction: 'CRM: Запрос индивидуальной консультации',
+      },
+      {
+        reply: 'Чтобы я помог точнее: в какой нише у вас проект (услуги, e-commerce, стройка, бьюти, опт) и какую систему учета вы используете (amoCRM, Bitrix24, МойСклад или Google Таблицы)?',
+        crmAction: 'CRM: Уточнение используемой CRM-системы',
+      },
+    ];
+
+    const currentFallback = fallbacks[fallbackIndex % fallbacks.length];
+    setFallbackIndex((prev) => prev + 1);
+    return currentFallback;
   };
 
   const handleSendMessage = (textToSend?: string) => {
@@ -205,13 +513,14 @@ export const TelegramChatSimulator: React.FC = () => {
       time: currentTime,
     };
 
-    setMessages((prev) => [...prev, userMsg]);
+    const newHistory = [...messages, userMsg];
+    setMessages(newHistory);
     if (!textToSend) setInputValue('');
     setIsTyping(true);
 
-    // Realistic typing delay (600 - 1000ms)
+    // Realistic typing delay (600 - 850ms)
     setTimeout(() => {
-      const { reply, crmAction } = getAiAnswer(text);
+      const { reply, crmAction } = getAiAnswer(text, newHistory);
       const botTime = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
 
       setMessages((prev) => [
@@ -229,7 +538,7 @@ export const TelegramChatSimulator: React.FC = () => {
       if (crmAction) {
         setLastCrmAlert(crmAction);
       }
-    }, 750);
+    }, 700);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -240,7 +549,10 @@ export const TelegramChatSimulator: React.FC = () => {
   };
 
   return (
-    <div className="w-full bg-[#0E1621] rounded-3xl border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.4)] overflow-hidden flex flex-col h-[520px] sm:h-[560px] font-sans">
+    <div 
+      data-lenis-prevent="true"
+      className="w-full bg-[#0E1621] rounded-3xl border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.4)] overflow-hidden flex flex-col h-[520px] sm:h-[560px] font-sans overscroll-contain select-text"
+    >
       
       {/* 1. Telegram Desktop Header */}
       <div className="bg-[#17212B] px-4 py-3 border-b border-[#101720] flex items-center justify-between select-none shrink-0">
@@ -297,7 +609,11 @@ export const TelegramChatSimulator: React.FC = () => {
       </div>
 
       {/* 2. Telegram Messages Canvas */}
-      <div ref={chatContainerRef} className="flex-1 p-3.5 sm:p-5 overflow-y-auto space-y-3 bg-[#0E1621] relative">
+      <div 
+        ref={chatContainerRef} 
+        data-lenis-prevent="true"
+        className="flex-1 p-3.5 sm:p-5 telegram-chat-scroll space-y-3 bg-[#0E1621] relative overscroll-contain"
+      >
         
         {/* Date separator pill */}
         <div className="flex justify-center my-1 select-none">
@@ -329,14 +645,6 @@ export const TelegramChatSimulator: React.FC = () => {
                   {isUser && <CheckCheck className="w-3.5 h-3.5 text-blue-light" />}
                 </div>
               </div>
-
-              {/* Instant CRM Action Notification Badge */}
-              {msg.crmAction && (
-                <div className="mt-1.5 flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-500/20 px-2.5 py-1 rounded-lg">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                  <span>{msg.crmAction}</span>
-                </div>
-              )}
             </div>
           );
         })}
@@ -418,14 +726,14 @@ export const TelegramChatSimulator: React.FC = () => {
         )}
       </div>
 
-      {/* Bottom Live amoCRM Sync Status Bar */}
+      {/* Bottom Live System Sync Status Bar */}
       {lastCrmAlert && (
-        <div className="bg-[#0A0E17] px-4 py-1.5 border-t border-emerald-500/20 text-[10px] text-emerald-300 flex items-center justify-between select-none">
+        <div className="bg-[#101721] px-4 py-2 border-t border-white/[0.06] text-[11px] text-zinc-300 flex items-center justify-between select-none">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400" />
-            <span className="font-mono">{lastCrmAlert}</span>
+            <span className="w-2 h-2 rounded-full bg-blue-light animate-pulse" />
+            <span className="font-mono text-zinc-200">{lastCrmAlert}</span>
           </div>
-          <span className="text-zinc-500 font-mono">LIVE API</span>
+          <span className="text-zinc-500 font-mono text-[10px]">LIVE SYNC</span>
         </div>
       )}
     </div>

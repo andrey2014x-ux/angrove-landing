@@ -46,12 +46,6 @@ export const Header: React.FC = () => {
             Услуги
           </a>
           <a
-            href="#cases"
-            className="editorial-link-hover hover:text-blue transition-colors focus-visible:ring-2 focus-visible:ring-blue"
-          >
-            Кейсы
-          </a>
-          <a
             href="#process"
             className="editorial-link-hover hover:text-blue transition-colors focus-visible:ring-2 focus-visible:ring-blue"
           >
@@ -112,13 +106,6 @@ export const Header: React.FC = () => {
             className="text-base font-bold text-ink hover:text-blue py-1.5 focus-visible:ring-2 focus-visible:ring-blue"
           >
             Услуги
-          </a>
-          <a
-            href="#cases"
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-base font-bold text-ink hover:text-blue py-1.5 focus-visible:ring-2 focus-visible:ring-blue"
-          >
-            Кейсы
           </a>
           <a
             href="#process"

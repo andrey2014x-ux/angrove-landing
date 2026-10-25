@@ -1,9 +1,24 @@
 User-agent: *
 Allow: /
 
+# Explicit AI Search Crawlers (AEO / GEO)
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Yandex Specific Rules
 User-agent: Yandex
 Allow: /
 Clean-param: ref /
 Clean-param: utm_source&utm_medium&utm_campaign&utm_content&utm_term /
 
+Host: https://angrove.ru
 Sitemap: https://angrove.ru/sitemap.xml

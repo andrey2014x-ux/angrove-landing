@@ -228,3 +228,27 @@ html.lenis, html.lenis body {
   mask-repeat: no-repeat;
   animation: n8nElectricPulse 3.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
+
+/* Custom Telegram chat scrollbar (visible & elegant) */
+.telegram-chat-scroll {
+  overflow-y: scroll !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.42) rgba(255, 255, 255, 0.06);
+}
+.telegram-chat-scroll::-webkit-scrollbar {
+  width: 7px;
+}
+.telegram-chat-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 9999px;
+}
+.telegram-chat-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.42);
+  border-radius: 9999px;
+}
+.telegram-chat-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.65);
+}
+

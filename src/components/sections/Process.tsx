@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, ShieldCheck, Video, KeyRound } from 'lucide-react';
 import { config } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { WordReveal } from '../ui/WordReveal';
@@ -102,6 +102,51 @@ export const Process: React.FC = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* 3 B2B Risk Reversal Guarantees */}
+        <div data-reveal="stage" className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-5 rounded-2xl bg-white border border-black/[0.06] shadow-xs flex items-start gap-3.5">
+            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-xs sm:text-sm font-bold text-ink uppercase tracking-tight mb-1">
+                30 дней гарантии
+              </div>
+              <div className="text-xs text-ink/70 font-sans leading-relaxed">
+                Бесплатно исправляю любые баги и поддерживаю стабильность работы после запуска в боевой контур.
+              </div>
+            </div>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-white border border-black/[0.06] shadow-xs flex items-start gap-3.5">
+            <div className="w-9 h-9 rounded-xl bg-blue/10 text-blue flex items-center justify-center shrink-0 border border-blue/20">
+              <Video className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-xs sm:text-sm font-bold text-ink uppercase tracking-tight mb-1">
+                Видеоинструкции команде
+              </div>
+              <div className="text-xs text-ink/70 font-sans leading-relaxed">
+                Записываю персональные Loom-гайды под ключ, чтобы любой менеджер разобрался в системе за 10 минут.
+              </div>
+            </div>
+          </div>
+
+          <div className="p-5 rounded-2xl bg-white border border-black/[0.06] shadow-xs flex items-start gap-3.5">
+            <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 border border-purple-100">
+              <KeyRound className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-xs sm:text-sm font-bold text-ink uppercase tracking-tight mb-1">
+                100% передача прав
+              </div>
+              <div className="text-xs text-ink/70 font-sans leading-relaxed">
+                Все исходники, ключи API и схемы n8n принадлежат вам. Никаких скрытых ежемесячных платежей за «доступ».
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Bottom CTA Bar */}
