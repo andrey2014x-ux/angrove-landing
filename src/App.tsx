@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Header } from './components/sections/Header';
 import { Hero } from './components/sections/Hero';
 import { Services } from './components/sections/Services';
-import { Cases } from './components/sections/Cases';
 import { Process } from './components/sections/Process';
 import { GuideForm } from './components/sections/GuideForm';
 import { Faq } from './components/sections/Faq';
 import { AboutMe } from './components/sections/AboutMe';
-import { FinalCta } from './components/sections/FinalCta';
 import { Footer } from './components/sections/Footer';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { Preloader } from './components/ui/Preloader';
@@ -70,10 +68,7 @@ export const App: React.FC = () => {
         {/* 2. Услуги (Bento Grid) */}
         <Services />
 
-        {/* 4. Реальные кейсы внедрения */}
-        <Cases />
-
-        {/* 5. Процесс */}
+        {/* 3. Процесс */}
         <Process />
 
         {/* 6. Гид и форма */}
@@ -84,12 +79,9 @@ export const App: React.FC = () => {
 
         {/* 8. FAQ */}
         <Faq />
-
-        {/* 9. Финальный призыв */}
-        <FinalCta />
       </main>
 
-      {/* 11. Подвал (Wave letter wordmark) */}
+      {/* 9. Монолитный финал: Призыв к действию + Подвал */}
       <Footer />
 
       {/* Floating Scroll-to-Top Control Node */}

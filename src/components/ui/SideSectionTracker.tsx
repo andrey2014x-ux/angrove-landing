@@ -11,8 +11,7 @@ const SECTIONS = [
   { id: 'guide', name: 'Гид', index: '08' },
   { id: 'faq', name: 'FAQ', index: '09' },
   { id: 'about', name: 'Обо мне', index: '10' },
-  { id: 'final-cta', name: 'Контакт', index: '11' },
-  { id: 'footer', name: 'Финал', index: '12' },
+  { id: 'final-cta', name: 'Финал', index: '11' },
 ];
 
 export const SideSectionTracker: React.FC = () => {
