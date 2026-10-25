@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Bot, PhoneCall, Database, Network, ArrowUpRight, Play, Pause, CheckCircle2 } from 'lucide-react';
+import { Bot, PhoneCall, Database, Network, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import { config } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { WordReveal } from '../ui/WordReveal';
@@ -7,15 +7,13 @@ import { useSectionReveal } from '../../lib/useScrollAnimation';
 import { TelegramChatSimulator } from '../ui/TelegramChatSimulator';
 import { BusinessMeshSimulator } from '../ui/BusinessMeshSimulator';
 import { ParserConsoleSimulator } from '../ui/ParserConsoleSimulator';
+import { VoiceCallSimulator } from '../ui/VoiceCallSimulator';
 
 export const Services: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
   useSectionReveal(sectionRef, { cardStagger: 0.08 });
 
   const [activeTab, setActiveTab] = useState<number>(0);
-
-  // Tab 2: Audio Simulation State
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
   const handleCtaClick = () => {
     trackGoal('click_services_cta');
@@ -25,27 +23,27 @@ export const Services: React.FC = () => {
   const tabs = [
     {
       id: 'bot',
-      title: 'Умный бот в Telegram',
-      tag: 'САМ ПРОДАЕТ 24/7',
-      simplePitch: 'Отвечает клиентам за 5 секунд, считает смету и записывает на замер, пока вы спите',
+      title: 'Умный AI-бот в Telegram',
+      tag: 'ПРОДАЕТ И ЗАПИСЫВАЕТ 24/7',
+      simplePitch: 'Отвечает за 3 секунды, консультирует по прайсу и записывает клиентов, пока вы заняты',
     },
     {
       id: 'voice',
-      title: 'Голосовой AI-робот',
-      tag: 'ВМЕСТО ОПЕРАТОРОВ',
-      simplePitch: 'Обзванивает базу или принимает звонки живым голосом без выгорания и задержек',
+      title: 'Голосовой AI-помощник',
+      tag: 'БЕЗ ПРОПУЩЕННЫХ ЗВОНКОВ',
+      simplePitch: 'Звонит клиентам приятным живым голосом, подтверждает визиты и принимает звонки',
     },
     {
       id: 'parser',
       title: 'Сбор баз клиентов',
-      tag: 'ЗА 3 МИНУТЫ В EXCEL',
-      simplePitch: 'Собирает чистые контакты поставщиков и клиентов с проверенными телефонами',
+      tag: 'ЧИСТЫЕ НОМЕРА В EXCEL',
+      simplePitch: 'Находит реальные контакты нужных людей и компаний без ручного поиска на картах',
     },
     {
       id: 'mesh',
-      title: 'Связка всего бизнеса',
-      tag: 'НОЛЬ РУЧНОГО ТРУДА',
-      simplePitch: 'Сайт, склад, касса и мессенджеры сами обмениваются данными без ошибок людей',
+      title: 'Автоматизация всех программ',
+      tag: 'НОЛЬ РУЧНОЙ РУТИНЫ',
+      simplePitch: 'Сайт, касса, склад, мессенджеры и CRM обмениваются данными сами без ошибок людей',
     },
   ];
 
@@ -78,6 +76,7 @@ export const Services: React.FC = () => {
             return (
               <button
                 key={tab.id}
+                id={`service-tab-${idx}`}
                 type="button"
                 data-reveal="card"
                 onClick={() => setActiveTab(idx)}
@@ -113,34 +112,40 @@ export const Services: React.FC = () => {
           {/* SCENARIO 1: TELEGRAM BOT */}
           {activeTab === 0 && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
-              <div className="lg:col-span-5 bg-white rounded-3xl border border-black/[0.06] shadow-sm p-6 sm:p-8 lg:p-10 flex flex-col justify-between">
+              <div className="lg:col-span-5 bg-white rounded-3xl border border-black/[0.06] shadow-sm p-6 sm:p-8 flex flex-col justify-between">
                 <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-bold mb-4">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue/10 text-blue text-[11px] font-bold tracking-wider uppercase mb-3">
                     <Bot className="w-3.5 h-3.5" />
-                    <span>СЦЕНАРИЙ: КЛИЕНТ ПИШЕТ В НЕРАБОЧЕЕ ВРЕМЯ</span>
+                    <span>Сценарий 01 · Мессенджеры</span>
                   </div>
 
-                  <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-ink mb-4 leading-tight">
-                    Бот отвечает клиенту за 5 секунд, квалифицирует и заносит сделку в CRM
+                  <h3 className="text-xl sm:text-2xl font-black text-ink mb-2 leading-tight tracking-tight">
+                    AI-ассистент продаж 24/7
                   </h3>
 
-                  <p className="text-sm sm:text-base text-ink/75 leading-relaxed mb-6 font-sans">
-                    Вам больше не нужно дежурить у телефона вечером или терять заявки в выходные. Бот сам задаст клиенту нужные вопросы по прайсу, рассчитает смету и запишет на замер или созвон.
+                  <p className="text-sm text-ink/70 leading-relaxed mb-5 font-sans">
+                    Общается как живой эксперт, рассчитывает смету и доводит клиента до записи или оплаты.
                   </p>
 
-                  <div className="space-y-2.5 mb-8 text-xs sm:text-sm font-medium text-ink/80">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Понимает голосовые сообщения и текст с опечатками</span>
+                  <div className="space-y-3 mb-5 text-xs sm:text-[13px] text-ink/80 leading-snug">
+                    <div className="flex items-start gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <span><strong className="text-ink font-semibold">Ответ за 3 секунды</strong> — ловит клиентов ночью и в выходные, пока конкуренты спят</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Моментально создает сделку в amoCRM или Bitrix24</span>
+                    <div className="flex items-start gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <span><strong className="text-ink font-semibold">Строго по регламенту</strong> — база знаний RAG без выдумок и галлюцинаций</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Присылает вам уведомление: «Горячий клиент готов к оплате»</span>
+                    <div className="flex items-start gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <span><strong className="text-ink font-semibold">Синхронизация с CRM</strong> — запись и контакты в YClients / amoCRM за 1 клик</span>
                     </div>
+                  </div>
+
+                  {/* Subtle Result Pill */}
+                  <div className="mb-6 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-zinc-100 border border-black/[0.04] text-[11px] text-ink/80 font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    <span>+35% к оплаченным заявкам · Окупаемость от 1 мес</span>
                   </div>
                 </div>
 
@@ -149,9 +154,9 @@ export const Services: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleCtaClick}
-                  className="inline-flex items-center justify-center gap-2 bg-blue text-white rounded-full px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_20px_rgba(61,92,255,0.35)] hover:bg-blue-dark transition-all cursor-pointer w-full sm:w-auto"
+                  className="inline-flex items-center justify-center gap-2 bg-blue text-white rounded-full px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_20px_rgba(61,92,255,0.3)] hover:bg-blue-dark transition-all cursor-pointer w-full sm:w-auto"
                 >
-                  <span>Хочу такого бота в свой бизнес</span>
+                  <span>Рассчитать AI-бота под ключ</span>
                   <ArrowUpRight className="w-4 h-4" />
                 </a>
               </div>
@@ -166,34 +171,40 @@ export const Services: React.FC = () => {
           {/* SCENARIO 2: VOICE TELEPHONY */}
           {activeTab === 1 && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
-              <div className="lg:col-span-5 bg-white rounded-3xl border border-black/[0.06] shadow-sm p-6 sm:p-8 lg:p-10 flex flex-col justify-between">
+              <div className="lg:col-span-5 bg-white rounded-3xl border border-black/[0.06] shadow-sm p-6 sm:p-8 flex flex-col justify-between">
                 <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-xs font-bold mb-4">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-[11px] font-bold tracking-wider uppercase mb-3">
                     <PhoneCall className="w-3.5 h-3.5" />
-                    <span>СЦЕНАРИЙ: ОБЗВОН БАЗЫ ИЛИ ВХОДЯЩИЕ ЗВОНКИ</span>
+                    <span>Сценарий 02 · Телефония</span>
                   </div>
 
-                  <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-ink mb-4 leading-tight">
-                    Голосовой робот обзванивает базу живым голосом и передает готовых клиентов
+                  <h3 className="text-xl sm:text-2xl font-black text-ink mb-2 leading-tight tracking-tight">
+                    Голосовой робот с живой речью
                   </h3>
 
-                  <p className="text-sm sm:text-base text-ink/75 leading-relaxed mb-6 font-sans">
-                    Больше не нужно нанимать операторов, которые быстро выгорают и делают по 40 звонков в день. Робот делает 1000 звонков в час, отвечает без пауз, слушает клиента и переводит заинтересованных на вас.
+                  <p className="text-sm text-ink/70 leading-relaxed mb-5 font-sans">
+                    Принимает звонки, подтверждает визиты и снижает неявки клиентов без участия операторов.
                   </p>
 
-                  <div className="space-y-2.5 mb-8 text-xs sm:text-sm font-medium text-ink/80">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Живая русская речь без роботизированного металлического акцента</span>
+                  <div className="space-y-3 mb-5 text-xs sm:text-[13px] text-ink/80 leading-snug">
+                    <div className="flex items-start gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <span><strong className="text-ink font-semibold">Естественная речь</strong> — живая русская интонация с задержкой ответа &lt; 0.4 сек</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Себестоимость звонка от 2 ₽ за минуту вместо зарплаты оператора</span>
+                    <div className="flex items-start gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <span><strong className="text-ink font-semibold">Управление календарем</strong> — сам находит свободное окно и подтверждает визит</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Запись разговора и краткая суть звонка сразу в вашей CRM</span>
+                    <div className="flex items-start gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <span><strong className="text-ink font-semibold">От 2 ₽ за минуту</strong> — в разы дешевле содержания штатного колл-центра</span>
                     </div>
+                  </div>
+
+                  {/* Subtle Result Pill */}
+                  <div className="mb-6 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-zinc-100 border border-black/[0.04] text-[11px] text-ink/80 font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    <span>До 70% меньше забытых визитов · Экономия до 250 000 ₽/мес</span>
                   </div>
                 </div>
 
@@ -202,56 +213,16 @@ export const Services: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleCtaClick}
-                  className="inline-flex items-center justify-center gap-2 bg-blue text-white rounded-full px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_20px_rgba(61,92,255,0.35)] hover:bg-blue-dark transition-all cursor-pointer w-full sm:w-auto"
+                  className="inline-flex items-center justify-center gap-2 bg-blue text-white rounded-full px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_20px_rgba(61,92,255,0.3)] hover:bg-blue-dark transition-all cursor-pointer w-full sm:w-auto"
                 >
-                  <span>Обсудить голосового робота</span>
+                  <span>Протестировать голосового AI</span>
                   <ArrowUpRight className="w-4 h-4" />
                 </a>
               </div>
 
-              {/* Right Side: Interactive Audio Telephony Simulator */}
-              <div className="lg:col-span-7 bg-[#0E111A] rounded-3xl p-6 sm:p-8 text-white border border-white/10 shadow-2xl flex flex-col justify-between min-h-[460px]">
-                <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-xs font-bold">Симуляция звонка клиенту</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-white/40">ЗАДЕРЖКА &lt; 0.4 СЕК</span>
-                </div>
-
-                {/* Visual Audio Wave */}
-                <div className="py-8 flex flex-col items-center justify-center text-center">
-                  <div className="flex items-center gap-1.5 h-16 mb-4">
-                    {[12, 28, 45, 60, 32, 55, 40, 20, 60, 48, 30, 50, 22].map((h, idx) => (
-                      <div
-                        key={idx}
-                        className={`w-1.5 rounded-full bg-blue transition-all duration-150 ${
-                          isPlayingAudio ? 'animate-pulse' : 'opacity-40'
-                        }`}
-                        style={{ height: isPlayingAudio ? `${h}px` : '12px' }}
-                      />
-                    ))}
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => setIsPlayingAudio(!isPlayingAudio)}
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-ink font-bold text-xs uppercase tracking-wider hover:bg-blue hover:text-white transition-all cursor-pointer shadow-lg"
-                  >
-                    {isPlayingAudio ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                    <span>{isPlayingAudio ? 'Пауза демо-диалога' : 'Воспроизвести пример звонка'}</span>
-                  </button>
-                </div>
-
-                {/* Dialog Script Subtitles */}
-                <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 text-xs text-zinc-300">
-                  <div className="font-bold text-blue-light text-[11px] mb-1">Фрагмент живого диалога:</div>
-                  <p className="italic">
-                    {isPlayingAudio
-                      ? '«— Алло, здравствуйте, Алексей! Звоню из клиники "Дента", вы оставляли заявку на консультацию. Вам удобно в четверг в 15:00 или в субботу?»'
-                      : 'Нажмите кнопку выше, чтобы прослушать, как звучит реальный диалог робота с клиентом.'}
-                  </p>
-                </div>
+              {/* Right Side: Interactive Live Voice Call Simulator with Synchronized Transcription */}
+              <div className="lg:col-span-7">
+                <VoiceCallSimulator />
               </div>
             </div>
           )}
@@ -259,34 +230,40 @@ export const Services: React.FC = () => {
           {/* SCENARIO 3: PARSERS & SCRAPING */}
           {activeTab === 2 && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
-              <div className="lg:col-span-5 bg-white rounded-3xl border border-black/[0.06] shadow-sm p-6 sm:p-8 lg:p-10 flex flex-col justify-between">
+              <div className="lg:col-span-5 bg-white rounded-3xl border border-black/[0.06] shadow-sm p-6 sm:p-8 flex flex-col justify-between">
                 <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold mb-4">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold tracking-wider uppercase mb-3">
                     <Database className="w-3.5 h-3.5" />
-                    <span>СЦЕНАРИЙ: ПОИСК ПОСТАВЩИКОВ И БАЗ КЛИЕНТОВ</span>
+                    <span>Сценарий 03 · Базы организаций</span>
                   </div>
 
-                  <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-ink mb-4 leading-tight">
-                    Программа за 3 минуты собирает чистую базу контактов с проверенными номерами
+                  <h3 className="text-xl sm:text-2xl font-black text-ink mb-2 leading-tight tracking-tight">
+                    Сбор B2B-базы организаций
                   </h3>
 
-                  <p className="text-sm sm:text-base text-ink/75 leading-relaxed mb-6 font-sans">
-                    Вместо того чтобы вручную сидеть на картах, каталогах и сайтах и копировать телефоны в Excel, программа обходит все нужные источники, убирает дубли и проверяет, что номер живой.
+                  <p className="text-sm text-ink/70 leading-relaxed mb-5 font-sans">
+                    Автоматический сбор открытых контактов компаний за 15 минут вместо недель ручного поиска.
                   </p>
 
-                  <div className="space-y-2.5 mb-8 text-xs sm:text-sm font-medium text-ink/80">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Сбор с любых закрытых каталогов, 2ГИС, Яндекс Карт и маркетплейсов</span>
+                  <div className="space-y-3 mb-5 text-xs sm:text-[13px] text-ink/80 leading-snug">
+                    <div className="flex items-start gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <span><strong className="text-ink font-semibold">Открытые источники</strong> — 2ГИС, Яндекс Карты, реестры и официальные сайты</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Проверка доступности телефонных номеров (ноль битых контактов)</span>
+                    <div className="flex items-start gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <span><strong className="text-ink font-semibold">100% законно по 152-ФЗ</strong> — только общедоступные корпоративные контакты организаций</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Выгрузка прямо в Google Таблицу или в вашу CRM</span>
+                    <div className="flex items-start gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <span><strong className="text-ink font-semibold">Чистая выгрузка</strong> — телефоны отделов продаж и закупок, email и сайты в Excel или CRM</span>
                     </div>
+                  </div>
+
+                  {/* Subtle Result Pill */}
+                  <div className="mb-6 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-zinc-100 border border-black/[0.04] text-[11px] text-ink/80 font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    <span>Сбор базы за 15 минут · Без нарушения 152-ФЗ</span>
                   </div>
                 </div>
 
@@ -295,9 +272,9 @@ export const Services: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleCtaClick}
-                  className="inline-flex items-center justify-center gap-2 bg-blue text-white rounded-full px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_20px_rgba(61,92,255,0.35)] hover:bg-blue-dark transition-all cursor-pointer w-full sm:w-auto"
+                  className="inline-flex items-center justify-center gap-2 bg-blue text-white rounded-full px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_20px_rgba(61,92,255,0.3)] hover:bg-blue-dark transition-all cursor-pointer w-full sm:w-auto"
                 >
-                  <span>Заказать сбор базы под мою нишу</span>
+                  <span>Собрать базу под мою нишу</span>
                   <ArrowUpRight className="w-4 h-4" />
                 </a>
               </div>
@@ -312,34 +289,40 @@ export const Services: React.FC = () => {
           {/* SCENARIO 4: END-TO-END INTEGRATIONS */}
           {activeTab === 3 && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
-              <div className="lg:col-span-5 bg-white rounded-3xl border border-black/[0.06] shadow-sm p-6 sm:p-8 lg:p-10 flex flex-col justify-between">
+              <div className="lg:col-span-5 bg-white rounded-3xl border border-black/[0.06] shadow-sm p-6 sm:p-8 flex flex-col justify-between">
                 <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue/10 text-blue text-xs font-bold mb-4">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue/10 text-blue text-[11px] font-bold tracking-wider uppercase mb-3">
                     <Network className="w-3.5 h-3.5" />
-                    <span>СЦЕНАРИЙ: СВЯЗКА ВСЕХ СЕРВИСОВ БИЗНЕСА</span>
+                    <span>Сценарий 04 · Бесшовные связки</span>
                   </div>
 
-                  <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-ink mb-4 leading-tight">
-                    Сайт, склад, касса и мессенджеры синхронизируются сами за 1 секунду
+                  <h3 className="text-xl sm:text-2xl font-black text-ink mb-2 leading-tight tracking-tight">
+                    Единая экосистема программ
                   </h3>
 
-                  <p className="text-sm sm:text-base text-ink/75 leading-relaxed mb-6 font-sans">
-                    Когда клиент платит на сайте, остатки на складе списываются автоматически, чек пробивается в налоговой, а вам в телефон приходит точный отчет. Ни один сотрудник ничего не перебивает руками.
+                  <p className="text-sm text-ink/70 leading-relaxed mb-5 font-sans">
+                    Сайт, CRM, склад, касса и мессенджеры обмениваются данными мгновенно и без человеческих ошибок.
                   </p>
 
-                  <div className="space-y-2.5 mb-8 text-xs sm:text-sm font-medium text-ink/80">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Ноль потерянных заказов и двойных продаж отсутствующего товара</span>
+                  <div className="space-y-3 mb-5 text-xs sm:text-[13px] text-ink/80 leading-snug">
+                    <div className="flex items-start gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <span><strong className="text-ink font-semibold">Мгновенный обмен</strong> — оплата на сайте сама списывает товар и ставит задачу курьеру</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Утренняя персональная сводка о деньгах и марже в Telegram в 08:30:00</span>
+                    <div className="flex items-start gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <span><strong className="text-ink font-semibold">Сводка в Telegram</strong> — утренний отчет владельцу о выручке и сделках в 08:30</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Работает бесперебойно 365 дней в году</span>
+                    <div className="flex items-start gap-2.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <span><strong className="text-ink font-semibold">Надежность 24/7</strong> — облачный контур с автоперезапуском и контролем ошибок 365 дней в году</span>
                     </div>
+                  </div>
+
+                  {/* Subtle Result Pill */}
+                  <div className="mb-6 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-zinc-100 border border-black/[0.04] text-[11px] text-ink/80 font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    <span>До 120 часов рутины сэкономлено · Ноль потерянных сделок</span>
                   </div>
                 </div>
 
@@ -348,9 +331,9 @@ export const Services: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleCtaClick}
-                  className="inline-flex items-center justify-center gap-2 bg-blue text-white rounded-full px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_20px_rgba(61,92,255,0.35)] hover:bg-blue-dark transition-all cursor-pointer w-full sm:w-auto"
+                  className="inline-flex items-center justify-center gap-2 bg-blue text-white rounded-full px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_20px_rgba(61,92,255,0.3)] hover:bg-blue-dark transition-all cursor-pointer w-full sm:w-auto"
                 >
-                  <span>Связать мои программы и сервисы</span>
+                  <span>Связать мои программы</span>
                   <ArrowUpRight className="w-4 h-4" />
                 </a>
               </div>
