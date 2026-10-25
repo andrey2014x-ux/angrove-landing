@@ -1,14 +1,40 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { config } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { ArrowUpRight, Send, Instagram } from 'lucide-react';
-import { WordReveal } from '../ui/WordReveal';
-import { useSectionReveal } from '../../lib/useScrollAnimation';
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
   const sectionRef = useRef<HTMLElement>(null);
-  useSectionReveal(sectionRef);
+  const btnRef = useRef<HTMLAnchorElement>(null);
+
+  // 1. Subtle magnetic physics for primary CTA button
+  const [btnPos, setBtnPos] = useState({ x: 0, y: 0 });
+
+  const handleBtnMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!btnRef.current) return;
+    const { left, top, width, height } = btnRef.current.getBoundingClientRect();
+    const centerX = left + width / 2;
+    const centerY = top + height / 2;
+    const pullX = (e.clientX - centerX) * 0.32;
+    const pullY = (e.clientY - centerY) * 0.32;
+    setBtnPos({ x: pullX, y: pullY });
+  };
+
+  const handleBtnMouseLeave = () => {
+    setBtnPos({ x: 0, y: 0 });
+  };
+
+  // 2. Ambient spotlight following cursor across the dark canvas
+  const [spotlight, setSpotlight] = useState({ x: 50, y: 35 });
+
+  const handleContainerMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    if (!sectionRef.current) return;
+    const rect = sectionRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setSpotlight({ x, y });
+  };
 
   const navigation = [
     { label: 'Услуги', href: '#services' },
@@ -21,88 +47,106 @@ export const Footer: React.FC = () => {
     <footer
       ref={sectionRef}
       id="final-cta"
-      className="bg-[#06080F] text-white relative overflow-hidden border-t border-white/[0.08]"
+      onMouseMove={handleContainerMouseMove}
+      className="bg-[#05070D] text-white relative overflow-hidden select-none"
     >
-      {/* Top subtle blue/cyan neon horizon line */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[800px] h-[1px] bg-gradient-to-r from-transparent via-blue via-cyan-400 to-transparent shadow-[0_0_30px_rgba(61,92,255,0.7)] pointer-events-none" />
+      {/* Top subtle hairline border */}
+      <div className="absolute top-0 left-0 w-full h-[1px] bg-white/[0.08]" />
 
-      {/* Ambient background glow behind CTA */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] bg-blue/10 rounded-full blur-[140px] pointer-events-none" />
+      {/* Interactive Cursor Spotlight Glow */}
+      <div
+        className="absolute pointer-events-none rounded-full blur-[130px] transition-all duration-300 ease-out hidden md:block"
+        style={{
+          left: `${spotlight.x}%`,
+          top: `${spotlight.y}%`,
+          transform: 'translate(-50%, -50%)',
+          width: '540px',
+          height: '540px',
+          background: 'radial-gradient(circle, rgba(61,92,255,0.16) 0%, rgba(0,240,255,0.05) 50%, transparent 75%)',
+        }}
+      />
 
       <div className="max-w-[1360px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
         
-        {/* --- Upper Tier: The Monolithic Finale Call to Action --- */}
-        <div className="pt-20 sm:pt-28 pb-16 sm:pb-20 text-center max-w-3xl mx-auto">
+        {/* --- Central Editorial Hero Statement --- */}
+        <div className="pt-24 sm:pt-36 pb-20 sm:pb-28 text-center max-w-4xl mx-auto flex flex-col items-center">
           
-          {/* Availability Pill */}
-          <div data-reveal="desc" className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-white/80 font-mono text-xs mb-8 shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="tracking-wide">ОТКРЫТ К НОВЫМ ПРОЕКТАМ</span>
+          {/* Subtle Monospace Architect Tag */}
+          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 font-mono text-[10px] sm:text-xs text-zinc-400 tracking-wider uppercase mb-6 sm:mb-8 text-center px-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+            <span>Андрей</span>
             <span className="text-white/20">·</span>
-            <span className="text-zinc-400">МОСКВА &amp; REMOTE</span>
+            <span>AI &amp; Automation Architect</span>
+            <span className="text-white/20">·</span>
+            <span>Москва (UTC+3)</span>
           </div>
 
-          {/* Heading */}
-          <WordReveal
-            as="h2"
-            text="Есть процесс который съедает время?"
-            className="text-3xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white leading-tight mb-6"
-            highlightWords={{
-              'съедает': 'font-serif italic font-normal text-blue-light lowercase',
-              'время?': 'font-serif italic font-normal text-blue-light lowercase',
-            }}
-          />
+          {/* Cinematic Headline with Serif Twist */}
+          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white leading-[1.15] mb-5 sm:mb-6 font-sans">
+            Давайте создадим систему,
+            <span className="block font-serif font-normal italic lowercase text-blue-light tracking-normal mt-1 sm:mt-2 text-3xl sm:text-5xl lg:text-7xl">
+              которая работает за вас.
+            </span>
+          </h2>
 
-          {/* Subtitle */}
-          <p
-            data-reveal="desc"
-            className="text-base sm:text-lg text-zinc-300 max-w-xl mx-auto mb-10 leading-relaxed font-sans"
-          >
-            Напишите в двух словах в Telegram — скажу, можно ли его автоматизировать, сколько это займёт и какой стек подойдёт лучше всего.
+          {/* Calm, Direct Subtitle */}
+          <p className="text-sm sm:text-base lg:text-lg text-zinc-300 max-w-xl mx-auto mb-12 leading-relaxed font-sans font-normal">
+            Напишите в Telegram — за 15 минут разберём узкие места ваших процессов и определим точный стек автоматизации.
           </p>
 
-          {/* Action Button Row */}
-          <div data-reveal="card" className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+          {/* Interactive Magnetic CTA Button & Direct Channels */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 mb-8 w-full sm:w-auto">
+            {/* Magnetic Button */}
             <a
+              ref={btnRef}
               href={config.telegramUrl}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackGoal('click_telegram')}
-              className="group inline-flex items-center justify-center gap-3 bg-blue hover:bg-blue-dark text-white rounded-full px-8 sm:px-10 py-4 text-sm sm:text-base font-bold shadow-[0_12px_35px_rgba(61,92,255,0.45)] hover:shadow-[0_16px_45px_rgba(61,92,255,0.65)] hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer w-full sm:w-auto"
+              onMouseMove={handleBtnMouseMove}
+              onMouseLeave={handleBtnMouseLeave}
+              style={{
+                transform: `translate3d(${btnPos.x}px, ${btnPos.y}px, 0)`,
+                transition: btnPos.x === 0 ? 'transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2)' : 'transform 0.08s ease-out',
+              }}
+              className="group inline-flex items-center justify-center gap-3 bg-blue hover:bg-blue-dark text-white rounded-full px-8 sm:px-10 py-4 sm:py-4.5 text-sm sm:text-base font-bold shadow-[0_12px_40px_rgba(61,92,255,0.4)] hover:shadow-[0_16px_50px_rgba(61,92,255,0.6)] cursor-pointer w-full sm:w-auto active:scale-[0.98] transition-[background-color,box-shadow]"
             >
               <Send className="w-4 h-4 text-white/90 group-hover:scale-110 transition-transform" />
               <span>Обсудить задачу в Telegram</span>
               <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
 
+            {/* Quiet Instagram Pill */}
             <a
               href={config.instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackGoal('click_instagram')}
-              className="group inline-flex items-center justify-center gap-2.5 bg-white/[0.05] hover:bg-white/[0.1] text-white rounded-full px-7 sm:px-8 py-4 text-sm sm:text-base font-bold border border-white/10 hover:border-white/25 backdrop-blur-sm hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer w-full sm:w-auto font-mono text-xs sm:text-sm"
+              className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-white/[0.04] hover:bg-white/[0.08] text-white/80 hover:text-white border border-white/10 hover:border-white/20 font-mono text-xs font-medium transition-all duration-200 cursor-pointer w-full sm:w-auto"
             >
-              <Instagram className="w-4 h-4 text-zinc-400 group-hover:text-[#E1306C] transition-colors" />
-              <span>Instagram* @_angrove_</span>
-              <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              <Instagram className="w-3.5 h-3.5 text-zinc-400" />
+              <span>@_angrove_</span>
+              <ArrowUpRight className="w-3.5 h-3.5 text-zinc-500" />
             </a>
           </div>
 
-          <p className="text-xs text-zinc-400 font-mono">
-            Отвечаю лично в течение 1–2 часов · Без навязчивых звонков и спама
-          </p>
+          {/* Micro Assurance */}
+          <div className="font-mono text-[11px] text-zinc-400 flex items-center gap-2">
+            <span>Личный ответ без менеджеров</span>
+            <span className="text-white/20">·</span>
+            <span>В течение 1–2 часов</span>
+          </div>
+
         </div>
 
-        {/* --- Lower Tier: Seamless Studio Bar --- */}
+        {/* --- Minimalist Studio Sub-bar --- */}
         <div id="footer" className="pt-8 pb-10 border-t border-white/[0.07] flex flex-col md:flex-row items-center justify-between gap-6 text-xs font-mono text-zinc-400">
           
-          {/* Identity & Role */}
-          <div className="flex items-center gap-2 text-center md:text-left">
+          {/* Brand Signature */}
+          <div className="flex items-center gap-2">
             <span className="font-bold text-white tracking-tight">_angrove_</span>
             <span className="text-white/20">·</span>
-            <span className="text-zinc-300">AI &amp; Automation Architect</span>
-            <span className="text-white/20 hidden sm:inline">·</span>
-            <span className="text-zinc-400 hidden sm:inline">UTC+3</span>
+            <span className="text-zinc-300">Автономные AI-системы и интеграции</span>
           </div>
 
           {/* Navigation Links */}
@@ -118,15 +162,11 @@ export const Footer: React.FC = () => {
             ))}
           </nav>
 
-          {/* Copyright & Disclaimer */}
+          {/* Year & Disclaimer */}
           <div className="flex flex-col md:items-end gap-1 text-center md:text-right">
-            <div>
-              <span>© {currentYear} _ANGROVE_</span>
-              <span className="text-white/20 mx-2">·</span>
-              <span className="text-zinc-400">Все права защищены</span>
-            </div>
+            <div>© {currentYear} _ANGROVE_</div>
             <div className="text-[10px] text-zinc-400 font-sans">
-              * Деятельность Meta (Instagram) признана экстремистской в РФ
+              * Meta (Instagram) признана экстремистской в РФ
             </div>
           </div>
 
