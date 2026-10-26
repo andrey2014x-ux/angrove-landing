@@ -242,8 +242,9 @@ export const TelegramChatScene: React.FC<TelegramChatSceneProps> = ({ activeTab 
   };
 
   const handleSend = (textToSend?: string) => {
-    const text = (textToSend || inputValue).trim();
-    if (!text || isTyping) return;
+    const rawText = (textToSend || inputValue).trim();
+    if (!rawText || isTyping) return;
+    const text = rawText.slice(0, 500);
 
     const now = new Date();
     const timeStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
@@ -392,6 +393,8 @@ export const TelegramChatScene: React.FC<TelegramChatSceneProps> = ({ activeTab 
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
+            maxLength={500}
+            autoComplete="off"
             placeholder="Напишите вопрос или задачу..."
             className="flex-1 bg-white/5 border border-white/15 focus:border-blue rounded-xl px-3.5 py-2 text-xs sm:text-sm text-white placeholder-white/40 focus:outline-none transition-colors"
           />

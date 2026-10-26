@@ -500,8 +500,9 @@ export const TelegramChatSimulator: React.FC = () => {
   };
 
   const handleSendMessage = (textToSend?: string) => {
-    const text = (textToSend || inputValue).trim();
-    if (!text) return;
+    const rawText = (textToSend || inputValue).trim();
+    if (!rawText || isTyping) return;
+    const text = rawText.slice(0, 500);
 
     trackGoal('simulate_bot_message');
 
@@ -693,6 +694,8 @@ export const TelegramChatSimulator: React.FC = () => {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
+          maxLength={500}
+          autoComplete="off"
           placeholder="Написать сообщение AI-ассистенту..."
           className="flex-1 bg-transparent text-white placeholder-[#798B9B] text-xs sm:text-sm focus:outline-none px-2"
         />
