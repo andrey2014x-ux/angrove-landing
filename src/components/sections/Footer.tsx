@@ -139,58 +139,6 @@ export const Footer: React.FC = () => {
 
         </div>
 
-        {/* --- Niche Solutions Directory (pSEO Internal Linking) --- */}
-        <div className="py-10 border-t border-white/[0.07]">
-          <div className="text-xs font-mono uppercase tracking-wider text-accent-bright mb-4 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent-bright" />
-            <span>Готовые решения и отраслевые связки:</span>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono">
-            <a
-              href="/solutions/amocrm-n8n"
-              className="p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.05] hover:border-accent/40 text-zinc-300 hover:text-white transition-all flex items-center justify-between group"
-            >
-              <span>amoCRM + n8n без подписок</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-accent-bright transition-colors" />
-            </a>
-            <a
-              href="/solutions/telegram-ai-bot"
-              className="p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.05] hover:border-accent/40 text-zinc-300 hover:text-white transition-all flex items-center justify-between group"
-            >
-              <span>AI-консультант в Telegram</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-accent-bright transition-colors" />
-            </a>
-            <a
-              href="/solutions/b2b-parser-2gis"
-              className="p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.05] hover:border-accent/40 text-zinc-300 hover:text-white transition-all flex items-center justify-between group"
-            >
-              <span>Парсинг 2ГИС и Яндекс.Карт</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-accent-bright transition-colors" />
-            </a>
-            <a
-              href="/solutions/avtoservis-ai"
-              className="p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.05] hover:border-accent/40 text-zinc-300 hover:text-white transition-all flex items-center justify-between group"
-            >
-              <span>AI-мастер для автосервисов</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-accent-bright transition-colors" />
-            </a>
-            <a
-              href="/solutions/moysklad-telegram"
-              className="p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.05] hover:border-accent/40 text-zinc-300 hover:text-white transition-all flex items-center justify-between group"
-            >
-              <span>МойСклад + бот остатков</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-accent-bright transition-colors" />
-            </a>
-            <a
-              href="/privacy"
-              className="p-3 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.05] text-zinc-400 hover:text-zinc-200 transition-all flex items-center justify-between"
-            >
-              <span>Политика конфиденциальности</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-zinc-600" />
-            </a>
-          </div>
-        </div>
-
         {/* --- Minimalist Studio Sub-bar --- */}
         <div id="footer" className="pt-8 pb-10 border-t border-white/[0.07] flex flex-col md:flex-row items-center justify-between gap-6 text-xs font-mono text-zinc-400">
           

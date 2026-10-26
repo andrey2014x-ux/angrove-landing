@@ -10,12 +10,7 @@ const KEY_LOCATION = `https://${HOST}/${KEY}.txt`;
 
 const URLS = [
   `https://${HOST}/`,
-  `https://${HOST}/privacy`,
-  `https://${HOST}/solutions/amocrm-n8n`,
-  `https://${HOST}/solutions/telegram-ai-bot`,
-  `https://${HOST}/solutions/b2b-parser-2gis`,
-  `https://${HOST}/solutions/avtoservis-ai`,
-  `https://${HOST}/solutions/moysklad-telegram`
+  `https://${HOST}/privacy`
 ];
 
 async function submitIndexNow(endpoint) {

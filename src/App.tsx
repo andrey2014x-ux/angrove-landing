@@ -8,14 +8,11 @@ import { Faq } from './components/sections/Faq';
 import { AboutMe } from './components/sections/AboutMe';
 import { Footer } from './components/sections/Footer';
 import { PrivacyPage } from './pages/PrivacyPage';
-import { SolutionPage } from './pages/SolutionPage';
-import { SOLUTIONS } from './data/solutionsData';
 import { Preloader } from './components/ui/Preloader';
 import { ScrollProgress } from './components/ui/ScrollProgress';
 import { ScrollToTop } from './components/ui/ScrollToTop';
 import { AmbientAtmosphere } from './components/ui/AmbientAtmosphere';
 import { Global3DCanvas } from './components/ui/Global3DCanvas';
-import { RoiCalculator } from './components/ui/RoiCalculator';
 import { initSmoothScroll } from './lib/motion';
 import { initAnalytics } from './lib/analytics';
 
@@ -48,15 +45,6 @@ export const App: React.FC = () => {
     return <PrivacyPage />;
   }
 
-  // Show programmatic solution pages (/solutions/:slug)
-  if (currentPath.startsWith('/solutions/')) {
-    const slug = currentPath.replace(/^\/solutions\//, '').replace(/\/$/, '');
-    const solution = SOLUTIONS[slug];
-    if (solution) {
-      return <SolutionPage solution={solution} />;
-    }
-  }
-
   // Main landing page in editorial style
   return (
     <div className="min-h-[100dvh] flex flex-col bg-paper text-ink selection:bg-blue selection:text-white relative font-sans">
@@ -79,11 +67,6 @@ export const App: React.FC = () => {
 
         {/* 2. Услуги (Bento Grid) */}
         <Services />
-
-        {/* Interactive ROI & Loss Calculator (Dwell Time / ПФ) */}
-        <div className="max-w-[1360px] mx-auto px-4 sm:px-8 lg:px-12 my-12 sm:my-20">
-          <RoiCalculator />
-        </div>
 
         {/* 3. Процесс */}
         <Process />
