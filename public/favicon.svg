@@ -1,7 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <rect width="64" height="64" rx="18" fill="#0A0E1C"/>
-  <rect x="2" y="2" width="60" height="60" rx="16" stroke="#3D5CFF" stroke-width="2" stroke-opacity="0.4"/>
-  <path d="M16 46L30 18H34L48 46H41.5L38 38.5H26L22.5 46H16ZM28 33.5H36L32 24.5L28 33.5Z" fill="#3D5CFF"/>
-  <circle cx="48" cy="18" r="3" fill="#617DFF"/>
-  <circle cx="16" cy="46" r="2" fill="#00F0FF"/>
+  <defs>
+    <linearGradient id="spark_grad" x1="10" y1="10" x2="54" y2="54" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="50%" stop-color="#3D5CFF"/>
+      <stop offset="100%" stop-color="#818CF8"/>
+    </linearGradient>
+    <radialGradient id="spark_ambient" cx="32" cy="32" r="22" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3D5CFF" stop-opacity="0.45"/>
+      <stop offset="60%" stop-color="#3D5CFF" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#3D5CFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Dark Velvet Squircle Base -->
+  <rect width="64" height="64" rx="18" fill="#0A0C16"/>
+  <rect x="1" y="1" width="62" height="62" rx="17" stroke="#3D5CFF" stroke-opacity="0.3" stroke-width="1"/>
+  <!-- Ambient Electric Halo -->
+  <circle cx="32" cy="32" r="22" fill="url(#spark_ambient)"/>
+  <!-- 4-Point AI Diamond Spark -->
+  <path d="M32 10C32 22.15 22.15 32 10 32C22.15 32 32 41.85 32 54C32 41.85 41.85 32 54 32C41.85 32 32 22.15 32 10Z" fill="url(#spark_grad)"/>
+  <!-- Center White Star Core -->
+  <circle cx="32" cy="32" r="4.5" fill="#FFFFFF"/>
 </svg>
