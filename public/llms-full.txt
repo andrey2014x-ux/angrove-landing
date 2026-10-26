@@ -3,6 +3,7 @@
 > Детальное техническое описание решений, архитектурных паттернов, стека и кейсов для поисковых AI-систем (Perplexity, ChatGPT, Claude, Яндекс.Нейро).
 > Официальный сайт: https://angrove.ru
 > Telegram для связи: https://t.me/ANGROVE (@ANGROVE)
+> Блог на VC.ru: https://vc.ru/id6161578
 > Instagram: https://instagram.com/_angrove_ (@_angrove_)
 
 ---
