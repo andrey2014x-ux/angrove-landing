@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import { SOLUTIONS } from '../src/data/solutionsData.ts';
+import { SOLUTIONS_RAW } from '../src/data/solutionsRaw.js';
+
+const SOLUTIONS = SOLUTIONS_RAW;
 
 const distDir = path.resolve('dist');
 const indexHtml = path.join(distDir, 'index.html');
