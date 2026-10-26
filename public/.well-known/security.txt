@@ -1,0 +1,10 @@
+# Security Policy for angrove.ru
+# RFC 9116: https://www.rfc-editor.org/rfc/rfc9116
+
+Contact: https://t.me/ANGROVE
+Contact: mailto:security@angrove.ru # TODO: замените на ваш личный контактный email
+Expires: 2027-10-26T00:00:00.000Z
+Preferred-Languages: ru, en
+Canonical: https://angrove.ru/.well-known/security.txt
+Policy: https://angrove.ru/
+Acknowledgments: https://angrove.ru/
