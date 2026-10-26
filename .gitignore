@@ -5,4 +5,14 @@ dist-ssr
 .vercel
 .env
 .env.*
+*.env
+*.pem
+*.key
+*.p12
+*.cert
+*.crt
+*.bak
+.codex-backup*
+temp*.bmp
 .DS_Store
+
