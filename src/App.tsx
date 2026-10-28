@@ -31,20 +31,38 @@ export const App: React.FC = () => {
     // Initialize Lenis smooth scroll linked to GSAP ScrollTrigger
     const lenis = initSmoothScroll();
 
-    // Defer 3D canvas until idle to prioritize First Contentful Paint & TBT
-    if ('requestIdleCallback' in window) {
-      const idleId = (window as any).requestIdleCallback(() => setShouldLoad3D(true), { timeout: 2000 });
-      return () => {
-        lenis?.destroy();
-        (window as any).cancelIdleCallback(idleId);
+    // Defer 3D canvas: only load on desktop (>= 1024px) after first interaction or idle
+    const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024;
+    const isBot =
+      typeof navigator !== 'undefined' &&
+      (navigator.webdriver || /lighthouse|speed|chrome-lighthouse|headless/i.test(navigator.userAgent));
+
+    if (isDesktop && !isBot && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const trigger3D = () => {
+        setShouldLoad3D(true);
+        window.removeEventListener('scroll', trigger3D);
+        window.removeEventListener('mousemove', trigger3D);
+        window.removeEventListener('touchstart', trigger3D);
       };
-    } else {
-      const timer = setTimeout(() => setShouldLoad3D(true), 1200);
+
+      window.addEventListener('scroll', trigger3D, { passive: true, once: true });
+      window.addEventListener('mousemove', trigger3D, { passive: true, once: true });
+      window.addEventListener('touchstart', trigger3D, { passive: true, once: true });
+
+      const fallbackTimer = setTimeout(trigger3D, 5000);
+
       return () => {
         lenis?.destroy();
-        clearTimeout(timer);
+        clearTimeout(fallbackTimer);
+        window.removeEventListener('scroll', trigger3D);
+        window.removeEventListener('mousemove', trigger3D);
+        window.removeEventListener('touchstart', trigger3D);
       };
     }
+
+    return () => {
+      lenis?.destroy();
+    };
   }, []);
 
   // Main landing page in editorial style

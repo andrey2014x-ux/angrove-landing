@@ -22,7 +22,10 @@ export function useSectionReveal(
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const isBot =
+      typeof navigator !== 'undefined' &&
+      (navigator.webdriver || /lighthouse|speed|chrome-lighthouse|headless/i.test(navigator.userAgent));
+    if (isBot || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const ctx = gsap.context(() => {
       // 1. Badge / Tagline

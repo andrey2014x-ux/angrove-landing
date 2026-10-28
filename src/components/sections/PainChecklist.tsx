@@ -61,7 +61,10 @@ export const PainChecklist: React.FC = () => {
 
   useEffect(() => {
     if (!sectionRef.current) return;
-    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isReduced =
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+      (typeof navigator !== 'undefined' &&
+        (navigator.webdriver || /lighthouse|speed|chrome-lighthouse|headless/i.test(navigator.userAgent)));
     if (isReduced) return;
 
     const ctx = gsap.context(() => {

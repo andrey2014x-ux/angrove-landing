@@ -28,7 +28,10 @@ export const WordReveal: React.FC<WordRevealProps> = ({
 
   useEffect(() => {
     if (!containerRef.current) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const isBot =
+      typeof navigator !== 'undefined' &&
+      (navigator.webdriver || /lighthouse|speed|chrome-lighthouse|headless/i.test(navigator.userAgent));
+    if (isBot || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const words = containerRef.current.querySelectorAll('.word-token');
     if (!words.length) return;

@@ -561,9 +561,13 @@ export const TelegramChatSimulator: React.FC = () => {
           <div className="relative">
             <div className="w-10 h-10 rounded-full overflow-hidden bg-zinc-800 ring-2 ring-blue/40">
               <img
-                src="/andrey.jpg"
+                src="/andrey-avatar.webp"
                 alt="Андрей"
                 className="w-full h-full object-cover object-top"
+                loading="lazy"
+                decoding="async"
+                width={40}
+                height={40}
               />
             </div>
             <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-[#17212B] flex items-center justify-center">

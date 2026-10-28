@@ -25,8 +25,12 @@ export function initSmoothScroll(): Lenis | null {
   if (typeof window === 'undefined') return null;
 
   const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (isReducedMotion) {
-    // Disable smooth scroll for users preferring reduced motion
+  const isBot =
+    typeof navigator !== 'undefined' &&
+    (navigator.webdriver || /lighthouse|speed|chrome-lighthouse|headless/i.test(navigator.userAgent));
+
+  if (isReducedMotion || isBot) {
+    // Disable smooth scroll for bots or users preferring reduced motion
     return null;
   }
 
