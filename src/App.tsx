@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { Header } from './components/sections/Header';
 import { Hero } from './components/sections/Hero';
 import { Services } from './components/sections/Services';
@@ -11,12 +11,16 @@ import { Preloader } from './components/ui/Preloader';
 import { ScrollProgress } from './components/ui/ScrollProgress';
 import { ScrollToTop } from './components/ui/ScrollToTop';
 import { AmbientAtmosphere } from './components/ui/AmbientAtmosphere';
-import { Global3DCanvas } from './components/ui/Global3DCanvas';
 import { initSmoothScroll } from './lib/motion';
 import { initAnalytics } from './lib/analytics';
 
+const Global3DCanvas = React.lazy(() =>
+  import('./components/ui/Global3DCanvas').then((m) => ({ default: m.Global3DCanvas }))
+);
+
 export const App: React.FC = () => {
   const [, setIsPreloaded] = useState(false);
+  const [shouldLoad3D, setShouldLoad3D] = useState(false);
 
   useEffect(() => {
     initAnalytics();
@@ -27,9 +31,20 @@ export const App: React.FC = () => {
     // Initialize Lenis smooth scroll linked to GSAP ScrollTrigger
     const lenis = initSmoothScroll();
 
-    return () => {
-      lenis?.destroy();
-    };
+    // Defer 3D canvas until idle to prioritize First Contentful Paint & TBT
+    if ('requestIdleCallback' in window) {
+      const idleId = (window as any).requestIdleCallback(() => setShouldLoad3D(true), { timeout: 2000 });
+      return () => {
+        lenis?.destroy();
+        (window as any).cancelIdleCallback(idleId);
+      };
+    } else {
+      const timer = setTimeout(() => setShouldLoad3D(true), 1200);
+      return () => {
+        lenis?.destroy();
+        clearTimeout(timer);
+      };
+    }
   }, []);
 
   // Main landing page in editorial style
@@ -37,7 +52,11 @@ export const App: React.FC = () => {
     <div className="min-h-[100dvh] flex flex-col bg-paper text-ink selection:bg-blue selection:text-white relative font-sans">
       {/* Background Motion & Atmosphere */}
       <AmbientAtmosphere />
-      <Global3DCanvas />
+      {shouldLoad3D && (
+        <Suspense fallback={null}>
+          <Global3DCanvas />
+        </Suspense>
+      )}
 
       {/* Preloader (< 1.2s, once per session) */}
       <Preloader onComplete={() => setIsPreloaded(true)} />

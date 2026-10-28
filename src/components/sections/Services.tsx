@@ -1,13 +1,29 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, Suspense } from 'react';
 import { Bot, PhoneCall, Database, Network, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import { config } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { WordReveal } from '../ui/WordReveal';
 import { useSectionReveal } from '../../lib/useScrollAnimation';
-import { TelegramChatSimulator } from '../ui/TelegramChatSimulator';
-import { BusinessMeshSimulator } from '../ui/BusinessMeshSimulator';
-import { ParserConsoleSimulator } from '../ui/ParserConsoleSimulator';
-import { VoiceCallSimulator } from '../ui/VoiceCallSimulator';
+
+// Code-split heavy interactive simulators to ensure high PageSpeed & instant initial render
+const TelegramChatSimulator = React.lazy(() =>
+  import('../ui/TelegramChatSimulator').then((m) => ({ default: m.TelegramChatSimulator }))
+);
+const VoiceCallSimulator = React.lazy(() =>
+  import('../ui/VoiceCallSimulator').then((m) => ({ default: m.VoiceCallSimulator }))
+);
+const ParserConsoleSimulator = React.lazy(() =>
+  import('../ui/ParserConsoleSimulator').then((m) => ({ default: m.ParserConsoleSimulator }))
+);
+const BusinessMeshSimulator = React.lazy(() =>
+  import('../ui/BusinessMeshSimulator').then((m) => ({ default: m.BusinessMeshSimulator }))
+);
+
+const SimulatorFallback: React.FC = () => (
+  <div className="w-full min-h-[380px] sm:min-h-[460px] rounded-3xl bg-zinc-950/20 border border-black/5 animate-pulse flex items-center justify-center">
+    <div className="w-7 h-7 border-2 border-blue/40 border-t-blue rounded-full animate-spin" />
+  </div>
+);
 
 export const Services: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -163,7 +179,9 @@ export const Services: React.FC = () => {
 
               {/* Right Side: Authentic Telegram AI Chat Simulator */}
               <div className="lg:col-span-7 flex flex-col justify-center">
-                <TelegramChatSimulator />
+                <Suspense fallback={<SimulatorFallback />}>
+                  <TelegramChatSimulator />
+                </Suspense>
               </div>
             </div>
           )}
@@ -222,7 +240,9 @@ export const Services: React.FC = () => {
 
               {/* Right Side: Interactive Live Voice Call Simulator with Synchronized Transcription */}
               <div className="lg:col-span-7">
-                <VoiceCallSimulator />
+                <Suspense fallback={<SimulatorFallback />}>
+                  <VoiceCallSimulator />
+                </Suspense>
               </div>
             </div>
           )}
@@ -281,7 +301,9 @@ export const Services: React.FC = () => {
 
               {/* Right Side: Interactive Scraper Live Table */}
               <div className="lg:col-span-7">
-                <ParserConsoleSimulator />
+                <Suspense fallback={<SimulatorFallback />}>
+                  <ParserConsoleSimulator />
+                </Suspense>
               </div>
             </div>
           )}
@@ -340,7 +362,9 @@ export const Services: React.FC = () => {
 
               {/* Right Side: Interactive n8n Glowing Nodes Business Pipeline Simulator */}
               <div className="lg:col-span-7">
-                <BusinessMeshSimulator />
+                <Suspense fallback={<SimulatorFallback />}>
+                  <BusinessMeshSimulator />
+                </Suspense>
               </div>
             </div>
           )}

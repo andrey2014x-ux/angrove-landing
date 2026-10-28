@@ -218,14 +218,19 @@ export const Hero: React.FC = () => {
             {/* Clean, Premium Photo of Andrey */}
             <div className="w-full max-w-[340px] sm:max-w-[390px] relative z-10">
               <div className="relative rounded-3xl overflow-hidden bg-zinc-900 border border-black/10 shadow-[0_25px_60px_rgba(0,0,0,0.12)] aspect-[4/5]">
-                <img
-                  src="/andrey.jpg"
-                  alt="Андрей — Архитектор систем"
-                  className="w-full h-full object-cover object-top select-none"
-                  loading="eager"
-                  width={390}
-                  height={488}
-                />
+                <picture>
+                  <source srcSet="/andrey.webp" type="image/webp" />
+                  <img
+                    src="/andrey.jpg"
+                    alt="Андрей — Архитектор систем"
+                    className="w-full h-full object-cover object-top select-none"
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
+                    width={390}
+                    height={488}
+                  />
+                </picture>
               </div>
             </div>
           </div>

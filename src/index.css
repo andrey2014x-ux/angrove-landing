@@ -43,7 +43,7 @@
 }
 
 .text-leopard-flow {
-  background-image: url('/leopard-pattern.png');
+  background-image: url('/leopard-pattern.webp');
   background-size: 254px 169px;
   background-repeat: repeat;
   -webkit-background-clip: text;

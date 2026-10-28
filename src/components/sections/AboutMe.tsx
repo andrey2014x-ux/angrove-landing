@@ -42,14 +42,18 @@ export const AboutMe: React.FC = () => {
           {/* Left: Andrey's Photo in rounded-3xl with Soft Glow */}
           <div data-reveal="card" className="lg:col-span-5 flex justify-center">
             <div className="w-full max-w-[380px] rounded-3xl overflow-hidden bg-zinc-900 border border-black/10 shadow-[0_20px_50px_rgba(0,0,0,0.1)] relative aspect-[4/5]">
-              <img
-                src="/andrey.jpg"
-                alt="Андрей — Архитектор систем"
-                className="w-full h-full object-cover object-top select-none"
-                loading="lazy"
-                width={380}
-                height={475}
-              />
+              <picture>
+                <source srcSet="/andrey.webp" type="image/webp" />
+                <img
+                  src="/andrey.jpg"
+                  alt="Андрей — Архитектор систем"
+                  className="w-full h-full object-cover object-top select-none"
+                  loading="lazy"
+                  decoding="async"
+                  width={380}
+                  height={475}
+                />
+              </picture>
               <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl bg-[#0A0C16]/80 backdrop-blur-md border border-white/10 text-white shadow-xl flex items-center justify-between">
                 <div>
                   <div className="text-xs font-mono text-blue-light font-bold">АНДРЕЙ · _ANGROVE_</div>
