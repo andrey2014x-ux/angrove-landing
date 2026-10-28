@@ -133,7 +133,7 @@ export const Comparison: React.FC = () => {
                 <span className="font-display font-black text-xl sm:text-2xl text-ink">
                   Вручную
                 </span>
-                <span className="text-xs sm:text-sm text-ink/50 font-sans">
+                <span className="text-xs sm:text-sm text-ink/75 font-sans">
                   (ручной сбор данных менеджером)
                 </span>
               </div>
@@ -170,7 +170,7 @@ export const Comparison: React.FC = () => {
               </AnimatePresence>
 
               {/* Progress Indicator inside */}
-              <span className="absolute right-4 text-xs font-mono font-bold text-ink/40">
+              <span className="absolute right-4 text-xs font-mono font-bold text-ink/75">
                 {manualProgress}%
               </span>
             </div>

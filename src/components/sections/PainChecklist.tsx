@@ -127,7 +127,7 @@ export const PainChecklist: React.FC = () => {
             >
               {/* Col 1: Index & Category */}
               <div className="lg:col-span-3 flex lg:flex-col items-center lg:items-start justify-between gap-2">
-                <span className="font-mono text-2xl sm:text-3xl font-black text-ink/40 group-hover:text-blue transition-colors">
+                <span className="font-mono text-2xl sm:text-3xl font-black text-ink/65 group-hover:text-blue transition-colors">
                   {pt.num}
                 </span>
                 <span className="font-mono text-xs uppercase tracking-wider text-ink/60 font-semibold">

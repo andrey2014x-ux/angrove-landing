@@ -64,11 +64,12 @@ export const Hero: React.FC = () => {
 
   useEffect(() => {
     if (!heroRef.current) return;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
     const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isBot =
       typeof navigator !== 'undefined' &&
       (navigator.webdriver || /lighthouse|speed|chrome-lighthouse|headless/i.test(navigator.userAgent));
-    if (isReduced || isBot) return;
+    if (isReduced || isBot || isMobile) return;
 
     const ctx = gsap.context(() => {
       const lines = headlineRef.current?.querySelectorAll('.hero-line');
@@ -186,12 +187,12 @@ export const Hero: React.FC = () => {
                   className="inline-flex items-center justify-center gap-2 bg-white text-ink rounded-full px-8 py-4 text-sm sm:text-base font-bold border border-black/[0.08] shadow-sm hover:border-black/20 hover:bg-zinc-50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
                 >
                   <span>Смотреть решения</span>
-                  <span className="text-ink/40">↓</span>
+                  <span className="text-ink/70">↓</span>
                 </a>
               </div>
 
               {/* Easy Next Step Micro-Offer */}
-              <div className="inline-flex items-center gap-2 text-xs text-ink/65 font-sans pt-1">
+              <div className="inline-flex items-center gap-2 text-xs text-ink/75 font-sans pt-1">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span>Бесплатный экспресс-разбор процессов за 15 минут в Telegram</span>
               </div>
@@ -203,19 +204,19 @@ export const Hero: React.FC = () => {
                 <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">
                   <CountUp target={70} suffix="+" duration={1400} delay={300} />
                 </div>
-                <div className="text-xs text-ink/60 font-sans mt-1">проектов в проде</div>
+                <div className="text-xs text-ink/75 font-sans mt-1">проектов в проде</div>
               </div>
               <div className="hero-stat">
                 <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">
                   <CountUp target={3} suffix=" дня" duration={1000} delay={400} />
                 </div>
-                <div className="text-xs text-ink/60 font-sans mt-1">первый рабочий прототип</div>
+                <div className="text-xs text-ink/75 font-sans mt-1">первый рабочий прототип</div>
               </div>
               <div className="hero-stat">
                 <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">
                   <CountUp target={100} suffix="%" duration={1500} delay={300} />
                 </div>
-                <div className="text-xs text-ink/60 font-sans mt-1">в срок по смете</div>
+                <div className="text-xs text-ink/75 font-sans mt-1">в срок по смете</div>
               </div>
             </div>
           </div>

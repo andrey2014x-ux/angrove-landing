@@ -139,7 +139,7 @@ export const Cases: React.FC = () => {
                       <div className="font-sans font-bold text-xs text-ink">
                         {item.source}
                       </div>
-                      <div className="text-[10px] font-mono text-ink/40">
+                      <div className="text-[10px] font-mono text-ink/75 font-medium">
                         {item.niche}
                       </div>
                     </div>
@@ -149,7 +149,7 @@ export const Cases: React.FC = () => {
                     <span className="font-mono text-[10px] font-semibold px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600">
                       {item.sourceBadge}
                     </span>
-                    <span className="font-mono text-[10px] text-ink/35">
+                    <span className="font-mono text-[10px] text-ink/70 font-mono">
                       {item.time}
                     </span>
                   </div>
@@ -171,7 +171,7 @@ export const Cases: React.FC = () => {
                   <span className="font-mono text-xs font-bold text-blue tracking-tight block">
                     {item.metricBadge}
                   </span>
-                  <span className="text-[11px] font-sans text-ink/50 block">
+                  <span className="text-[11px] font-sans text-ink/75 block">
                     {item.metricSub}
                   </span>
                 </div>

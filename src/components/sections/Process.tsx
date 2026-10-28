@@ -97,7 +97,7 @@ export const Process: React.FC = () => {
                 </p>
               </div>
 
-              <div className="pt-6 mt-6 border-t border-black/[0.04] text-[10px] font-mono text-ink/40 uppercase">
+              <div className="pt-6 mt-6 border-t border-black/[0.04] text-[10px] font-mono text-ink/75 uppercase font-semibold">
                 ЭТАП ПОД КЛЮЧ
               </div>
             </div>

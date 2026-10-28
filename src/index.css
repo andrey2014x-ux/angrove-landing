@@ -1,11 +1,16 @@
-@import '@fontsource/onest/400.css';
-@import '@fontsource/onest/500.css';
-@import '@fontsource/onest/700.css';
-@import '@fontsource/onest/800.css';
-@import '@fontsource/onest/900.css';
+@import '@fontsource/onest/cyrillic-400.css';
+@import '@fontsource/onest/cyrillic-500.css';
+@import '@fontsource/onest/cyrillic-700.css';
+@import '@fontsource/onest/cyrillic-800.css';
+@import '@fontsource/onest/cyrillic-900.css';
+@import '@fontsource/onest/latin-400.css';
+@import '@fontsource/onest/latin-500.css';
+@import '@fontsource/onest/latin-700.css';
+@import '@fontsource/onest/latin-800.css';
+@import '@fontsource/onest/latin-900.css';
 @import '@fontsource/lora/cyrillic-400-italic.css';
 @import '@fontsource/lora/cyrillic-500-italic.css';
-@import '@fontsource/lora/400-italic.css';
+@import '@fontsource/lora/latin-400-italic.css';
 
 @tailwind base;
 @tailwind components;
