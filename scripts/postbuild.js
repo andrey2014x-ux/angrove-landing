@@ -11,28 +11,14 @@ if (!fs.existsSync(indexHtml)) {
 
 const baseHtml = fs.readFileSync(indexHtml, 'utf8');
 
-// 1. Create dist/privacy/index.html
+// Clean up any privacy directory in dist (site does not collect or store personal data)
 const privacyDir = path.join(distDir, 'privacy');
-if (!fs.existsSync(privacyDir)) {
-  fs.mkdirSync(privacyDir, { recursive: true });
+if (fs.existsSync(privacyDir)) {
+  fs.rmSync(privacyDir, { recursive: true, force: true });
+  console.log('✓ Cleaned up dist/privacy directory');
 }
-let privacyHtml = baseHtml
-  .replace(
-    /<title>.*?<\/title>/,
-    '<title>Политика конфиденциальности | _angrove_</title>'
-  )
-  .replace(
-    /<meta name="description" content=".*?" \/>/,
-    '<meta name="description" content="Политика обработки персональных данных сайта angrove.ru (_angrove_)." />'
-  )
-  .replace(
-    /<link rel="canonical" href=".*?" \/>/,
-    '<link rel="canonical" href="https://angrove.ru/privacy" />'
-  );
-fs.writeFileSync(path.join(privacyDir, 'index.html'), privacyHtml, 'utf8');
-console.log('✓ Created dist/privacy/index.html with custom metadata');
 
-// 2. Create dist/404.html for GitHub Pages SPA fallback
+// 1. Create dist/404.html for GitHub Pages SPA fallback
 fs.copyFileSync(indexHtml, path.join(distDir, '404.html'));
 console.log('✓ Created dist/404.html for SPA fallback routing');
 
@@ -43,11 +29,10 @@ if (fs.existsSync(solutionsDir)) {
   console.log('✓ Cleaned up dist/solutions directory');
 }
 
-// 3. Update sitemap.xml with main pages only
+// 2. Update sitemap.xml with main indexed URL only
 const today = new Date().toISOString().split('T')[0];
 const sitemapUrls = [
-  { loc: 'https://angrove.ru/', priority: '1.0', changefreq: 'weekly' },
-  { loc: 'https://angrove.ru/privacy', priority: '0.3', changefreq: 'monthly' }
+  { loc: 'https://angrove.ru/', priority: '1.0', changefreq: 'weekly' }
 ];
 
 const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>

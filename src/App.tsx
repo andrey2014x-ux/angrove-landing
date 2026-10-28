@@ -7,7 +7,6 @@ import { GuideForm } from './components/sections/GuideForm';
 import { Faq } from './components/sections/Faq';
 import { AboutMe } from './components/sections/AboutMe';
 import { Footer } from './components/sections/Footer';
-import { PrivacyPage } from './pages/PrivacyPage';
 import { Preloader } from './components/ui/Preloader';
 import { ScrollProgress } from './components/ui/ScrollProgress';
 import { ScrollToTop } from './components/ui/ScrollToTop';
@@ -17,7 +16,6 @@ import { initSmoothScroll } from './lib/motion';
 import { initAnalytics } from './lib/analytics';
 
 export const App: React.FC = () => {
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
   const [, setIsPreloaded] = useState(false);
 
   useEffect(() => {
@@ -29,21 +27,10 @@ export const App: React.FC = () => {
     // Initialize Lenis smooth scroll linked to GSAP ScrollTrigger
     const lenis = initSmoothScroll();
 
-    const handlePopState = () => {
-      setCurrentPath(window.location.pathname);
-    };
-
-    window.addEventListener('popstate', handlePopState);
     return () => {
-      window.removeEventListener('popstate', handlePopState);
       lenis?.destroy();
     };
   }, []);
-
-  // Show standalone /privacy page
-  if (currentPath === '/privacy' || currentPath === '/privacy/') {
-    return <PrivacyPage />;
-  }
 
   // Main landing page in editorial style
   return (

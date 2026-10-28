@@ -9,8 +9,7 @@ const KEY = 'c8f2a1b94e7d03f69182ab47dc0e561f';
 const KEY_LOCATION = `https://${HOST}/${KEY}.txt`;
 
 const URLS = [
-  `https://${HOST}/`,
-  `https://${HOST}/privacy`
+  `https://${HOST}/`
 ];
 
 async function submitIndexNow(endpoint) {
