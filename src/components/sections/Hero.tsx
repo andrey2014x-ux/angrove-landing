@@ -229,6 +229,7 @@ export const Hero: React.FC = () => {
             <div className="w-full max-w-[340px] sm:max-w-[390px] relative z-10">
               <div className="relative rounded-3xl overflow-hidden bg-zinc-900 border border-black/10 shadow-[0_25px_60px_rgba(0,0,0,0.12)] aspect-[4/5]">
                 <picture>
+                  <source media="(max-width: 640px)" srcSet="/andrey-mobile.webp" type="image/webp" />
                   <source srcSet="/andrey.webp" type="image/webp" />
                   <img
                     src="/andrey.jpg"

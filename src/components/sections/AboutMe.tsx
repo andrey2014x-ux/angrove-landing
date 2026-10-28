@@ -43,6 +43,7 @@ export const AboutMe: React.FC = () => {
           <div data-reveal="card" className="lg:col-span-5 flex justify-center">
             <div className="w-full max-w-[380px] rounded-3xl overflow-hidden bg-zinc-900 border border-black/10 shadow-[0_20px_50px_rgba(0,0,0,0.1)] relative aspect-[4/5]">
               <picture>
+                <source media="(max-width: 640px)" srcSet="/andrey-mobile.webp" type="image/webp" />
                 <source srcSet="/andrey.webp" type="image/webp" />
                 <img
                   src="/andrey.jpg"
