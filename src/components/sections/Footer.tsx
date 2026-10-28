@@ -94,9 +94,8 @@ export const Footer: React.FC = () => {
             Напишите в Telegram — за 15 минут разберём узкие места ваших процессов и определим точный стек автоматизации.
           </p>
 
-          {/* Interactive Magnetic CTA Button & Direct Channels */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 mb-8 w-full sm:w-auto">
-            {/* Magnetic Button */}
+          {/* Interactive Magnetic CTA Button */}
+          <div className="flex items-center justify-center mb-8 w-full">
             <a
               ref={btnRef}
               href={config.telegramUrl}
@@ -114,19 +113,6 @@ export const Footer: React.FC = () => {
               <Send className="w-4 h-4 text-white/90 group-hover:scale-110 transition-transform" />
               <span>Обсудить задачу в Telegram</span>
               <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </a>
-
-            {/* Quiet Instagram Pill */}
-            <a
-              href={config.instagramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackGoal('click_instagram')}
-              className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-white/[0.04] hover:bg-white/[0.08] text-white/80 hover:text-white border border-white/10 hover:border-white/20 font-mono text-xs font-medium transition-all duration-200 cursor-pointer w-full sm:w-auto"
-            >
-              <Instagram className="w-3.5 h-3.5 text-zinc-400" />
-              <span>@_angrove_</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-zinc-500" />
             </a>
           </div>
 
@@ -162,11 +148,68 @@ export const Footer: React.FC = () => {
             ))}
           </nav>
 
-          {/* Year & Disclaimer */}
-          <div className="flex flex-col md:items-end gap-1 text-center md:text-right">
-            <div>© {currentYear} _ANGROVE_</div>
-            <div className="text-[10px] text-zinc-400 font-sans">
-              * Meta (Instagram) признана экстремистской в РФ
+          {/* Social Icons & Copyright */}
+          <div className="flex flex-col md:items-end items-center gap-3 text-center md:text-right">
+            {/* Minimal Social & Channel Icon Buttons */}
+            <div className="flex items-center gap-2">
+              {/* Telegram Channel */}
+              <a
+                href={config.telegramChannelUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Telegram-канал @angrove_ai"
+                aria-label="Telegram-канал @angrove_ai"
+                className="w-8 h-8 rounded-full border border-white/10 hover:border-[#229ED9]/50 bg-white/[0.03] hover:bg-[#229ED9]/10 flex items-center justify-center text-zinc-400 hover:text-[#229ED9] transition-all duration-200 cursor-pointer"
+              >
+                <Send className="w-3.5 h-3.5 -translate-x-[0.5px] translate-y-[0.5px]" />
+              </a>
+
+              {/* VK */}
+              <a
+                href={config.vkUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="ВКонтакте"
+                aria-label="ВКонтакте"
+                className="w-8 h-8 rounded-full border border-white/10 hover:border-[#0077FF]/50 bg-white/[0.03] hover:bg-[#0077FF]/10 flex items-center justify-center text-zinc-400 hover:text-[#0077FF] transition-all duration-200 cursor-pointer"
+              >
+                <svg className="w-3.5 h-3.5 fill-current" viewBox="3.5 6.5 17 11.5">
+                  <path d="M6.79 7.3H4.05c.13 6.24 3.25 9.99 8.72 9.99h.31v-3.57c2.01.2 3.53 1.67 4.14 3.57h2.84c-.78-2.84-2.83-4.41-4.11-5.01 1.28-.74 3.08-2.54 3.51-4.98h-2.58c-.56 1.98-2.22 3.78-3.8 3.95V7.3H10.5v6.92c-1.6-.4-3.62-2.34-3.71-6.92Z" />
+                </svg>
+              </a>
+
+              {/* VC.ru */}
+              <a
+                href={config.vcUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Статьи на vc.ru"
+                aria-label="Статьи на vc.ru"
+                className="w-8 h-8 rounded-full border border-white/10 hover:border-white/30 bg-white/[0.03] hover:bg-white/[0.08] flex items-center justify-center text-zinc-400 hover:text-white transition-all duration-200 cursor-pointer"
+              >
+                <span className="font-sans font-black text-[10px] tracking-tight leading-none uppercase">vc</span>
+              </a>
+
+              {/* Instagram */}
+              <a
+                href={config.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackGoal('click_instagram')}
+                title="Instagram @_angrove_"
+                aria-label="Instagram @_angrove_"
+                className="w-8 h-8 rounded-full border border-white/10 hover:border-pink-500/50 bg-white/[0.03] hover:bg-pink-500/10 flex items-center justify-center text-zinc-400 hover:text-pink-400 transition-all duration-200 cursor-pointer"
+              >
+                <Instagram className="w-3.5 h-3.5" />
+              </a>
+            </div>
+
+            {/* Copyright & Disclaimer */}
+            <div className="flex flex-col md:items-end items-center gap-0.5">
+              <div>© {currentYear} _ANGROVE_</div>
+              <div className="text-[10px] text-zinc-500 font-sans">
+                * Meta (Instagram) признана экстремистской в РФ
+              </div>
             </div>
           </div>
 
