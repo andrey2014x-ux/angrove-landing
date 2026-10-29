@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { config } from '../../config';
+import { config, getTelegramUrl, TELEGRAM_MESSAGES } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { ArrowUpRight, Send, Instagram } from 'lucide-react';
 
@@ -98,7 +98,7 @@ export const Footer: React.FC = () => {
           <div className="flex items-center justify-center mb-8 w-full">
             <a
               ref={btnRef}
-              href={config.telegramUrl}
+              href={getTelegramUrl(TELEGRAM_MESSAGES.footer)}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackGoal('click_telegram')}

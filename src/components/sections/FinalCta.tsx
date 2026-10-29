@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { config } from '../../config';
+import { config, getTelegramUrl, TELEGRAM_MESSAGES } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { ArrowUpRight, Send, Instagram } from 'lucide-react';
 import { WordReveal } from '../ui/WordReveal';
@@ -45,7 +45,7 @@ export const FinalCta: React.FC = () => {
 
             <div data-reveal="card" className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
-                href={config.telegramUrl}
+                href={getTelegramUrl(TELEGRAM_MESSAGES.footer)}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={handleTelegramClick}

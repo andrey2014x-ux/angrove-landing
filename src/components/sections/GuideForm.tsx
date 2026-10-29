@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { config } from '../../config';
+import { getTelegramUrl, TELEGRAM_MESSAGES } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { ArrowUpRight, FileText, CheckCircle2 } from 'lucide-react';
 import { WordReveal } from '../ui/WordReveal';
@@ -11,7 +11,7 @@ export const GuideForm: React.FC = () => {
 
   const handleOpenTelegram = () => {
     trackGoal('click_guide');
-    window.open(config.telegramUrl, '_blank', 'noopener,noreferrer');
+    window.open(getTelegramUrl(TELEGRAM_MESSAGES.guide), '_blank', 'noopener,noreferrer');
   };
 
   return (

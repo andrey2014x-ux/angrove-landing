@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { trackGoal } from '../../lib/analytics';
-import { config } from '../../config';
+import { getTelegramUrl, TELEGRAM_MESSAGES } from '../../config';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -74,7 +74,7 @@ export const Header: React.FC = () => {
 
           {/* Quick Header Telegram Action Button */}
           <a
-            href={config.telegramUrl}
+            href={getTelegramUrl(TELEGRAM_MESSAGES.general)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackGoal('click_telegram')}
@@ -138,7 +138,7 @@ export const Header: React.FC = () => {
           </a>
 
           <a
-            href={config.telegramUrl}
+            href={getTelegramUrl(TELEGRAM_MESSAGES.general)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => {

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { ArrowUpRight, MessageSquare, Bell, TrendingUp, Database } from 'lucide-react';
-import { config } from '../../config';
+import { getTelegramUrl, TELEGRAM_MESSAGES } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { WordReveal } from '../ui/WordReveal';
 import { useSectionReveal } from '../../lib/useScrollAnimation';
@@ -109,7 +109,7 @@ export const Cases: React.FC = () => {
           </div>
 
           <a
-            href={config.telegramUrl}
+            href={getTelegramUrl(TELEGRAM_MESSAGES.cases)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleDiscussClick}
@@ -177,7 +177,7 @@ export const Cases: React.FC = () => {
                 </div>
 
                 <a
-                  href={config.telegramUrl}
+                  href={getTelegramUrl(TELEGRAM_MESSAGES.cases)}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleDiscussClick}

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { ArrowUpRight, ShieldCheck, Video, KeyRound } from 'lucide-react';
-import { config } from '../../config';
+import { getTelegramUrl, TELEGRAM_MESSAGES } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { WordReveal } from '../ui/WordReveal';
 import { useSectionReveal } from '../../lib/useScrollAnimation';
@@ -155,7 +155,7 @@ export const Process: React.FC = () => {
             Хотите понять, сколько времени займет автоматизация вашей конкретной задачи?
           </div>
           <a
-            href={config.telegramUrl}
+            href={getTelegramUrl(TELEGRAM_MESSAGES.process)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleCtaClick}

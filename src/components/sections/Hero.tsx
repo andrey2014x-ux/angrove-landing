@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { config } from '../../config';
+import { getTelegramUrl, TELEGRAM_MESSAGES } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { gsap } from '../../lib/motion';
 import { ArrowUpRight } from 'lucide-react';
@@ -172,7 +172,7 @@ export const Hero: React.FC = () => {
             <div className="hero-actions flex flex-col items-start gap-3 w-full sm:w-auto">
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
                 <a
-                  href={config.telegramUrl}
+                  href={getTelegramUrl(TELEGRAM_MESSAGES.general)}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleTelegramClick}

@@ -13,7 +13,7 @@ import {
   Filter,
   Sparkles,
 } from 'lucide-react';
-import { config } from '../../../config';
+import { getTelegramUrl, TELEGRAM_MESSAGES } from '../../../config';
 
 interface ChatMessage {
   id: string;
@@ -328,7 +328,7 @@ export const TelegramChatScene: React.FC<TelegramChatSceneProps> = ({ activeTab 
               {m.hasCta && (
                 <div className="mt-2.5 pt-2 border-t border-white/20">
                   <a
-                    href={config.telegramUrl}
+                    href={getTelegramUrl(TELEGRAM_MESSAGES.simulator)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 bg-white text-ink px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-paper transition-all shadow-sm"

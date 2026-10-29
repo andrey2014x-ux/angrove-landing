@@ -1,6 +1,6 @@
 import React, { useState, useRef, Suspense } from 'react';
 import { Bot, PhoneCall, Database, Network, ArrowUpRight, CheckCircle2 } from 'lucide-react';
-import { config } from '../../config';
+import { getTelegramUrl, TELEGRAM_MESSAGES } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { WordReveal } from '../ui/WordReveal';
 import { useSectionReveal } from '../../lib/useScrollAnimation';
@@ -166,7 +166,7 @@ export const Services: React.FC = () => {
                 </div>
 
                 <a
-                  href={config.telegramUrl}
+                  href={getTelegramUrl(TELEGRAM_MESSAGES.bot)}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleCtaClick}
@@ -227,7 +227,7 @@ export const Services: React.FC = () => {
                 </div>
 
                 <a
-                  href={config.telegramUrl}
+                  href={getTelegramUrl(TELEGRAM_MESSAGES.voice)}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleCtaClick}
@@ -288,7 +288,7 @@ export const Services: React.FC = () => {
                 </div>
 
                 <a
-                  href={config.telegramUrl}
+                  href={getTelegramUrl(TELEGRAM_MESSAGES.parser)}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleCtaClick}
@@ -349,7 +349,7 @@ export const Services: React.FC = () => {
                 </div>
 
                 <a
-                  href={config.telegramUrl}
+                  href={getTelegramUrl(TELEGRAM_MESSAGES.n8n)}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleCtaClick}

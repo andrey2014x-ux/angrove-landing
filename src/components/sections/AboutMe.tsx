@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { config } from '../../config';
+import { getTelegramUrl, TELEGRAM_MESSAGES } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { ArrowUpRight, ShieldCheck, Terminal, Compass } from 'lucide-react';
 import { WordReveal } from '../ui/WordReveal';
@@ -102,7 +102,7 @@ export const AboutMe: React.FC = () => {
 
             <div data-reveal="stage">
               <a
-                href={config.telegramUrl}
+                href={getTelegramUrl(TELEGRAM_MESSAGES.about)}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={handleTelegramClick}

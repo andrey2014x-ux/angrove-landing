@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Paperclip, Smile, Mic, MoreVertical, CheckCheck, ArrowUpRight } from 'lucide-react';
-import { config } from '../../config';
+import { getTelegramUrl, TELEGRAM_MESSAGES } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 
 interface ChatMessage {
@@ -595,7 +595,7 @@ export const TelegramChatSimulator: React.FC = () => {
         {/* Telegram Header Action Icons */}
         <div className="flex items-center gap-1 text-[#798B9B]">
           <a
-            href={config.telegramUrl}
+            href={getTelegramUrl(TELEGRAM_MESSAGES.simulator)}
             target="_blank"
             rel="noopener noreferrer"
             title="Открыть в Telegram"

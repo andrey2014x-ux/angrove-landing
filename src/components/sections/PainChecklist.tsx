@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { config } from '../../config';
+import { getTelegramUrl, TELEGRAM_MESSAGES } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { gsap } from '../../lib/motion';
 
@@ -176,7 +176,7 @@ export const PainChecklist: React.FC = () => {
             Узнали свой процесс хотя бы в одном пункте? Опишите задачу — разберем архитектуру за 15 минут.
           </div>
           <a
-            href={config.telegramUrl}
+            href={getTelegramUrl(TELEGRAM_MESSAGES.pain)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleTelegramClick}
