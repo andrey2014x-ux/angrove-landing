@@ -32,8 +32,9 @@ export const Global3DCanvas: React.FC = () => {
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
     camera.position.set(0, 0, 8.5);
 
+    const isMobile = width < 1024;
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.25 : 1.75));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.25;
     container.appendChild(renderer.domElement);
@@ -58,7 +59,8 @@ export const Global3DCanvas: React.FC = () => {
     scene.add(masterGroup);
 
     const isDesktop = width >= 1024;
-    masterGroup.position.set(isDesktop ? 2.4 : 0, 0.05, 0);
+    masterGroup.position.set(isDesktop ? 2.4 : 0, isDesktop ? 0.05 : -0.15, isDesktop ? 0 : -1.1);
+    masterGroup.scale.setScalar(isDesktop ? 1.15 : 0.72);
 
     // -------------------------------------------------------------
     // MODULE A: Hero Core (Translucent Crystal + Gyro Rings)
@@ -317,7 +319,18 @@ export const Global3DCanvas: React.FC = () => {
       targetMouseY = y * 2.0;
     };
 
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        const x = (touch.clientX / window.innerWidth) - 0.5;
+        const y = (touch.clientY / window.innerHeight) - 0.5;
+        targetMouseX = x * 1.5;
+        targetMouseY = y * 1.5;
+      }
+    };
+
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
 
     let targetScrollProgress = 0;
     let currentScrollProgress = 0;
@@ -326,6 +339,9 @@ export const Global3DCanvas: React.FC = () => {
       const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       targetScrollProgress = window.scrollY / maxScroll;
     };
+
+    handleScroll();
+    currentScrollProgress = targetScrollProgress;
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 
@@ -492,11 +508,12 @@ export const Global3DCanvas: React.FC = () => {
           targetScale = 1.3 * Math.max(0.05, footerFade);
         }
       } else {
-        // Mobile responsive spatial tuning
-        targetScale = 0.7 * Math.max(0.05, footerFade);
+        // Mobile responsive spatial tuning:
+        // Positioned gracefully behind content with gentle organic breathing
+        targetScale = 0.72 * Math.max(0.05, footerFade);
         targetX = mouseX * 0.15;
-        targetY = -0.2 + Math.sin(p * Math.PI * 2) * 0.35;
-        targetZ = -0.9;
+        targetY = -0.15 + Math.sin(p * Math.PI * 2) * 0.3;
+        targetZ = -1.1;
       }
 
       masterGroup.position.x += (targetX - masterGroup.position.x) * 0.05;
@@ -545,6 +562,7 @@ export const Global3DCanvas: React.FC = () => {
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, w < 1024 ? 1.25 : 1.75));
     };
 
     window.addEventListener('resize', handleResize);
@@ -552,6 +570,7 @@ export const Global3DCanvas: React.FC = () => {
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
       if (renderer.domElement && renderer.domElement.parentNode) {

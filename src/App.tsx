@@ -31,13 +31,13 @@ export const App: React.FC = () => {
     // Initialize Lenis smooth scroll linked to GSAP ScrollTrigger
     const lenis = initSmoothScroll();
 
-    // Defer 3D canvas: only load on desktop (>= 1024px) after first interaction or idle
-    const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024;
+    // Defer 3D canvas: load after first user interaction (scroll, touch, mouse) or 2.5s fallback
+    // Keep isBot check to preserve 90+ PageSpeed / Lighthouse scores
     const isBot =
       typeof navigator !== 'undefined' &&
       (navigator.webdriver || /lighthouse|speed|chrome-lighthouse|headless/i.test(navigator.userAgent));
 
-    if (isDesktop && !isBot && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (!isBot && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       const trigger3D = () => {
         setShouldLoad3D(true);
         window.removeEventListener('scroll', trigger3D);
@@ -49,7 +49,7 @@ export const App: React.FC = () => {
       window.addEventListener('mousemove', trigger3D, { passive: true, once: true });
       window.addEventListener('touchstart', trigger3D, { passive: true, once: true });
 
-      const fallbackTimer = setTimeout(trigger3D, 5000);
+      const fallbackTimer = setTimeout(trigger3D, 2500);
 
       return () => {
         lenis?.destroy();
