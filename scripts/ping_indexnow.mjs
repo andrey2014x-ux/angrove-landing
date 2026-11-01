@@ -4,12 +4,15 @@
  * Automatically notifies Yandex and Bing whenever pages are updated.
  */
 
+import { SOLUTIONS_RAW } from '../src/data/solutionsRaw.js';
+
 const HOST = 'angrove.ru';
 const KEY = 'c8f2a1b94e7d03f69182ab47dc0e561f';
 const KEY_LOCATION = `https://${HOST}/${KEY}.txt`;
 
 const URLS = [
-  `https://${HOST}/`
+  `https://${HOST}/`,
+  ...Object.keys(SOLUTIONS_RAW).map((slug) => `https://${HOST}/solutions/${slug}`)
 ];
 
 async function submitIndexNow(endpoint) {

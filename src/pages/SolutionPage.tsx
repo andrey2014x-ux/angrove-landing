@@ -279,7 +279,7 @@ export const SolutionPage: React.FC<SolutionPageProps> = ({ solution }) => {
       <footer className="border-t border-line py-8 text-center text-xs font-mono text-slate-500">
         <p>© {new Date().getFullYear()} _angrove_ · Андрей. Все решения лицензируются на инфраструктуре клиента.</p>
         <p className="mt-1">
-          <a href="/privacy" className="hover:text-slate-300 transition-colors">Политика конфиденциальности</a>
+          <span className="text-slate-500 text-xs">Автоматизация бизнеса под ключ</span>
         </p>
       </footer>
     </div>

@@ -7,6 +7,8 @@ import { GuideForm } from './components/sections/GuideForm';
 import { Faq } from './components/sections/Faq';
 import { AboutMe } from './components/sections/AboutMe';
 import { Footer } from './components/sections/Footer';
+import { SolutionPage } from './pages/SolutionPage';
+import { SOLUTIONS } from './data/solutionsData';
 import { Preloader } from './components/ui/Preloader';
 import { ScrollProgress } from './components/ui/ScrollProgress';
 import { ScrollToTop } from './components/ui/ScrollToTop';
@@ -64,6 +66,17 @@ export const App: React.FC = () => {
       lenis?.destroy();
     };
   }, []);
+
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/';
+
+  // Show programmatic solution pages (/solutions/:slug)
+  if (currentPath.startsWith('/solutions/')) {
+    const slug = currentPath.replace(/^\/solutions\//, '').replace(/\/$/, '');
+    const solution = SOLUTIONS[slug];
+    if (solution) {
+      return <SolutionPage solution={solution} />;
+    }
+  }
 
   // Main landing page in editorial style
   return (

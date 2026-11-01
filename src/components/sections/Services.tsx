@@ -1,5 +1,5 @@
 import React, { useState, useRef, Suspense } from 'react';
-import { Bot, PhoneCall, Database, Network, ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { Bot, PhoneCall, Database, Network, ArrowUpRight, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { getTelegramUrl, TELEGRAM_MESSAGES } from '../../config';
 import { trackGoal } from '../../lib/analytics';
 import { WordReveal } from '../ui/WordReveal';
@@ -165,16 +165,25 @@ export const Services: React.FC = () => {
                   </div>
                 </div>
 
-                <a
-                  href={getTelegramUrl(TELEGRAM_MESSAGES.bot)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={handleCtaClick}
-                  className="inline-flex items-center justify-center gap-2 bg-blue text-white rounded-full px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_20px_rgba(61,92,255,0.3)] hover:bg-blue-dark transition-all cursor-pointer w-full sm:w-auto"
-                >
-                  <span>Рассчитать AI-бота под ключ</span>
-                  <ArrowUpRight className="w-4 h-4" />
-                </a>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                  <a
+                    href={getTelegramUrl(TELEGRAM_MESSAGES.bot)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={handleCtaClick}
+                    className="inline-flex items-center justify-center gap-2 bg-blue text-white rounded-full px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_20px_rgba(61,92,255,0.3)] hover:bg-blue-dark transition-all cursor-pointer w-full sm:w-auto"
+                  >
+                    <span>Рассчитать AI-бота под ключ</span>
+                    <ArrowUpRight className="w-4 h-4" />
+                  </a>
+                  <a
+                    href="/solutions/telegram-ai-bot"
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full border border-black/10 text-ink/70 hover:text-blue hover:border-blue/30 text-xs font-mono font-medium transition-colors"
+                  >
+                    <span>Подробнее о решении</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
+                </div>
               </div>
 
               {/* Right Side: Authentic Telegram AI Chat Simulator */}
@@ -287,16 +296,25 @@ export const Services: React.FC = () => {
                   </div>
                 </div>
 
-                <a
-                  href={getTelegramUrl(TELEGRAM_MESSAGES.parser)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={handleCtaClick}
-                  className="inline-flex items-center justify-center gap-2 bg-blue text-white rounded-full px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_20px_rgba(61,92,255,0.3)] hover:bg-blue-dark transition-all cursor-pointer w-full sm:w-auto"
-                >
-                  <span>Собрать базу под мою нишу</span>
-                  <ArrowUpRight className="w-4 h-4" />
-                </a>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                  <a
+                    href={getTelegramUrl(TELEGRAM_MESSAGES.parser)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={handleCtaClick}
+                    className="inline-flex items-center justify-center gap-2 bg-blue text-white rounded-full px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_20px_rgba(61,92,255,0.3)] hover:bg-blue-dark transition-all cursor-pointer w-full sm:w-auto"
+                  >
+                    <span>Собрать базу под мою нишу</span>
+                    <ArrowUpRight className="w-4 h-4" />
+                  </a>
+                  <a
+                    href="/solutions/b2b-parser-2gis"
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full border border-black/10 text-ink/70 hover:text-blue hover:border-blue/30 text-xs font-mono font-medium transition-colors"
+                  >
+                    <span>Подробнее о парсинге</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
+                </div>
               </div>
 
               {/* Right Side: Interactive Scraper Live Table */}
@@ -348,16 +366,25 @@ export const Services: React.FC = () => {
                   </div>
                 </div>
 
-                <a
-                  href={getTelegramUrl(TELEGRAM_MESSAGES.n8n)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={handleCtaClick}
-                  className="inline-flex items-center justify-center gap-2 bg-blue text-white rounded-full px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_20px_rgba(61,92,255,0.3)] hover:bg-blue-dark transition-all cursor-pointer w-full sm:w-auto"
-                >
-                  <span>Связать мои программы</span>
-                  <ArrowUpRight className="w-4 h-4" />
-                </a>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                  <a
+                    href={getTelegramUrl(TELEGRAM_MESSAGES.n8n)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={handleCtaClick}
+                    className="inline-flex items-center justify-center gap-2 bg-blue text-white rounded-full px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_20px_rgba(61,92,255,0.3)] hover:bg-blue-dark transition-all cursor-pointer w-full sm:w-auto"
+                  >
+                    <span>Связать мои программы</span>
+                    <ArrowUpRight className="w-4 h-4" />
+                  </a>
+                  <a
+                    href="/solutions/amocrm-n8n"
+                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-full border border-black/10 text-ink/70 hover:text-blue hover:border-blue/30 text-xs font-mono font-medium transition-colors"
+                  >
+                    <span>Подробнее об интеграции</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </a>
+                </div>
               </div>
 
               {/* Right Side: Interactive n8n Glowing Nodes Business Pipeline Simulator */}
