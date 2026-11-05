@@ -39,24 +39,32 @@ export const Services: React.FC = () => {
   const tabs = [
     {
       id: 'bot',
+      shortTitle: 'AI-бот',
+      icon: Bot,
       title: 'Умный AI-бот в Telegram',
       tag: 'ПРОДАЕТ И ЗАПИСЫВАЕТ 24/7',
       simplePitch: 'Отвечает за 3 секунды, консультирует по прайсу и записывает клиентов, пока вы заняты',
     },
     {
       id: 'voice',
+      shortTitle: 'Звонки',
+      icon: PhoneCall,
       title: 'Голосовой AI-помощник',
       tag: 'БЕЗ ПРОПУЩЕННЫХ ЗВОНКОВ',
       simplePitch: 'Звонит клиентам приятным живым голосом, подтверждает визиты и принимает звонки',
     },
     {
       id: 'parser',
+      shortTitle: 'Парсер',
+      icon: Database,
       title: 'Сбор баз клиентов',
       tag: 'ЧИСТЫЕ НОМЕРА В EXCEL',
       simplePitch: 'Находит реальные контакты нужных людей и компаний без ручного поиска на картах',
     },
     {
       id: 'mesh',
+      shortTitle: 'Связки',
+      icon: Network,
       title: 'Автоматизация всех программ',
       tag: 'НОЛЬ РУЧНОЙ РУТИНЫ',
       simplePitch: 'Сайт, касса, склад, мессенджеры и CRM обмениваются данными сами без ошибок людей',
@@ -85,8 +93,36 @@ export const Services: React.FC = () => {
           </p>
         </div>
 
-        {/* 4 Simple Human Selector Pills */}
-        <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pt-8 overflow-x-auto no-scrollbar pb-2 snap-x -mx-4 px-4 sm:mx-0 sm:px-0">
+        {/* MOBILE ( < md ): Segmented control where all 4 services are 100% visible and tap-friendly */}
+        <div className="md:hidden pt-6">
+          <div className="grid grid-cols-4 gap-1.5 p-1.5 rounded-2xl bg-zinc-200/80 border border-black/[0.06] shadow-inner">
+            {tabs.map((tab, idx) => {
+              const isActive = idx === activeTab;
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  id={`service-mobile-tab-${idx}`}
+                  type="button"
+                  onClick={() => setActiveTab(idx)}
+                  className={`flex flex-col items-center justify-center py-2.5 px-1 rounded-xl transition-all duration-200 cursor-pointer text-center select-none ${
+                    isActive
+                      ? 'bg-[#0A0C16] text-white shadow-md'
+                      : 'text-ink/70 hover:text-ink hover:bg-black/5'
+                  }`}
+                >
+                  <Icon className={`w-4 h-4 mb-1 transition-colors ${isActive ? 'text-blue-light' : 'text-ink/60'}`} />
+                  <span className="text-[11px] font-bold leading-tight tracking-tight">
+                    {tab.shortTitle}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* DESKTOP & TABLET ( >= md ): 4 Full Cards in grid */}
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 pt-8">
           {tabs.map((tab, idx) => {
             const isActive = idx === activeTab;
             return (
@@ -96,7 +132,7 @@ export const Services: React.FC = () => {
                 type="button"
                 data-reveal="card"
                 onClick={() => setActiveTab(idx)}
-                className={`text-left p-4 sm:p-5 rounded-2xl border transition-all duration-200 cursor-pointer min-w-[260px] sm:min-w-0 snap-start shrink-0 sm:shrink ${
+                className={`text-left p-5 rounded-2xl border transition-all duration-200 cursor-pointer ${
                   isActive
                     ? 'bg-[#0A0C16] text-white border-black/10 shadow-xl'
                     : 'bg-white text-ink border-black/[0.06] shadow-sm hover:border-black/20 hover:bg-zinc-50'
@@ -111,7 +147,7 @@ export const Services: React.FC = () => {
                   {isActive && <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0 ml-2" />}
                 </div>
 
-                <div className="font-bold text-sm sm:text-base leading-tight mb-1">
+                <div className="font-bold text-base leading-tight mb-1">
                   {tab.title}
                 </div>
                 <div className={`text-xs leading-relaxed line-clamp-2 ${isActive ? 'text-zinc-300' : 'text-zinc-500'}`}>
