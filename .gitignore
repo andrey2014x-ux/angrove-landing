@@ -15,4 +15,5 @@ dist-ssr
 .codex-backup*
 temp*.bmp
 .DS_Store
+.agents
 

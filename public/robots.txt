@@ -1,8 +1,11 @@
 User-agent: *
 Allow: /
 
-# Explicit AI Search Crawlers (AEO / GEO)
+# Explicit AI Search Crawlers (AEO / GEO / Knowledge Graph)
 User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
 Allow: /
 
 User-agent: PerplexityBot
@@ -11,7 +14,23 @@ Allow: /
 User-agent: ClaudeBot
 Allow: /
 
+User-agent: anthropic-ai
+Allow: /
+
 User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+# Google Search
+User-agent: Googlebot
 Allow: /
 
 # Yandex Specific Rules
