@@ -106,13 +106,13 @@ export const Faq: React.FC = () => {
                   aria-expanded={isOpen}
                   aria-controls={`faq-content-${idx}`}
                   onClick={() => toggle(faq.id)}
-                  className="w-full text-left p-6 sm:p-7 flex items-start justify-between gap-6 cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2"
+                  className="w-full text-left p-4 sm:p-7 flex items-start justify-between gap-3 sm:gap-6 cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2"
                 >
-                  <div className="flex items-start gap-4 sm:gap-6 pt-0.5">
+                  <div className="flex items-start gap-3 sm:gap-6 pt-0.5">
                     <span className="font-mono text-xs sm:text-sm text-blue font-bold pt-0.5">
                       0{idx + 1}
                     </span>
-                    <span className="text-base sm:text-lg md:text-xl font-bold uppercase tracking-tight text-ink group-hover:text-blue transition-colors leading-snug">
+                    <span className="text-sm sm:text-lg md:text-xl font-bold uppercase tracking-tight text-ink group-hover:text-blue transition-colors leading-snug">
                       {faq.question}
                     </span>
                   </div>
@@ -136,7 +136,7 @@ export const Faq: React.FC = () => {
                       transition={{ duration: 0.25, ease: 'easeInOut' }}
                       className="overflow-hidden"
                     >
-                      <div className="pl-6 sm:pl-14 pr-6 pb-6 text-ink/80 text-sm sm:text-base leading-relaxed font-sans border-t border-black/[0.04] pt-4">
+                      <div className="px-4 pb-5 sm:pl-14 sm:pr-7 sm:pb-7 text-ink/80 text-xs sm:text-base leading-relaxed font-sans border-t border-black/[0.04] pt-4">
                         {faq.answer}
                       </div>
                     </motion.div>

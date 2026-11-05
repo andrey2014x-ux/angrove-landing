@@ -552,7 +552,7 @@ export const TelegramChatSimulator: React.FC = () => {
   return (
     <div 
       data-lenis-prevent="true"
-      className="w-full bg-[#0E1621] rounded-3xl border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.4)] overflow-hidden flex flex-col h-[520px] sm:h-[560px] font-sans overscroll-contain select-text"
+      className="w-full bg-[#0E1621] rounded-3xl border border-white/10 shadow-[0_25px_60px_rgba(0,0,0,0.4)] overflow-hidden flex flex-col h-[460px] sm:h-[560px] font-sans overscroll-contain select-text"
     >
       
       {/* 1. Telegram Desktop Header */}

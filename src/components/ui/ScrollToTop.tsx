@@ -67,7 +67,7 @@ export const ScrollToTop: React.FC = () => {
           transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
           whileHover={{ scale: 1.06 }}
           whileTap={{ scale: 0.94 }}
-          className="fixed bottom-5 right-5 sm:bottom-7 sm:right-7 z-40 group flex items-center justify-center w-12 h-12 rounded-full bg-[#0A0C16]/85 hover:bg-[#0A0C16] backdrop-blur-md border border-white/12 hover:border-blue/60 text-white shadow-lg shadow-black/30 hover:shadow-[0_0_24px_rgba(61,92,255,0.45)] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue cursor-pointer select-none"
+          className="hidden sm:flex fixed sm:bottom-7 sm:right-7 z-40 group items-center justify-center w-12 h-12 rounded-full bg-[#0A0C16]/85 hover:bg-[#0A0C16] backdrop-blur-md border border-white/12 hover:border-blue/60 text-white shadow-lg shadow-black/30 hover:shadow-[0_0_24px_rgba(61,92,255,0.45)] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue cursor-pointer select-none"
           aria-label="Переместиться наверх страницы"
           title="Наверх страницы"
         >

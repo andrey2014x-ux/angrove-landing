@@ -86,7 +86,7 @@ export const Services: React.FC = () => {
         </div>
 
         {/* 4 Simple Human Selector Pills */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pt-8">
+        <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pt-8 overflow-x-auto no-scrollbar pb-2 snap-x -mx-4 px-4 sm:mx-0 sm:px-0">
           {tabs.map((tab, idx) => {
             const isActive = idx === activeTab;
             return (
@@ -96,25 +96,25 @@ export const Services: React.FC = () => {
                 type="button"
                 data-reveal="card"
                 onClick={() => setActiveTab(idx)}
-                className={`text-left p-4 sm:p-5 rounded-2xl border transition-all duration-200 cursor-pointer ${
+                className={`text-left p-4 sm:p-5 rounded-2xl border transition-all duration-200 cursor-pointer min-w-[260px] sm:min-w-0 snap-start shrink-0 sm:shrink ${
                   isActive
                     ? 'bg-[#0A0C16] text-white border-black/10 shadow-xl'
                     : 'bg-white text-ink border-black/[0.06] shadow-sm hover:border-black/20 hover:bg-zinc-50'
                 }`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${
+                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full whitespace-nowrap ${
                     isActive ? 'bg-white/10 text-blue-light' : 'bg-zinc-100 text-zinc-600'
                   }`}>
                     {tab.tag}
                   </span>
-                  {isActive && <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />}
+                  {isActive && <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0 ml-2" />}
                 </div>
 
                 <div className="font-bold text-sm sm:text-base leading-tight mb-1">
                   {tab.title}
                 </div>
-                <div className={`text-xs line-clamp-2 leading-relaxed ${isActive ? 'text-zinc-300' : 'text-zinc-500'}`}>
+                <div className={`text-xs leading-relaxed line-clamp-2 ${isActive ? 'text-zinc-300' : 'text-zinc-500'}`}>
                   {tab.simplePitch}
                 </div>
               </button>

@@ -150,13 +150,13 @@ export const Hero: React.FC = () => {
               ref={headlineRef}
               className="font-display font-black tracking-tight leading-[0.95] text-ink select-none mb-6"
             >
-              <span className="hero-line block text-5xl sm:text-7xl lg:text-[88px] font-black">
+              <span className="hero-line block text-4xl sm:text-7xl lg:text-[88px] font-black">
                 Заменяю
               </span>
-              <span className="hero-line block font-serif italic font-normal text-5xl sm:text-7xl lg:text-[88px] tracking-tight my-1">
+              <span className="hero-line block font-serif italic font-normal text-4xl sm:text-7xl lg:text-[88px] tracking-tight my-1">
                 ручной труд
               </span>
-              <span className="hero-line block text-6xl sm:text-8xl lg:text-[110px] uppercase font-black tracking-tighter">
+              <span className="hero-line block text-5xl sm:text-8xl lg:text-[110px] uppercase font-black tracking-tighter">
                 <span className="text-leopard-flow inline-block">
                   КОДОМ
                 </span>
@@ -192,8 +192,8 @@ export const Hero: React.FC = () => {
               </div>
 
               {/* Easy Next Step Micro-Offer */}
-              <div className="inline-flex items-center gap-2 text-xs text-ink/75 font-sans pt-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <div className="inline-flex items-start gap-2.5 text-xs text-ink/75 font-sans pt-1">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mt-1 shrink-0" />
                 <span>Бесплатный экспресс-разбор процессов за 15 минут в Telegram</span>
               </div>
             </div>
@@ -210,7 +210,7 @@ export const Hero: React.FC = () => {
                 <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">
                   <CountUp target={3} suffix=" дня" duration={1000} delay={400} />
                 </div>
-                <div className="text-xs text-ink/75 font-sans mt-1">первый рабочий прототип</div>
+                <div className="text-xs text-ink/75 font-sans mt-1">первый прототип</div>
               </div>
               <div className="hero-stat">
                 <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">

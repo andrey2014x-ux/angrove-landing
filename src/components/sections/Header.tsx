@@ -99,7 +99,7 @@ export const Header: React.FC = () => {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-paper border-b border-line-dark px-6 py-6 flex flex-col gap-4 animate-fadeIn">
+        <div className="md:hidden bg-paper border-b border-black/[0.08] px-6 py-6 flex flex-col gap-4 animate-fadeIn shadow-lg">
           <a
             href="#services"
             onClick={() => setMobileMenuOpen(false)}

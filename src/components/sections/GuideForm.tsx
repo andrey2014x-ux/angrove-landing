@@ -21,7 +21,7 @@ export const GuideForm: React.FC = () => {
       className="bg-transparent text-ink py-16 sm:py-20 relative overflow-hidden"
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
-        <div data-reveal="stage" className="bg-[#0A0C16] text-white rounded-3xl p-8 sm:p-12 border border-white/10 shadow-2xl relative overflow-hidden">
+        <div data-reveal="stage" className="bg-[#0A0C16] text-white rounded-3xl p-6 sm:p-12 border border-white/10 shadow-2xl relative overflow-hidden">
           {/* Subtle blue glow in corner */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-blue/20 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
 
