@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send, Paperclip, Smile, Mic, MoreVertical, CheckCheck, ArrowUpRight } from 'lucide-react';
 import { getTelegramUrl, TELEGRAM_MESSAGES } from '../../config';
 import { trackGoal } from '../../lib/analytics';
+import { queryAiAssistant } from '../../lib/aiWebhook';
 
 interface ChatMessage {
   id: string;
@@ -26,6 +27,14 @@ export const TelegramChatSimulator: React.FC = () => {
   const [fallbackIndex, setFallbackIndex] = useState(0);
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   // Direct native wheel handler to guarantee 100% reliable scrolling inside Lenis
   useEffect(() => {
@@ -499,7 +508,7 @@ export const TelegramChatSimulator: React.FC = () => {
     return currentFallback;
   };
 
-  const handleSendMessage = (textToSend?: string) => {
+  const handleSendMessage = async (textToSend?: string) => {
     const rawText = (textToSend || inputValue).trim();
     if (!rawText || isTyping) return;
     const text = rawText.slice(0, 500);
@@ -519,27 +528,35 @@ export const TelegramChatSimulator: React.FC = () => {
     if (!textToSend) setInputValue('');
     setIsTyping(true);
 
-    // Realistic typing delay (600 - 850ms)
-    setTimeout(() => {
-      const { reply, crmAction } = getAiAnswer(text, newHistory);
-      const botTime = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+    const startTime = Date.now();
+    const { reply, crmAction } = await queryAiAssistant(text, newHistory, getAiAnswer);
 
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: (Date.now() + 1).toString(),
-          sender: 'bot',
-          text: reply,
-          time: botTime,
-          crmAction,
-        },
-      ]);
-      setIsTyping(false);
+    // Realistic typing delay: ensure at least 650ms to preserve human-like conversational pacing
+    const elapsed = Date.now() - startTime;
+    const minDelay = 650;
+    if (elapsed < minDelay) {
+      await new Promise((r) => setTimeout(r, minDelay - elapsed));
+    }
 
-      if (crmAction) {
-        setLastCrmAlert(crmAction);
-      }
-    }, 700);
+    if (!isMountedRef.current) return;
+
+    const botTime = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: (Date.now() + 1).toString(),
+        sender: 'bot',
+        text: reply,
+        time: botTime,
+        crmAction,
+      },
+    ]);
+    setIsTyping(false);
+
+    if (crmAction) {
+      setLastCrmAlert(crmAction);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

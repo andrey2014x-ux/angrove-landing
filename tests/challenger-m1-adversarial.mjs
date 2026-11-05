@@ -462,18 +462,22 @@ describe('Empirical Challenger: Milestone M1 (Cases Before/After Section)', () =
         const results = [];
         for (let idx = 0; idx < ctas.length; idx++) {
           const cta = ctas[idx];
-          // Scroll CTA into viewport center
-          const rectBefore = cta.getBoundingClientRect();
-          window.scrollTo(0, window.scrollY + rectBefore.top - window.innerHeight / 2);
+          if (window.lenis) {
+            window.lenis.scrollTo(cta, { immediate: true, offset: -250 });
+          } else {
+            cta.scrollIntoView({ block: 'center', behavior: 'instant' });
+          }
           await new Promise(r => setTimeout(r, 200));
 
           const rect = cta.getBoundingClientRect();
           const cx = Math.floor(rect.left + rect.width / 2);
           const cy = Math.floor(rect.top + rect.height / 2);
-          const target = document.elementFromPoint(cx, cy);
+          const inBounds = cy >= 0 && cy <= window.innerHeight && cx >= 0 && cx <= window.innerWidth;
+          const target = inBounds ? document.elementFromPoint(cx, cy) : null;
           const isDirectOrChild = Boolean(target && (target === cta || cta.contains(target)));
           results.push({
             idx,
+            inBounds,
             isDirectOrChild,
             rect: { top: rect.top, cy, height: window.innerHeight },
             targetTag: target?.tagName,
@@ -486,6 +490,7 @@ describe('Empirical Challenger: Milestone M1 (Cases Before/After Section)', () =
       assert.ok(hitTest, 'Hit test failed to evaluate');
       assert.ok(hitTest.length >= 2, 'Must have tested at least 2 CTAs');
       for (const res of hitTest) {
+        assert.strictEqual(res.inBounds, true, `CTA #${res.idx} must be within viewport bounds (cy: ${res.rect.cy}, h: ${res.rect.height})`);
         assert.strictEqual(res.isDirectOrChild, true, `CTA #${res.idx} must not be obstructed by overlay (hit: ${res.targetTag}.${res.targetClass}, pos: ${JSON.stringify(res.rect)})`);
       }
     });

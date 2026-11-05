@@ -22,14 +22,11 @@ export const GuideForm: React.FC = () => {
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
         <div data-reveal="stage" className="bg-[#0A0C16] text-white rounded-3xl p-6 sm:p-12 border border-white/10 shadow-2xl relative overflow-hidden">
-          {/* Subtle blue glow in corner */}
-          <div className="absolute top-0 right-0 w-80 h-80 bg-blue/20 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
-
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
             <div className="lg:col-span-8">
               <div data-reveal="badge" className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-blue-light text-xs font-mono font-bold mb-4">
                 <FileText className="w-3.5 h-3.5" />
-                <span>БЕСПЛАТНЫЙ МАТЕРИАЛ</span>
+                <span>Бесплатный материал</span>
               </div>
 
               <WordReveal
@@ -59,7 +56,7 @@ export const GuideForm: React.FC = () => {
               </div>
             </div>
 
-            <div className="lg:col-span-4 flex lg:justify-end">
+            <div className="lg:col-span-4 flex flex-col items-stretch sm:items-center lg:items-end justify-center">
               <button
                 type="button"
                 onClick={handleOpenTelegram}
@@ -68,6 +65,9 @@ export const GuideForm: React.FC = () => {
                 <span>Забрать PDF в Telegram</span>
                 <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </button>
+              <p className="mt-2 text-xs text-zinc-400 text-center lg:text-right font-sans">
+                Бот пришлет PDF в Telegram за 5 секунд
+              </p>
             </div>
           </div>
         </div>

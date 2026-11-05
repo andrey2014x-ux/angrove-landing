@@ -93,7 +93,7 @@ export const AboutMe: React.FC = () => {
 
               <div data-reveal="card" className="bg-white p-5 rounded-2xl border border-black/[0.06] shadow-sm">
                 <Compass className="w-5 h-5 text-blue mb-2.5" />
-                <div className="font-bold text-sm text-ink mb-1">14 дней гарантии</div>
+                <div className="font-bold text-sm text-ink mb-1">30 дней гарантии</div>
                 <div className="text-xs text-ink/65 leading-relaxed">
                   Бесплатный мониторинг и поддержка после запуска в боевой режим.
                 </div>

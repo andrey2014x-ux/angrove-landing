@@ -7,6 +7,7 @@ export interface AppConfig {
   instagramUrl: string;
   formEndpoint?: string;
   metrikaId?: string;
+  aiWebhookUrl?: string;
 }
 
 export const config: AppConfig = {
@@ -18,6 +19,7 @@ export const config: AppConfig = {
   instagramUrl: import.meta.env.VITE_INSTAGRAM_URL || 'https://instagram.com/_angrove_',
   formEndpoint: import.meta.env.VITE_FORM_ENDPOINT || '',
   metrikaId: import.meta.env.VITE_METRIKA_ID || '114097000',
+  aiWebhookUrl: import.meta.env.VITE_AI_WEBHOOK_URL || '',
 };
 
 export const TELEGRAM_MESSAGES = {

@@ -176,7 +176,7 @@ export const Hero: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleTelegramClick}
-                  className="group inline-flex items-center justify-center gap-2.5 bg-blue text-white rounded-full px-8 py-4 text-sm sm:text-base font-bold shadow-[0_10px_25px_rgba(61,92,255,0.35)] hover:shadow-[0_15px_35px_rgba(61,92,255,0.5)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
+                  className="group inline-flex items-center justify-center gap-2.5 bg-blue text-white rounded-full px-8 py-4 text-sm sm:text-base font-bold shadow-md hover:shadow-lg shadow-blue/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
                 >
                   <span>Обсудить задачу</span>
                   <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -214,9 +214,9 @@ export const Hero: React.FC = () => {
               </div>
               <div className="hero-stat">
                 <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">
-                  <CountUp target={100} suffix="%" duration={1500} delay={300} />
+                  <CountUp target={0} suffix=" ₽" duration={1000} delay={300} />
                 </div>
-                <div className="text-xs text-ink/75 font-sans mt-1">в срок по смете</div>
+                <div className="text-xs text-ink/75 font-sans mt-1">скрытых доплат / фиксированная смета</div>
               </div>
             </div>
           </div>
