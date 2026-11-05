@@ -2,6 +2,7 @@ import React, { useEffect, useState, Suspense } from 'react';
 import { Header } from './components/sections/Header';
 import { Hero } from './components/sections/Hero';
 import { Services } from './components/sections/Services';
+import { Cases } from './components/sections/Cases';
 import { Process } from './components/sections/Process';
 import { GuideForm } from './components/sections/GuideForm';
 import { Faq } from './components/sections/Faq';
@@ -92,7 +93,10 @@ export const App: React.FC = () => {
         {/* 2. Услуги (Bento Grid) */}
         <Services />
 
-        {/* 3. Процесс */}
+        {/* 3. Кейсы: до и после */}
+        <Cases />
+
+        {/* 4. Процесс */}
         <Process />
 
         {/* 6. Гид и форма */}

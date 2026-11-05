@@ -20,7 +20,7 @@ export type AnalyticsGoal =
 export function initAnalytics(): void {
   if (typeof window === 'undefined') return;
 
-  const metrikaId = config.metrikaId || '113813233';
+  const metrikaId = config.metrikaId || '114097000';
   const metrikaNum = parseInt(metrikaId, 10);
   if (isNaN(metrikaNum)) return;
 
@@ -52,7 +52,7 @@ export function initAnalytics(): void {
 
 export function trackGoal(goal: AnalyticsGoal): void {
   if (typeof window === 'undefined') return;
-  const metrikaId = config.metrikaId || '113813233';
+  const metrikaId = config.metrikaId || '114097000';
   const metrikaNum = parseInt(metrikaId, 10);
   if (!isNaN(metrikaNum) && window.ym) {
     window.ym(metrikaNum, 'reachGoal', goal);
