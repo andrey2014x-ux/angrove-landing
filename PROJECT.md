@@ -20,9 +20,9 @@ Every feature from the Survey phase is mapped to an assigned milestone:
 |---|------|-------|-------------|--------|
 | M-TEST | E2E Testing Suite | Build test infrastructure & Tiers 1-4 test cases (Cases, Simulators, AI Webhook fallback, Mobile UI, PageSpeed/Build) -> TEST_READY.md | none | DONE |
 | M1 | Solid Cases Before/After | Redesign `src/components/sections/Cases.tsx` into 3-tab Before/After with real metrics and mount in `src/App.tsx` | none | DONE |
-| M2 | Unslop & Visual Polish | Sentence case tags in Services/GuideForm, remove glow blobs, harmonize 30d warranty in AboutMe, refine Hero stats & nav | none | IN_PROGRESS |
-| M3 | Live AI Webhook & Fallback | Implement `src/lib/aiWebhook.ts`, update `src/config.ts`, update `index.html` CSP, integrate into `TelegramChatSimulator.tsx` | none | PLANNED |
-| M-FINAL | Final Verification & Hardening | Run 100% E2E test suite (Tiers 1-4), verify 4 simulators, verify mobile layout, Tier 5 hardening, audit verdict | M-TEST, M1, M2, M3 | PLANNED |
+| M2 | Unslop & Visual Polish | Sentence case tags in Services/GuideForm, remove glow blobs, harmonize 30d warranty in AboutMe, refine Hero stats & nav | none | DONE |
+| M3 | Live AI Webhook & Fallback | Implement `src/lib/aiWebhook.ts`, update `src/config.ts`, update `index.html` CSP, integrate into `TelegramChatSimulator.tsx` | none | DONE |
+| M-FINAL | Final Verification & Hardening | Run 100% E2E test suite (Tiers 1-4), verify 4 simulators, verify mobile layout, Tier 5 hardening, audit verdict | M-TEST, M1, M2, M3 | DONE |
 
 ## Interface Contracts
 ### Cases Component ↔ App.tsx & Global3DCanvas
@@ -39,13 +39,13 @@ Every feature from the Survey phase is mapped to an assigned milestone:
 ## Code Layout
 - `src/components/sections/Cases.tsx`: Cases Before/After section (completed by Worker M1).
 - `src/App.tsx`: Layout composition (mount Cases, nav targets).
-- `src/components/sections/Services.tsx`: Tags to sentence case (owned by Worker M2).
-- `src/components/sections/GuideForm.tsx`: Glow blob removal, sentence case tags (owned by Worker M2).
-- `src/components/sections/AboutMe.tsx`: Warranty sync to 30 days (owned by Worker M2).
-- `src/components/sections/Header.tsx`, `Footer.tsx`: Nav link #cases (owned by Worker M2).
-- `src/components/sections/Hero.tsx`: Stats text refinement (owned by Worker M2).
-- `src/lib/aiWebhook.ts`: New helper for external webhook querying (owned by Worker M3).
-- `src/config.ts`: Add `aiWebhookUrl` (owned by Worker M3).
-- `index.html`: Update CSP `connect-src` (owned by Worker M3).
-- `src/components/ui/TelegramChatSimulator.tsx`: Webhook integration with typing delay (owned by Worker M3).
-- `tests/e2e/`: E2E test harness and test cases (completed by M-TEST).
+- `src/components/sections/Services.tsx`: Tags to sentence case (completed by Worker M2).
+- `src/components/sections/GuideForm.tsx`: Glow blob removal, sentence case tags (completed by Worker M2).
+- `src/components/sections/AboutMe.tsx`: Warranty sync to 30 days (completed by Worker M2).
+- `src/components/sections/Header.tsx`, `Footer.tsx`: Nav link #cases (completed by Worker M2).
+- `src/components/sections/Hero.tsx`: Stats text refinement (completed by Worker M2).
+- `src/lib/aiWebhook.ts`: Helper for external webhook querying (completed by Worker M3).
+- `src/config.ts`: Add `aiWebhookUrl` (completed by Worker M3).
+- `index.html`: Update CSP `connect-src` (completed by Worker M3).
+- `src/components/ui/TelegramChatSimulator.tsx`: Webhook integration with typing delay (completed by Worker M3).
+- `tests/e2e/`: E2E test harness and test cases (completed by M-TEST & M-FINAL).
