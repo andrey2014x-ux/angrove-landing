@@ -17,7 +17,7 @@ export const config: AppConfig = {
   vkUrl: import.meta.env.VITE_VK_URL || 'https://vk.com/angrove',
   instagramUrl: import.meta.env.VITE_INSTAGRAM_URL || 'https://instagram.com/_angrove_',
   formEndpoint: import.meta.env.VITE_FORM_ENDPOINT || '',
-  metrikaId: import.meta.env.VITE_METRIKA_ID || '',
+  metrikaId: import.meta.env.VITE_METRIKA_ID || '113813233',
 };
 
 export const TELEGRAM_MESSAGES = {

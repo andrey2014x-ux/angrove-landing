@@ -18,19 +18,23 @@ export type AnalyticsGoal =
   | 'simulate_bot_message';
 
 export function initAnalytics(): void {
-  if (!config.metrikaId || typeof window === 'undefined') return;
+  if (typeof window === 'undefined') return;
 
-  const metrikaNum = parseInt(config.metrikaId, 10);
+  const metrikaId = config.metrikaId || '113813233';
+  const metrikaNum = parseInt(metrikaId, 10);
   if (isNaN(metrikaNum)) return;
 
-  // Insert Metrika script if not already present
+  // If already initialized via index.html script tag
+  if (window.ym) return;
+
+  // Fallback: insert Metrika script if not already present
   if (!document.getElementById('ym-script')) {
     const script = document.createElement('script');
     script.id = 'ym-script';
     script.type = 'text/javascript';
     script.async = true;
     script.src = 'https://mc.yandex.ru/metrika/tag.js';
-    
+
     script.onload = () => {
       if (window.ym) {
         window.ym(metrikaNum, 'init', {
@@ -47,8 +51,9 @@ export function initAnalytics(): void {
 }
 
 export function trackGoal(goal: AnalyticsGoal): void {
-  if (!config.metrikaId || typeof window === 'undefined') return;
-  const metrikaNum = parseInt(config.metrikaId, 10);
+  if (typeof window === 'undefined') return;
+  const metrikaId = config.metrikaId || '113813233';
+  const metrikaNum = parseInt(metrikaId, 10);
   if (!isNaN(metrikaNum) && window.ym) {
     window.ym(metrikaNum, 'reachGoal', goal);
   }
