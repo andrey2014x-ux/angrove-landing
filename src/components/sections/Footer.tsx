@@ -38,7 +38,6 @@ export const Footer: React.FC = () => {
 
   const navigation = [
     { label: 'Услуги', href: '#services' },
-    { label: 'Кейсы', href: '#cases' },
     { label: 'Процесс', href: '#process' },
     { label: 'Обо мне', href: '#about' },
     { label: 'FAQ', href: '#faq' },
