@@ -52,11 +52,11 @@ export const Process: React.FC = () => {
     <section
       ref={sectionRef}
       id="process"
-      className="bg-transparent text-ink py-16 sm:py-24 relative overflow-hidden"
+      className="bg-transparent text-ink py-12 sm:py-24 relative overflow-hidden scroll-mt-20 sm:scroll-mt-24"
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-black/[0.06]">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 pb-6 sm:pb-10 border-b border-black/[0.06]">
           <div>
             <WordReveal
               as="h2"
@@ -71,15 +71,15 @@ export const Process: React.FC = () => {
         </div>
 
         {/* 4-Step Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 pt-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 pt-6 sm:pt-10">
           {STEPS.map((step) => (
             <div
               key={step.num}
               data-reveal="card"
-              className="bg-white rounded-3xl p-7 flex flex-col justify-between border border-black/[0.06] shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
+              className="bg-white rounded-3xl p-5 sm:p-7 flex flex-col justify-between border border-black/[0.06] shadow-[0_10px_30px_rgba(0,0,0,0.03)] hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
             >
               <div>
-                <div className="flex items-center justify-between pb-4 mb-6 border-b border-black/[0.06]">
+                <div className="flex items-center justify-between pb-3 sm:pb-4 mb-4 sm:mb-6 border-b border-black/[0.06]">
                   <span className="font-mono text-2xl font-black text-ink/30 group-hover:text-blue transition-colors">
                     {step.num}
                   </span>
@@ -88,7 +88,7 @@ export const Process: React.FC = () => {
                   </span>
                 </div>
 
-                <h3 className="text-base sm:text-lg font-bold uppercase tracking-tight text-ink mb-2">
+                <h3 className="text-base sm:text-lg font-bold uppercase tracking-tight text-ink mb-1.5 sm:mb-2">
                   {step.title}
                 </h3>
 
@@ -97,7 +97,7 @@ export const Process: React.FC = () => {
                 </p>
               </div>
 
-              <div className="pt-6 mt-6 border-t border-black/[0.04] text-[10px] font-mono text-ink/75 uppercase font-semibold">
+              <div className="pt-4 mt-4 sm:pt-6 sm:mt-6 border-t border-black/[0.04] text-[10px] font-mono text-ink/75 uppercase font-semibold">
                 ЭТАП ПОД КЛЮЧ
               </div>
             </div>
@@ -159,7 +159,7 @@ export const Process: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleCtaClick}
-            className="group inline-flex items-center gap-2 bg-blue text-white rounded-full px-6 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_20px_rgba(61,92,255,0.3)] hover:shadow-[0_12px_25px_rgba(61,92,255,0.45)] hover:-translate-y-0.5 active:translate-y-0 transition-all select-none cursor-pointer whitespace-nowrap"
+            className="group inline-flex items-center justify-center w-full sm:w-auto gap-2 bg-blue text-white rounded-full px-6 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_20px_rgba(61,92,255,0.3)] hover:shadow-[0_12px_25px_rgba(61,92,255,0.45)] hover:-translate-y-0.5 active:translate-y-0 transition-all select-none cursor-pointer whitespace-nowrap"
           >
             <span>Разобрать задачу бесплатно</span>
             <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

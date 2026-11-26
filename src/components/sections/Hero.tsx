@@ -136,7 +136,7 @@ export const Hero: React.FC = () => {
   return (
     <section
       ref={heroRef}
-      className="relative bg-transparent text-ink pt-10 sm:pt-16 pb-16 sm:pb-24"
+      className="relative bg-transparent text-ink pt-6 sm:pt-16 pb-12 sm:pb-24"
       id="hero"
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 relative">
@@ -148,7 +148,7 @@ export const Hero: React.FC = () => {
             {/* H1 Headline with Leopard Code Text */}
             <h1
               ref={headlineRef}
-              className="font-display font-black tracking-tight leading-[0.95] text-ink select-none mb-6"
+              className="font-display font-black tracking-tight leading-[0.95] text-ink select-none mb-4 sm:mb-6"
             >
               <span className="hero-line block text-4xl sm:text-7xl lg:text-[88px] font-black">
                 Заменяю
@@ -164,19 +164,19 @@ export const Hero: React.FC = () => {
             </h1>
 
             {/* Subtitle */}
-            <p className="hero-subtitle font-sans text-base sm:text-lg lg:text-xl text-ink/75 font-normal leading-relaxed max-w-xl mb-6">
+            <p className="hero-subtitle font-sans text-[15px] sm:text-lg lg:text-xl text-ink/75 font-normal leading-relaxed max-w-xl mb-5 sm:mb-6">
               Создаю умных AI-ботов и автоматизацию для бизнеса. Они сами общаются с клиентами, записывают на услуги и наводят порядок в данных. Вы развиваете дело, пока рутина работает сама 24/7.
             </p>
 
             {/* Actions: Modern Buttons */}
             <div className="hero-actions flex flex-col items-start gap-3 w-full sm:w-auto">
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
                 <a
                   href={getTelegramUrl(TELEGRAM_MESSAGES.general)}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleTelegramClick}
-                  className="group inline-flex items-center justify-center gap-2.5 bg-blue text-white rounded-full px-8 py-4 text-sm sm:text-base font-bold shadow-md hover:shadow-lg shadow-blue/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
+                  className="group inline-flex items-center justify-center gap-2.5 bg-blue text-white rounded-full px-7 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-bold shadow-md hover:shadow-lg shadow-blue/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
                 >
                   <span>Обсудить задачу</span>
                   <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -184,7 +184,7 @@ export const Hero: React.FC = () => {
 
                 <a
                   href="#services"
-                  className="inline-flex items-center justify-center gap-2 bg-white text-ink rounded-full px-8 py-4 text-sm sm:text-base font-bold border border-black/[0.08] shadow-sm hover:border-black/20 hover:bg-zinc-50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 bg-white text-ink rounded-full px-7 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base font-bold border border-black/[0.08] shadow-sm hover:border-black/20 hover:bg-zinc-50 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
                 >
                   <span>Смотреть решения</span>
                   <span className="text-ink/70">↓</span>
@@ -199,24 +199,24 @@ export const Hero: React.FC = () => {
             </div>
 
             {/* Stats Row */}
-            <div className="grid grid-cols-3 gap-4 sm:gap-8 pt-8 mt-6 border-t border-black/[0.06] w-full max-w-lg items-baseline">
+            <div className="grid grid-cols-3 gap-3 sm:gap-8 pt-6 mt-5 sm:pt-8 sm:mt-6 border-t border-black/[0.06] w-full max-w-lg items-baseline">
               <div className="hero-stat">
-                <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">
+                <div className="text-xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">
                   <CountUp target={70} suffix="+" duration={1400} delay={300} />
                 </div>
-                <div className="text-xs text-ink/75 font-sans mt-1">проектов в проде</div>
+                <div className="text-[11px] sm:text-xs text-ink/75 font-sans mt-1 leading-snug">проектов в проде</div>
               </div>
               <div className="hero-stat">
-                <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">
+                <div className="text-xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">
                   <CountUp target={3} suffix=" дня" duration={1000} delay={400} />
                 </div>
-                <div className="text-xs text-ink/75 font-sans mt-1">первый прототип</div>
+                <div className="text-[11px] sm:text-xs text-ink/75 font-sans mt-1 leading-snug">первый прототип</div>
               </div>
               <div className="hero-stat">
-                <div className="text-2xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">
+                <div className="text-xl sm:text-3xl font-black font-display text-ink tabular-nums tracking-tight">
                   <CountUp target={0} suffix=" ₽" duration={1000} delay={300} />
                 </div>
-                <div className="text-xs text-ink/75 font-sans mt-1">скрытых доплат / фиксированная смета</div>
+                <div className="text-[11px] sm:text-xs text-ink/75 font-sans mt-1 leading-snug">скрытых доплат</div>
               </div>
             </div>
           </div>
@@ -224,7 +224,7 @@ export const Hero: React.FC = () => {
           {/* Right Column: Clean Premium Photo Frame framed by Global 3D */}
           <div
             ref={photoBlockRef}
-            className="lg:col-span-5 flex flex-col items-center justify-center w-full relative min-h-[440px] sm:min-h-[500px]"
+            className="lg:col-span-5 flex flex-col items-center justify-center w-full relative min-h-[340px] sm:min-h-[500px]"
           >
             {/* Clean, Premium Photo of Andrey */}
             <div className="w-full max-w-[340px] sm:max-w-[390px] relative z-10">

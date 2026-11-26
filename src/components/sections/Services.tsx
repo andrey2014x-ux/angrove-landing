@@ -75,11 +75,11 @@ export const Services: React.FC = () => {
     <section
       ref={sectionRef}
       id="services"
-      className="bg-transparent text-ink py-16 sm:py-24 relative overflow-hidden"
+      className="bg-transparent text-ink py-12 sm:py-24 relative overflow-hidden scroll-mt-20 sm:scroll-mt-24"
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-black/[0.06]">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 pb-6 sm:pb-10 border-b border-black/[0.06]">
           <div>
             <WordReveal
               as="h2"

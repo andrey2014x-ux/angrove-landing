@@ -85,53 +85,66 @@ export const Header: React.FC = () => {
           </a>
         </nav>
 
-        {/* Mobile Hamburger Button */}
-        <button
-          type="button"
-          className="md:hidden p-2.5 text-ink hover:text-blue focus-visible:ring-2 focus-visible:ring-blue active:scale-95 transition-transform cursor-pointer"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-expanded={mobileMenuOpen}
-          aria-label={mobileMenuOpen ? 'Закрыть меню' : 'Открыть меню'}
-        >
-          {mobileMenuOpen ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
-        </button>
+        {/* Mobile Quick Actions (Telegram Pill + Hamburger) */}
+        <div className="flex md:hidden items-center gap-2">
+          <a
+            href={getTelegramUrl(TELEGRAM_MESSAGES.general)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackGoal('click_telegram')}
+            className="inline-flex items-center gap-1 px-3.5 py-2 rounded-full bg-blue text-white font-sans text-xs font-bold active:scale-95 transition-transform shadow-sm"
+          >
+            <span>Telegram</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </a>
+
+          <button
+            type="button"
+            className="p-2.5 text-ink hover:text-blue focus-visible:ring-2 focus-visible:ring-blue active:scale-95 transition-transform cursor-pointer"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-expanded={mobileMenuOpen}
+            aria-label={mobileMenuOpen ? 'Закрыть меню' : 'Открыть меню'}
+          >
+            {mobileMenuOpen ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-paper border-b border-black/[0.08] px-6 py-6 flex flex-col gap-4 animate-fadeIn shadow-lg">
+        <div className="md:hidden bg-paper border-b border-black/[0.08] px-6 py-5 flex flex-col gap-2 animate-fadeIn shadow-lg">
           <a
             href="#services"
             onClick={() => setMobileMenuOpen(false)}
-            className="text-base font-bold text-ink hover:text-blue py-1.5 focus-visible:ring-2 focus-visible:ring-blue"
+            className="text-base font-bold text-ink hover:text-blue py-2.5 focus-visible:ring-2 focus-visible:ring-blue"
           >
             Услуги
           </a>
           <a
             href="#process"
             onClick={() => setMobileMenuOpen(false)}
-            className="text-base font-bold text-ink hover:text-blue py-1.5 focus-visible:ring-2 focus-visible:ring-blue"
+            className="text-base font-bold text-ink hover:text-blue py-2.5 focus-visible:ring-2 focus-visible:ring-blue"
           >
             Процесс
           </a>
           <a
             href="#about"
             onClick={() => setMobileMenuOpen(false)}
-            className="text-base font-bold text-ink hover:text-blue py-1.5 focus-visible:ring-2 focus-visible:ring-blue"
+            className="text-base font-bold text-ink hover:text-blue py-2.5 focus-visible:ring-2 focus-visible:ring-blue"
           >
             Обо мне
           </a>
           <a
             href="#faq"
             onClick={() => setMobileMenuOpen(false)}
-            className="text-base font-bold text-ink hover:text-blue py-1.5 focus-visible:ring-2 focus-visible:ring-blue"
+            className="text-base font-bold text-ink hover:text-blue py-2.5 focus-visible:ring-2 focus-visible:ring-blue"
           >
             Вопросы
           </a>
           <a
             href="#guide"
             onClick={handleGuideClick}
-            className="text-base font-bold text-blue py-1.5 flex items-center justify-between"
+            className="text-base font-bold text-blue py-2.5 flex items-center justify-between"
           >
             <span>Получить гид (PDF)</span>
             <span aria-hidden="true">↓</span>
@@ -145,7 +158,7 @@ export const Header: React.FC = () => {
               trackGoal('click_telegram');
               setMobileMenuOpen(false);
             }}
-            className="mt-2 py-3 px-5 rounded-xl bg-ink text-white font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2"
+            className="mt-2 py-3.5 px-5 rounded-full bg-blue text-white font-sans text-sm font-bold flex items-center justify-center gap-2 shadow-sm"
           >
             <span>Написать в Telegram</span>
             <ArrowUpRight className="w-4 h-4" />

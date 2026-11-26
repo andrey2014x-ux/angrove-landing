@@ -69,7 +69,7 @@ export const Footer: React.FC = () => {
       <div className="max-w-[1360px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
         
         {/* --- Central Editorial Hero Statement --- */}
-        <div className="pt-24 sm:pt-36 pb-20 sm:pb-28 text-center max-w-4xl mx-auto flex flex-col items-center">
+        <div className="pt-16 sm:pt-36 pb-14 sm:pb-28 text-center max-w-4xl mx-auto flex flex-col items-center">
           
           {/* Subtle Monospace Architect Tag */}
           <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 font-mono text-[10px] sm:text-xs text-zinc-400 tracking-wider uppercase mb-6 sm:mb-8 text-center px-2">

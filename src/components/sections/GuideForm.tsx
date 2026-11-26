@@ -18,7 +18,7 @@ export const GuideForm: React.FC = () => {
     <section
       ref={sectionRef}
       id="guide"
-      className="bg-transparent text-ink py-16 sm:py-20 relative overflow-hidden"
+      className="bg-transparent text-ink py-12 sm:py-20 relative overflow-hidden scroll-mt-20 sm:scroll-mt-24"
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
         <div data-reveal="stage" className="bg-[#0A0C16] text-white rounded-3xl p-6 sm:p-12 border border-white/10 shadow-2xl relative overflow-hidden">

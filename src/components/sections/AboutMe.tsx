@@ -17,12 +17,12 @@ export const AboutMe: React.FC = () => {
     <section
       ref={sectionRef}
       id="about"
-      className="bg-transparent text-ink py-16 sm:py-24 relative overflow-hidden"
+      className="bg-transparent text-ink py-12 sm:py-24 relative overflow-hidden scroll-mt-20 sm:scroll-mt-24"
     >
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-black/[0.06] mb-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 pb-6 sm:pb-10 border-b border-black/[0.06] mb-6 sm:mb-10">
           <div>
             <WordReveal
               as="h2"
@@ -106,7 +106,7 @@ export const AboutMe: React.FC = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={handleTelegramClick}
-                className="group inline-flex items-center gap-2.5 bg-blue text-white rounded-full px-8 py-4 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_25px_rgba(61,92,255,0.35)] hover:shadow-[0_12px_30px_rgba(61,92,255,0.5)] hover:-translate-y-0.5 active:translate-y-0 transition-all select-none cursor-pointer"
+                className="group inline-flex items-center justify-center w-full sm:w-auto gap-2.5 bg-blue text-white rounded-full px-8 py-4 text-xs sm:text-sm font-bold uppercase tracking-wider shadow-[0_10px_25px_rgba(61,92,255,0.35)] hover:shadow-[0_12px_30px_rgba(61,92,255,0.5)] hover:-translate-y-0.5 active:translate-y-0 transition-all select-none cursor-pointer"
               >
                 <span>Написать Андрею напрямую</span>
                 <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
