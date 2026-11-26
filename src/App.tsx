@@ -24,15 +24,9 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     initAnalytics();
-
-    // Mark HTML as JS-enabled for progressive enhancement
     document.documentElement.classList.add('js');
-
-    // Initialize Lenis smooth scroll linked to GSAP ScrollTrigger
     const lenis = initSmoothScroll();
 
-    // Defer 3D canvas: load after first user interaction (scroll, touch, mouse) or 2.5s fallback
-    // Keep isBot check to preserve 90+ PageSpeed / Lighthouse scores
     const isBot =
       typeof navigator !== 'undefined' &&
       (navigator.webdriver || /lighthouse|speed|chrome-lighthouse|headless/i.test(navigator.userAgent));
@@ -65,10 +59,8 @@ export const App: React.FC = () => {
     };
   }, []);
 
-  // Main landing page in editorial style
   return (
     <div className="min-h-[100dvh] flex flex-col bg-paper text-ink selection:bg-blue selection:text-white relative font-sans">
-      {/* Background Motion & Atmosphere */}
       <AmbientAtmosphere />
       {shouldLoad3D && (
         <Suspense fallback={null}>
@@ -76,39 +68,20 @@ export const App: React.FC = () => {
         </Suspense>
       )}
 
-      {/* Preloader (< 1.2s, once per session) */}
       <Preloader onComplete={() => setIsPreloaded(true)} />
-
-      {/* Top Scroll Progress Bar */}
       <ScrollProgress />
-
-      {/* 0. Header (Sticky) */}
       <Header />
 
       <main className="flex-1 relative z-10">
-        {/* 1. Hero */}
         <Hero />
-
-        {/* 2. Услуги (Bento Grid) */}
         <Services />
-
-        {/* 3. Процесс */}
         <Process />
-
-        {/* 6. Гид и форма */}
         <GuideForm />
-
-        {/* 7. Обо мне */}
         <AboutMe />
-
-        {/* 8. FAQ */}
         <Faq />
       </main>
 
-      {/* 9. Монолитный финал: Призыв к действию + Подвал */}
       <Footer />
-
-      {/* Floating Scroll-to-Top Control Node */}
       <ScrollToTop />
     </div>
   );
