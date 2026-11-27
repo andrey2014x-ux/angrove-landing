@@ -69,10 +69,10 @@ export const Footer: React.FC = () => {
       <div className="max-w-[1360px] mx-auto px-4 sm:px-8 lg:px-12 relative z-10">
         
         {/* --- Central Editorial Hero Statement --- */}
-        <div className="pt-16 sm:pt-36 pb-14 sm:pb-28 text-center max-w-4xl mx-auto flex flex-col items-center">
+        <div className="pt-16 sm:pt-20 pb-12 sm:pb-16 text-center max-w-4xl mx-auto flex flex-col items-center">
           
           {/* Subtle Monospace Architect Tag */}
-          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 font-mono text-[10px] sm:text-xs text-zinc-400 tracking-wider uppercase mb-6 sm:mb-8 text-center px-2">
+          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 font-mono text-[10px] sm:text-xs text-zinc-400 tracking-wider uppercase mb-5 sm:mb-6 text-center px-2">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
             <span>Андрей</span>
             <span className="text-white/20">·</span>
@@ -82,7 +82,7 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Cinematic Headline with Serif Twist */}
-          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white leading-[1.15] mb-5 sm:mb-6 font-sans">
+          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white leading-[1.12] mb-4 sm:mb-5 font-sans">
             Давайте создадим систему,
             <span className="block font-serif font-normal italic lowercase text-blue-light tracking-normal mt-1 sm:mt-2 text-3xl sm:text-5xl lg:text-7xl">
               которая работает за вас.
@@ -90,12 +90,12 @@ export const Footer: React.FC = () => {
           </h2>
 
           {/* Calm, Direct Subtitle */}
-          <p className="text-sm sm:text-base lg:text-lg text-zinc-300 max-w-xl mx-auto mb-12 leading-relaxed font-sans font-normal">
-            Напишите в Telegram — за 15 минут разберём узкие места ваших процессов и определим точный стек автоматизации.
+          <p className="text-sm sm:text-base lg:text-lg text-zinc-300 max-w-xl mx-auto mb-8 sm:mb-10 leading-relaxed font-sans font-normal">
+            Напишите в Telegram — за 15 минут разберём узкие места ваших процессов, подберём решение и назовём точную цену.
           </p>
 
           {/* Interactive Magnetic CTA Button */}
-          <div className="flex items-center justify-center mb-8 w-full">
+          <div className="flex items-center justify-center mb-6 sm:mb-7 w-full">
             <a
               ref={btnRef}
               href={getTelegramUrl(TELEGRAM_MESSAGES.footer)}
@@ -126,7 +126,7 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* --- Minimalist Studio Sub-bar --- */}
-        <div id="footer" className="pt-8 pb-10 border-t border-white/[0.07] flex flex-col md:flex-row items-center justify-between gap-6 text-xs font-mono text-zinc-400">
+        <div id="footer" className="pt-7 pb-9 sm:pr-16 border-t border-white/[0.07] flex flex-col md:flex-row items-center justify-between gap-6 text-xs font-mono text-zinc-400">
           
           {/* Brand Signature */}
           <div className="flex items-center gap-2">
